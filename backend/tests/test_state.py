@@ -86,3 +86,16 @@ def test_replay_is_deterministic(sims):
     _, a = replay(match.meta, match.events)
     _, b = replay(match.meta, match.events)
     assert a == b
+
+
+def test_full_state_snapshot(sims):
+    from regista.state import build_state
+
+    match, _ = sims[7]
+    st = build_state(match.meta)
+    for ev in match.events:
+        st.apply(ev)
+    snap = st.snapshot()
+    assert snap["score"] == {"NVL": 2, "SLM": 1}
+    assert {"xg", "momentum", "chaos_5m", "press_cusum", "records"} <= set(snap)
+    assert snap["records"]["sprint"]["player_id"] == "SLM-11"
