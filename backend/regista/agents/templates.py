@@ -50,6 +50,11 @@ class FactView:
     def get(self, key: str) -> Fact | None:
         return self.map.get(key)
 
+    def normalized_key(self, fact: Fact) -> str:
+        """The most generic key for a fact (team./player./...), used for localized labels."""
+        keys = [k for k, f in self.map.items() if f is fact]
+        return next((k for k in keys if k.split(".")[0] in ("team", "player")), keys[0] if keys else fact.key)
+
 
 def fmt_number(v: float | int, lang: str) -> str:
     s = str(v) if isinstance(v, int) else f"{v:.2f}".rstrip("0").rstrip(".")
@@ -60,6 +65,13 @@ def fmt_value(v, lang: str) -> str:
     if isinstance(v, str):
         return VALUES[lang].get(v, v)
     return fmt_number(v, lang)
+
+
+def stat_callout(fact: Fact, view: FactView, lang: str) -> StatCallout:
+    """Stat callout formatted from the fact by code, so its value cannot drift from the fact."""
+    label = STAT_LABELS.get(lang, {}).get(view.normalized_key(fact), fact.label)
+    unit = "" if fact.unit is None else ("%" if fact.unit == "%" else f" {fact.unit}")
+    return StatCallout(label=label[:40], value=f"{fmt_value(fact.value, lang)}{unit}", fact_id=fact.fact_id)
 
 
 class TemplateNarrator:
@@ -106,9 +118,7 @@ class TemplateNarrator:
         for key in stat_keys:
             f = view.get(key)
             if f is not None:
-                label = STAT_LABELS[lang].get(key, f.label)
-                unit = "" if f.unit is None else ("%" if f.unit == "%" else f" {f.unit}")
-                stat = StatCallout(label=label[:40], value=f"{fmt_value(f.value, lang)}{unit}", fact_id=f.fact_id)
+                stat = stat_callout(f, view, lang)
                 break
         return RenderedInsight(
             insight_id=insight.insight_id,
