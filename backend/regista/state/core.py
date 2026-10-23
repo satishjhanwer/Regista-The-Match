@@ -23,6 +23,7 @@ from .rolling import RollingSum
 WINDOWS_S: dict[str, float] = {"5m": 300.0, "10m": 600.0}
 FINAL_THIRD_X = 70.0
 LONG_PASS_M = 32.0
+LONG_LOFTED_PASS_M = 25.0
 ON_BALL = frozenset({"pass", "carry", "shot", "clearance"})
 TURNOVER_CAUSES = frozenset({"tackle", "interception"})
 
@@ -36,6 +37,11 @@ class MetricUpdate:
     elapsed_s: float
     window_start_s: float | None = None
     window_end_s: float | None = None
+
+
+def is_long_ball(ev) -> bool:
+    """A non-cross pass over 32 m, or a lofted (high) non-cross pass over 25 m."""
+    return not ev.is_cross and (ev.length_m > LONG_PASS_M or (ev.height == "high" and ev.length_m > LONG_LOFTED_PASS_M))
 
 
 class Component(Protocol):
@@ -199,7 +205,7 @@ class MatchState:
             self.count(team, "passes_complete")
             if self.rel_x(team, ev.end_x) >= FINAL_THIRD_X:
                 self.count(team, "passes_final_third")
-        if ev.length_m > LONG_PASS_M:
+        if is_long_ball(ev):
             self.count(team, "long_passes")
         if ev.pressure.defenders_within_5m >= 1:
             self.count(team, "pressed_passes")

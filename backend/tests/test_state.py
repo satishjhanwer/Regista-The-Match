@@ -99,3 +99,19 @@ def test_full_state_snapshot(sims):
     assert snap["score"] == {"NVL": 2, "SLM": 1}
     assert {"xg", "momentum", "chaos_5m", "press_cusum", "records"} <= set(snap)
     assert snap["records"]["sprint"]["player_id"] == "SLM-11"
+
+
+@pytest.mark.parametrize("seed", [1, 2, 3, 4, 5, 7])
+def test_s4_northvale_go_long(sims, seed):
+    from regista.contracts.events import match_minute
+
+    match, _ = sims[seed]
+    _, updates = replay(match.meta, match.events)
+    minute = {e.elapsed_s: match_minute(e.period, e.t) for e in match.events}
+    series = [(minute[u.elapsed_s], u.value) for u in updates if u.key == "NVL.long_ball_share_10m"]
+
+    def mean(a, b):
+        vals = [v for m, v in series if a <= m < b]
+        return sum(vals) / len(vals)
+
+    assert mean(78, 90) > 1.5 * mean(48, 58)
