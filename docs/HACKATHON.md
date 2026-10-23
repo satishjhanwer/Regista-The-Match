@@ -7,7 +7,7 @@ Challenge: **The Synthetic Match Insights Engine for Premier League Studio**.
 
 - Hackathon window: 29 Sep to 20 Oct 2026 (registration closed 20 Oct).
 - **Submission deadline: 27 Oct 2026, 11:59 PM Pacific Time** (28 Oct, 12:29 PM IST).
-- Rules: https://aka.ms/insidethegame/rules (not fetchable by tools; read in a browser before submitting).
+- Rules: <https://aka.ms/insidethegame/rules> (not fetchable by tools; read in a browser before submitting).
 
 ## Challenge requirements (condensed from the brief)
 
@@ -16,6 +16,7 @@ real-time narratives and automated recaps for studio, broadcast or streaming, pe
 No real Premier League data is provided or allowed.
 
 ### (i) One pipeline, five stages
+
 - [ ] **Ingest** synthetic events as they happen: passes, shots, tackles, possession changes, pressure events, match metadata.
 - [ ] **Interpret** into meaningful statistics, patterns and context.
 - [ ] **Explain** why a moment matters, not only that it happened.
@@ -26,21 +27,26 @@ No real Premier League data is provided or allowed.
 - A project that only generates metrics has no audience; one that only personalizes has nothing to personalize. Do both.
 
 ### (ii) Real-time match intelligence (features to consider)
+
 - [ ] Player identification: real-time name tagging, optional speed and distance indicators when thresholds are hit.
 - [ ] Pass quality: distance, accuracy, pass difficulty rating.
 - [ ] Speed metrics: ball speed, shot speed.
 - [ ] Auto-eventing from video (optional; **out of scope for Regista**, documented as a future producer behind the event contract).
 
 ### (iii) Narrative generation
+
 - [ ] Key narratives, player-performance context, notable milestones, match recaps.
 
 ### (iv) Explainability
+
 - [ ] Why moments matter: control vs chaos, tactical pressure changes, game rhythm patterns.
 
 ### (v) Data innovation
+
 - [x] Create or extend a synthetic football-realistic dataset (passes, shots, tackles, possession changes, pressure, metadata).
 
 ### (vi) Multi-language storytelling
+
 - [ ] Clear natural-language output in multiple languages.
 
 ## What to submit
