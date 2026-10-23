@@ -1,0 +1,224 @@
+{
+  "match_id": "RGS-2026-0001",
+  "seed": 7,
+  "final_score": {
+    "NVL": 2,
+    "SLM": 1
+  },
+  "storylines": [
+    {
+      "storyline_id": "S1_home_control",
+      "label": "Northvale control the tempo",
+      "start_clock_s": 0.0,
+      "end_clock_s": 1500.0,
+      "description": "Northvale keep the ball in long, low-risk sequences; Saltmere sit off in a mid block.",
+      "expected_signals": [
+        "home pass completion high",
+        "long home possession sequences",
+        "low possession-sequence entropy"
+      ]
+    },
+    {
+      "storyline_id": "S2_chaos_spell",
+      "label": "A chaotic spell",
+      "start_clock_s": 1500.0,
+      "end_clock_s": 2400.0,
+      "description": "Both sides go direct; turnovers spike and nobody settles.",
+      "expected_signals": [
+        "turnover rate up for both teams",
+        "long-ball share up",
+        "short possession sequences"
+      ]
+    },
+    {
+      "storyline_id": "S3_away_press_shift",
+      "label": "Saltmere switch to a high press",
+      "start_clock_s": 3480.0,
+      "end_clock_s": 4320.0,
+      "description": "Saltmere push their line up and press high; Northvale's build-up from the back breaks down.",
+      "expected_signals": [
+        "away pressure events per home pass up",
+        "home PPDA-against down / away PPDA down",
+        "home pass completion in own half down",
+        "turnovers in home defensive third up"
+      ]
+    },
+    {
+      "storyline_id": "S4_home_go_long",
+      "label": "Northvale go long to beat the press",
+      "start_clock_s": 4320.0,
+      "end_clock_s": 5760.0,
+      "description": "Northvale bypass the press with longer passes; Saltmere's press fades with fatigue.",
+      "expected_signals": [
+        "home long-ball share up",
+        "away pressure events fall from S3 levels"
+      ]
+    }
+  ],
+  "scripted_event_ids": {
+    "G1": "RGS-2026-0001-01046",
+    "G2": "RGS-2026-0001-01712",
+    "M1": "RGS-2026-0001-02006",
+    "G3": "RGS-2026-0001-02290"
+  },
+  "shots": [
+    {
+      "event_id": "RGS-2026-0001-00061",
+      "xg_true": 0.0951
+    },
+    {
+      "event_id": "RGS-2026-0001-00078",
+      "xg_true": 0.0756
+    },
+    {
+      "event_id": "RGS-2026-0001-00142",
+      "xg_true": 0.2705
+    },
+    {
+      "event_id": "RGS-2026-0001-00168",
+      "xg_true": 0.2585
+    },
+    {
+      "event_id": "RGS-2026-0001-00192",
+      "xg_true": 0.1889
+    },
+    {
+      "event_id": "RGS-2026-0001-00196",
+      "xg_true": 0.706
+    },
+    {
+      "event_id": "RGS-2026-0001-00427",
+      "xg_true": 0.6475
+    },
+    {
+      "event_id": "RGS-2026-0001-00444",
+      "xg_true": 0.2401
+    },
+    {
+      "event_id": "RGS-2026-0001-00464",
+      "xg_true": 0.1308
+    },
+    {
+      "event_id": "RGS-2026-0001-00532",
+      "xg_true": 0.407
+    },
+    {
+      "event_id": "RGS-2026-0001-00534",
+      "xg_true": 0.1362
+    },
+    {
+      "event_id": "RGS-2026-0001-00555",
+      "xg_true": 0.2287
+    },
+    {
+      "event_id": "RGS-2026-0001-00649",
+      "xg_true": 0.0122
+    },
+    {
+      "event_id": "RGS-2026-0001-00693",
+      "xg_true": 0.1208
+    },
+    {
+      "event_id": "RGS-2026-0001-00786",
+      "xg_true": 0.1465
+    },
+    {
+      "event_id": "RGS-2026-0001-00805",
+      "xg_true": 0.0967
+    },
+    {
+      "event_id": "RGS-2026-0001-00929",
+      "xg_true": 0.1513
+    },
+    {
+      "event_id": "RGS-2026-0001-00944",
+      "xg_true": 0.1688
+    },
+    {
+      "event_id": "RGS-2026-0001-01046",
+      "xg_true": 0.1664
+    },
+    {
+      "event_id": "RGS-2026-0001-01164",
+      "xg_true": 0.1326
+    },
+    {
+      "event_id": "RGS-2026-0001-01317",
+      "xg_true": 0.016
+    },
+    {
+      "event_id": "RGS-2026-0001-01321",
+      "xg_true": 0.2354
+    },
+    {
+      "event_id": "RGS-2026-0001-01477",
+      "xg_true": 0.116
+    },
+    {
+      "event_id": "RGS-2026-0001-01590",
+      "xg_true": 0.0499
+    },
+    {
+      "event_id": "RGS-2026-0001-01712",
+      "xg_true": 0.1666
+    },
+    {
+      "event_id": "RGS-2026-0001-01840",
+      "xg_true": 0.2661
+    },
+    {
+      "event_id": "RGS-2026-0001-01851",
+      "xg_true": 0.4741
+    },
+    {
+      "event_id": "RGS-2026-0001-01897",
+      "xg_true": 0.1542
+    },
+    {
+      "event_id": "RGS-2026-0001-02060",
+      "xg_true": 0.0778
+    },
+    {
+      "event_id": "RGS-2026-0001-02078",
+      "xg_true": 0.0642
+    },
+    {
+      "event_id": "RGS-2026-0001-02148",
+      "xg_true": 0.1366
+    },
+    {
+      "event_id": "RGS-2026-0001-02189",
+      "xg_true": 0.4393
+    },
+    {
+      "event_id": "RGS-2026-0001-02234",
+      "xg_true": 0.4061
+    },
+    {
+      "event_id": "RGS-2026-0001-02290",
+      "xg_true": 0.1047
+    },
+    {
+      "event_id": "RGS-2026-0001-02318",
+      "xg_true": 0.1006
+    },
+    {
+      "event_id": "RGS-2026-0001-02365",
+      "xg_true": 0.1281
+    }
+  ],
+  "pass_model": {
+    "intercept": 3.6,
+    "length_per_m": -0.075,
+    "passer_defenders_5m": -0.55,
+    "receiver_defenders_5m": -0.35,
+    "high": -0.6
+  },
+  "xg_model": {
+    "intercept": -0.9,
+    "distance_per_m": -0.11,
+    "angle_per_rad": 1.2,
+    "header": -0.8,
+    "defenders_5m": -0.35
+  }
+}

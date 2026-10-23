@@ -1,0 +1,13 @@
+{
+  "name": "regista-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "contracts": "node scripts/gen-contracts.mjs"
+  },
+  "devDependencies": {
+    "json-schema-to-typescript": "^15.0.0",
+    "typescript": "^5.9.3"
+  }
+}

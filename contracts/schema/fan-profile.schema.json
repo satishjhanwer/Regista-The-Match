@@ -1,0 +1,63 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "profile_id": {
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "analyst",
+        "casual",
+        "player_focus"
+      ],
+      "type": "string"
+    },
+    "language": {
+      "description": "BCP 47 tag, e.g. en, hi, es",
+      "type": "string"
+    },
+    "favorite_team_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "focus_player_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "metric_of_interest": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "profile_id",
+    "mode",
+    "language",
+    "favorite_team_id",
+    "focus_player_id",
+    "metric_of_interest"
+  ],
+  "title": "FanProfile",
+  "type": "object"
+}
