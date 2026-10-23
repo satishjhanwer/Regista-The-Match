@@ -88,6 +88,7 @@ class MatchState:
         self.score = {t: 0 for t in self.team_ids}
         self.player_goals: dict[str, int] = defaultdict(int)
         self.goal_events: dict[str, list[str]] = defaultdict(list)  # player_id -> goal event ids, in order
+        self.player_totals: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
         self.totals: dict[str, dict[str, float]] = {t: defaultdict(float) for t in self.team_ids}
         self.windows: dict[str, TeamWindows] = {t: TeamWindows() for t in self.team_ids}
         self.passes: dict[str, object] = {}  # event_id -> PassEvent, for assist / key-pass lookups
@@ -157,6 +158,8 @@ class MatchState:
 
         if typ in ON_BALL and ev.team_id is not None:
             self._on_ball(ev)
+        if ev.player_id is not None:
+            self._on_player(ev)
         if typ == "pass":
             self._on_pass(ev, out)
         elif typ == "carry":
@@ -177,6 +180,24 @@ class MatchState:
         self.last_event = ev
         self.n_events += 1
         return out
+
+    def _on_player(self, ev) -> None:
+        pt = self.player_totals[ev.player_id]
+        typ = ev.type
+        if typ == "pass":
+            pt["passes"] += 1
+            pt["passes_complete"] += ev.outcome == "complete"
+        elif typ == "shot":
+            pt["shots"] += 1
+            pt["goals"] += ev.outcome == "goal"
+        elif typ == "pressure":
+            pt["pressures"] += 1
+        elif typ == "tackle":
+            pt["tackles_won"] += ev.outcome == "won"
+        elif typ == "interception":
+            pt["interceptions"] += 1
+        elif typ == "sprint" and ev.top_speed_kmh > pt["top_speed_kmh"]:
+            pt["top_speed_kmh"] = ev.top_speed_kmh
 
     def _on_ball(self, ev) -> None:
         prev = self.last_on_ball_team

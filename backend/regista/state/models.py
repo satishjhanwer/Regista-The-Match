@@ -44,6 +44,7 @@ class ExpectedGoals:
         xg = self.model.predict(shot_features(ev))
         st.shot_xg[ev.event_id] = xg
         st.count(ev.team_id, "xg", xg)
+        st.player_totals[ev.player_id]["xg"] += xg
         st.emit(out, f"{ev.team_id}.shot_xg", xg)
         st.emit(out, f"{ev.team_id}.xg_total", st.totals[ev.team_id]["xg"])
         st.emit(out, f"{ev.team_id}.xg_10m", st.window(ev.team_id, "xg", "10m"), "10m")
