@@ -29,6 +29,10 @@ backend/regista/sim/        Simulator: roster.py (fictional teams), director.py 
 backend/regista/state/      Hot-path metrics: core.py (MatchState, rolling windows), models.py (+ models/*.json), momentum.py,
                             control.py, press.py (gated CUSUM), records.py (speeds, milestones). build_state(meta) wires all
 backend/regista/detect/     detectors.py (9 kinds), pipeline.py (InsightPipeline, cooldown/dedupe, run_match), __main__.py (CLI)
+backend/regista/agents/     verifier.py (code gate), templates.py + phrases.py (en/es/hi fallback), profiles.py (presets,
+                            relevance, slots), context.py (snapshot + Analyst tools), analyst.py, narrator.py,
+                            orchestrator.py (WarmPath: verify/retry/fallback, cache, traces), recap.py, __main__.py (record)
+backend/regista/api/        replay.py (deterministic Replay), hub.py (shared clock, fan-out), app.py (FastAPI + /ws). docs/API.md
 backend/scripts/            export_schemas.py (Pydantic -> JSON Schema), hello_foundry.py (agent smoke test), fit_models.py
 backend/tests/              simulator, contracts, state/models/momentum/control/press/records, test_detect.py (acceptance)
 contracts/schema/           Exported JSON Schemas (generated, committed)
@@ -36,19 +40,20 @@ frontend/src/contracts/     TS types generated from contracts/schema (generated,
 data/                       Canonical demo match (seed 7) + truth file
 ```
 
-Planned (not yet built): `backend/regista/agents/` (Analyst, Narrator, Verifier, orchestration), `backend/regista/api/` (FastAPI + WebSocket replay),
-`frontend/` Vite app, `infra/` Bicep + `azure.yaml`.
+Planned (not yet built): `frontend/` Vite app, `infra/` Bicep + `azure.yaml`.
 
 ## Commands
 
 ```bash
 cd backend
-pip install -e ".[dev,agents]"
+pip install -e ".[dev,agents,api]"
 pytest -q                                   # must stay green
 ruff check . && ruff format .               # line length 140
 python -m regista.sim generate --seed 7 --out ../data
 python -m regista.sim summary ../data/RGS-2026-0001.json
 python -m regista.detect ../data/RGS-2026-0001.json   # insight timeline + per-event latency
+python -m regista.api                       # replay API on :8000 (see docs/API.md)
+python -m regista.agents record ../data/RGS-2026-0001.json --out ../data/RGS-2026-0001.renders.json
 python scripts/fit_models.py                # refit pass/xG models on seeds 1-5, report vs truth on seed 7
 python scripts/hello_foundry.py             # needs .env (see .env.example) + az login
 
@@ -89,6 +94,7 @@ an offline demo never need a model. Switch to `foundry` for the recorded demo on
   Env vars `FOUNDRY_PROJECT_ENDPOINT`, `FOUNDRY_MODEL`. Uses the Responses API.
 - `agent_framework.foundry` also exposes `FoundryEvals` / `evaluate_traces` (groundedness eval for the Verifier story).
 - Function tools: plain functions with `Annotated[type, Field(description=...)]` params and a docstring.
+- Tests drive the real Agent loop with `tests/fake_llm.py` (`ScriptedClient`: FunctionInvocationLayer + BaseChatClient).
 - The API moves fast. If something does not match, inspect signatures (`inspect.signature`) before guessing.
 
 ## Simulator facts the next stages rely on

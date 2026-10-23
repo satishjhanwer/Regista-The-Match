@@ -154,3 +154,44 @@ Remaining false alarms are noise during the first-half baseline window.
   25-32 m, and length alone missed S4 on seed 7.
 - G2's press -> turnover -> goal chain is built from the possession that produced the goal: who won it, seconds to goal,
   distance from goal, and the pressed share if the scoring team has an active press alarm.
+
+## D20. The Verifier is code, not a model
+
+The gate that keeps ungrounded claims off screen must not be able to hallucinate. `agents/verifier.py` checks each
+claim mechanically. Cited fact ids must exist. Every number must equal a cited fact's value, previous value, a number
+inside a string value (score, clock) or label (window length), its 0-1 value as a percentage, or the moment's clock.
+Fan-colour claims with no citation may contain no numbers. Players named must be entities of the insight or cited
+values. Numbers are read after normalizing Devanagari digits and decimal commas, so the check is the same in en/es/hi.
+Its feedback text goes back to the Narrator for the single retry. Limit: numbers written as words ("two") are not
+caught. Prompts ask for digits.
+
+## D21. Analyst tools read a frozen snapshot and mint candidate facts
+
+The warm path runs after the hot path has moved on, so `capture(state, insight)` freezes what the Analyst may see
+when the insight fires (window stats for both teams and windows, player totals, score, momentum, chaos). Tools never
+compute. Every number a tool returns is registered as a candidate fact with metric evidence. Only candidates the
+Analyst selects are appended to the insight, so the Narrator can cite them and the Verifier can check them. A number
+that never became a fact cannot reach the screen. The rule-based Analyst (no model) selects the detector's facts.
+
+## D22. Narration output is structured, and code formats the numbers it can
+
+The Narrator returns JSON with a headline, claims with `fact_ids`, and a stat callout fact id. The body is the claims
+joined (the Verifier enforces this). The stat callout value is formatted from the fact by code. Template narration is
+the fallback, built from per-kind phrase specs in `agents/phrases.py`, written per language rather than translated.
+A test renders every insight on six seeds for 14 profiles and requires all of them to verify. On a second rejection,
+an error or a 20 s timeout, the template is used and the trace records why.
+
+## D23. One shared replay clock, renders cached per (insight, profile)
+
+The API models a studio feed: one replay clock (speed, pause, seek, step), many viewers. Each tick pushes clock and
+metrics, raw events and overlays to every viewer. An insight is dispatched to a viewer only if `relevance()` keeps it
+for that profile, and only verified or revised renders are sent. The Analyst runs once per insight and each
+(insight, profile) renders once (single-flight), so N viewers with the same profile cost one model call. Seeking
+backwards rebuilds the hot path (under 100 ms). Insight ids are deterministic, so the cache survives seeks.
+Moments skipped by a seek go to history, not to screens.
+
+## D24. Recorded runs for the demo
+
+`python -m regista.agents record` renders every insight (recaps included) for the preset profiles and writes a
+JSON cache. `REGISTA_AGENT_CACHE` makes the API serve it, with a "cache" step at the head of each trace. A video take
+then never depends on model latency or rate limits, and the trace shown is the recorded one, not a staged one.

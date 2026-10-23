@@ -69,6 +69,15 @@ az login
 python scripts/hello_foundry.py
 ```
 
+Run the replay API (template narration unless an LLM provider is set in `backend/.env`):
+
+```bash
+pip install -e ".[dev,agents,api]"
+python -m regista.api                      # http://127.0.0.1:8000/api/health, ws://127.0.0.1:8000/ws?profile=analyst-en
+python -m regista.agents record ../data/RGS-2026-0001.json --out ../data/RGS-2026-0001.renders.json
+REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.json python -m regista.api   # serve a recorded run
+```
+
 Regenerate contracts after changing a model:
 
 ```bash
@@ -122,7 +131,12 @@ Storyline tests run across six seeds to make sure each signal is real, not one l
       momentum EWMA, control vs chaos, PPDA-like press with a gated CUSUM change-point, speed records, milestones, nine
       detectors emitting evidence-backed `Insight`s. Seed 7 replay: 40 insights from 2,406 events in about 70 ms,
       p95 under 0.05 ms per event. Try `python -m regista.detect ../data/RGS-2026-0001.json` from `backend/`.
-- [ ] Analyst, Narrator, Verifier agents and recap
+- [x] Analyst, Narrator, Verifier agents and recap (`backend/regista/agents`): Agent Framework agents with tools
+      over a frozen match-state snapshot, a code Verifier with one feedback retry, and a verified template fallback in
+      English, Spanish and Hindi. Tested through Agent Framework's real tool loop with a scripted model; first live
+      Foundry run pending.
+- [x] Replay API (`backend/regista/api`): shared replay clock, `/ws?profile=` stream of ticks, events and verified
+      overlays, per-profile fan-out with caching, recorded runs for demos. Protocol in [`docs/API.md`](docs/API.md).
 - [ ] React overlay and fan controls
 - [ ] Azure Container Apps deployment with `azd up`, OpenTelemetry tracing
 

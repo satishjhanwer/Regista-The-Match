@@ -30,16 +30,19 @@ Package `backend/regista/state/` and `backend/regista/detect/`.
       Press: all six acceptance seeds pass; on 40 seeds the gated CUSUM has 2 false SLM alarms before 55' and 2 misses
       in 58-66' (see D18). S4 is covered at metric level (long-ball share), no dedicated detector. Replay: `python -m regista.detect ../data/RGS-2026-0001.json` (p95 ~50 us per event).
 
-## Sat 24 Oct: agents + API
+## Sat 24 Oct: agents + API (done, pending a real model run)
 
 Package `backend/regista/agents/` and `backend/regista/api/`.
 
-- [ ] Analyst (tools: get_state, get_facts, get_player, get_window_stats), Narrator, Verifier on Agent Framework + Foundry
-- [ ] Verifier: numeric/entity check of each `Claim` against cited facts; retry once; template fallback
-- [ ] Recap at half time and full time from accumulated insights
-- [ ] FastAPI: replay service (speed x10/x20, pause, seek), WebSocket `/ws?profile=...` streaming `OverlayPayload`
-- [ ] Per-profile fan-out: one Insight -> N RenderedInsights (cache by insight_id + profile)
-- [ ] Record a cached agent-output run for deterministic demo recording
+- [x] Analyst (tools: get_state, get_facts, get_player, get_window_stats), Narrator, Verifier on Agent Framework + Foundry
+      Built on Agent Framework and tested through its real tool loop with a scripted chat client. Not yet run against
+      Foundry or any live model (no Azure access or local model on this machine yet).
+- [x] Verifier: numeric/entity check of each `Claim` against cited facts; retry once; template fallback
+- [x] Recap at half time and full time from accumulated insights
+- [x] FastAPI: replay service (speed x10/x20, pause, seek), WebSocket `/ws?profile=...` streaming `OverlayPayload`
+- [x] Per-profile fan-out: one Insight -> N RenderedInsights (cache by insight_id + profile)
+- [x] Record a cached agent-output run for deterministic demo recording (`python -m regista.agents record`)
+- [ ] Record the demo cache with the real model once one is configured, and check a Verifier rejection shows up in it
 
 ## Sun 25 Oct: frontend
 
