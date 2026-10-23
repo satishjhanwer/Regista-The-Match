@@ -1,0 +1,458 @@
+{
+  "$defs": {
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "fact_ids": {
+          "description": "Facts this sentence relies on; empty means opinion/colour only",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "fact_ids"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "DisplayDirective": {
+      "additionalProperties": false,
+      "properties": {
+        "slot": {
+          "enum": [
+            "lower_third",
+            "top_bar",
+            "side_panel",
+            "ticker",
+            "player_tag"
+          ],
+          "type": "string"
+        },
+        "template_id": {
+          "type": "string"
+        },
+        "show_at_match_clock_s": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "ttl_ms": {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        "priority": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "slot",
+        "template_id",
+        "show_at_match_clock_s",
+        "ttl_ms",
+        "priority"
+      ],
+      "title": "DisplayDirective",
+      "type": "object"
+    },
+    "Entities": {
+      "additionalProperties": false,
+      "properties": {
+        "team_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "player_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "team_ids",
+        "player_ids"
+      ],
+      "title": "Entities",
+      "type": "object"
+    },
+    "EvidenceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "event",
+            "metric"
+          ],
+          "type": "string"
+        },
+        "ref": {
+          "description": "event_id for events, metric key (e.g. 'away.ppda') for metrics",
+          "type": "string"
+        },
+        "window_start_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "window_end_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "ref",
+        "window_start_s",
+        "window_end_s"
+      ],
+      "title": "EvidenceRef",
+      "type": "object"
+    },
+    "Fact": {
+      "additionalProperties": false,
+      "properties": {
+        "fact_id": {
+          "type": "string"
+        },
+        "key": {
+          "description": "Stable machine key, e.g. 'home.pass_completion_own_half'",
+          "type": "string"
+        },
+        "label": {
+          "description": "Human label in English; renderers localize",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "previous_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Baseline the value is compared against, for deltas"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "fact_id",
+        "key",
+        "label",
+        "value",
+        "unit",
+        "previous_value",
+        "evidence"
+      ],
+      "title": "Fact",
+      "type": "object"
+    },
+    "Insight": {
+      "additionalProperties": false,
+      "properties": {
+        "insight_id": {
+          "type": "string"
+        },
+        "match_id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "goal",
+            "momentum_shift",
+            "press_change",
+            "control_vs_chaos",
+            "rhythm_shift",
+            "shot_quality",
+            "key_pass",
+            "player_tag",
+            "milestone",
+            "period_summary",
+            "recap"
+          ],
+          "type": "string"
+        },
+        "priority": {
+          "description": "5 = interrupt-worthy",
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "clock": {
+          "$ref": "#/$defs/MatchClock"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "ttl_ms": {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        "entities": {
+          "$ref": "#/$defs/Entities"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/Fact"
+          },
+          "type": "array"
+        },
+        "why_it_matters_hint": {
+          "description": "Deterministic detector rationale handed to the agents, never shown verbatim",
+          "type": "string"
+        }
+      },
+      "required": [
+        "insight_id",
+        "match_id",
+        "kind",
+        "priority",
+        "clock",
+        "created_at",
+        "ttl_ms",
+        "entities",
+        "facts",
+        "why_it_matters_hint"
+      ],
+      "title": "Insight",
+      "type": "object"
+    },
+    "MatchClock": {
+      "additionalProperties": false,
+      "properties": {
+        "period": {
+          "enum": [
+            1,
+            2
+          ],
+          "type": "integer"
+        },
+        "t": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "match_clock_s": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "display": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "period",
+        "t",
+        "match_clock_s",
+        "display"
+      ],
+      "title": "MatchClock",
+      "type": "object"
+    },
+    "RenderedInsight": {
+      "additionalProperties": false,
+      "properties": {
+        "insight_id": {
+          "type": "string"
+        },
+        "profile_id": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "analyst",
+            "casual",
+            "player_focus"
+          ],
+          "type": "string"
+        },
+        "headline": {
+          "maxLength": 80,
+          "type": "string"
+        },
+        "body": {
+          "maxLength": 320,
+          "type": "string"
+        },
+        "stat_callout": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StatCallout"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "type": "array"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        }
+      },
+      "required": [
+        "insight_id",
+        "profile_id",
+        "language",
+        "mode",
+        "headline",
+        "body",
+        "stat_callout",
+        "claims",
+        "verification"
+      ],
+      "title": "RenderedInsight",
+      "type": "object"
+    },
+    "StatCallout": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "fact_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value",
+        "fact_id"
+      ],
+      "title": "StatCallout",
+      "type": "object"
+    },
+    "Verification": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "verified",
+            "revised",
+            "rejected"
+          ],
+          "type": "string"
+        },
+        "checked_claims": {
+          "default": 0,
+          "type": "integer"
+        },
+        "rejected_claims": {
+          "default": 0,
+          "type": "integer"
+        },
+        "notes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "checked_claims",
+        "rejected_claims",
+        "notes"
+      ],
+      "title": "Verification",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "type": "string"
+    },
+    "insight": {
+      "$ref": "#/$defs/Insight"
+    },
+    "rendered": {
+      "$ref": "#/$defs/RenderedInsight"
+    },
+    "display": {
+      "$ref": "#/$defs/DisplayDirective"
+    }
+  },
+  "required": [
+    "schema_version",
+    "insight",
+    "rendered",
+    "display"
+  ],
+  "title": "OverlayPayload",
+  "type": "object"
+}

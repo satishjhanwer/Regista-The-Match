@@ -1,0 +1,116 @@
+{
+  "$defs": {
+    "Storyline": {
+      "additionalProperties": false,
+      "properties": {
+        "storyline_id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "start_clock_s": {
+          "type": "number"
+        },
+        "end_clock_s": {
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "expected_signals": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "storyline_id",
+        "label",
+        "start_clock_s",
+        "end_clock_s",
+        "description",
+        "expected_signals"
+      ],
+      "title": "Storyline",
+      "type": "object"
+    },
+    "TruthShot": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "type": "string"
+        },
+        "xg_true": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "event_id",
+        "xg_true"
+      ],
+      "title": "TruthShot",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "match_id": {
+      "type": "string"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "final_score": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "type": "object"
+    },
+    "storylines": {
+      "items": {
+        "$ref": "#/$defs/Storyline"
+      },
+      "type": "array"
+    },
+    "scripted_event_ids": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "shots": {
+      "items": {
+        "$ref": "#/$defs/TruthShot"
+      },
+      "type": "array"
+    },
+    "pass_model": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "type": "object"
+    },
+    "xg_model": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "match_id",
+    "seed",
+    "final_score",
+    "storylines",
+    "scripted_event_ids",
+    "shots",
+    "pass_model",
+    "xg_model"
+  ],
+  "title": "GroundTruth",
+  "type": "object"
+}
