@@ -21,6 +21,9 @@ agents = [
     "azure-identity>=1.17",
     "python-dotenv>=1.0",
 ]
+local = [
+    "agent-framework-foundry-local>=1.0",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.6",

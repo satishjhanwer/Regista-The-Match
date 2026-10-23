@@ -23,7 +23,7 @@ React + TypeScript overlay with fan controls (mode, club, player focus, language
 
 ## Repo layout
 
-```
+```text
 backend/regista/contracts/  Pydantic contracts. SINGLE SOURCE OF TRUTH for events, Insight, OverlayPayload, FanProfile
 backend/regista/sim/        Simulator: roster.py (fictional teams), director.py (storylines + script), engine.py, __main__.py (CLI)
 backend/scripts/            export_schemas.py (Pydantic -> JSON Schema), hello_foundry.py (agent smoke test)
@@ -70,6 +70,13 @@ CI (`.github/workflows/ci.yml`) runs ruff, pytest, and fails if generated schema
 - **Secrets:** `.env` is gitignored. Prefer Entra ID (`DefaultAzureCredential`) over API keys.
 - **Determinism:** simulator uses one seeded `random.Random`. Same seed must produce byte-identical output (tested).
 
+## LLM access (important)
+
+The owner has **no Azure subscription yet**. All agent code must get its client from `regista.llm.build_chat_client()`,
+never construct a client directly. Providers: `foundry` (submission target), `azure_openai`, `foundry_local`,
+`openai_compat` (Ollama etc.), `none` (deterministic templates). Every agent path must work with `none` so tests, CI and
+an offline demo never need a model. Switch to `foundry` for the recorded demo once Azure is available.
+
 ## Agent Framework notes (verified 23 Oct 2026, agent-framework-core 1.22)
 
 - Packages are split: `agent-framework-core`, `agent-framework-foundry`, `agent-framework-openai`. All pinned in `pyproject.toml` extra `agents`.
@@ -85,7 +92,7 @@ CI (`.github/workflows/ci.yml`) runs ruff, pytest, and fails if generated schema
 Demo match seed 7: **Northvale 2-1 Saltmere**. Scripted ids are in the truth file under `scripted_event_ids` (G1, G2, M1, G3).
 
 | When | Storyline / moment | What detectors should find |
-|---|---|---|
+| --- | --- | --- |
 | 0-25' | S1 Northvale control | high NVL completion, long sequences, low sequence entropy |
 | 25-40' | S2 chaos spell | turnovers/min up about 1.5-2x, long-ball share up, short sequences |
 | 38' | G1 Nordgren through ball, Vukovic goal (NVL-09) | key pass (through ball), shot quality |

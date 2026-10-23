@@ -26,7 +26,7 @@ flowchart LR
 Two tiers, by design:
 
 | Tier | What runs | Latency budget | Why |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Hot path | Deterministic metrics, moment detection, stat overlays | under 200 ms per event | Testable, no hallucination risk, no per-event model cost |
 | Warm path | Analyst, Narrator, Verifier agents on detected moments only | 1.5 to 3 s per moment | Broadcast graphics already trail live action; narratives land around stoppages |
 
@@ -41,7 +41,7 @@ Every `Insight` carries facts with evidence references. Personalization never ch
 
 ## Repository layout
 
-```
+```text
 backend/
   regista/contracts/   Pydantic contracts: events, insights, overlay payloads (source of truth)
   regista/sim/         Synthetic match simulator and CLI
@@ -82,11 +82,11 @@ CI fails if the committed schemas or generated TypeScript types drift from the P
 
 The simulator is a seeded possession-chain model with continuous player positions, so pressure, pass difficulty and shot quality emerge from geometry rather than being sampled directly.
 
-* **Movement.** 22 players relax towards a 4-3-3 shape that shifts with the ball (time constant about 1.8 s). Out of possession, the `1 + round(2 * press)` nearest defenders close the ball down to a distance that shrinks as pressing intensity rises.
-* **Passes.** Completion is Bernoulli with `logit p = 3.6 - 0.075 L - 0.55 n_passer - 0.35 n_receiver - 0.6 [high] + skill`, where `L` is length in metres and `n` counts opponents within 5 m.
-* **Shots.** Ground-truth xG is logistic in distance, goal-mouth angle, header flag and nearby defenders. Organic shots never score; goals come only from the script, so the scoreline is fixed while chance quality stays realistic.
-* **Speeds.** Pass ball speed, shot speed, carry top speed and sprint events (distance, peak speed) are emitted for threshold-based player tagging.
-* **Determinism.** One seeded RNG drives everything: same seed, same match.
+- **Movement.** 22 players relax towards a 4-3-3 shape that shifts with the ball (time constant about 1.8 s). Out of possession, the `1 + round(2 * press)` nearest defenders close the ball down to a distance that shrinks as pressing intensity rises.
+- **Passes.** Completion is Bernoulli with `logit p = 3.6 - 0.075 L - 0.55 n_passer - 0.35 n_receiver - 0.6 [high] + skill`, where `L` is length in metres and `n` counts opponents within 5 m.
+- **Shots.** Ground-truth xG is logistic in distance, goal-mouth angle, header flag and nearby defenders. Organic shots never score; goals come only from the script, so the scoreline is fixed while chance quality stays realistic.
+- **Speeds.** Pass ball speed, shot speed, carry top speed and sprint events (distance, peak speed) are emitted for threshold-based player tagging.
+- **Determinism.** One seeded RNG drives everything: same seed, same match.
 
 Output per match: `data/<match_id>.json` (metadata and ordered events, about 2,400 events) and `data/<match_id>.truth.json` (storylines, scripted event ids, per-shot true xG, model coefficients). The truth file is never streamed to the pipeline; it exists to evaluate the analytics layer.
 
@@ -95,7 +95,7 @@ Output per match: `data/<match_id>.json` (metadata and ordered events, about 2,4
 Northvale FC 2-1 Saltmere Athletic.
 
 | Window | Storyline | Signal the analytics layer should find |
-|---|---|---|
+| --- | --- | --- |
 | 0 to 25' | Northvale control the tempo | High home completion, long sequences, low sequence entropy |
 | 25 to 40' | A chaotic spell | Turnover rate up for both sides, long-ball share up |
 | 38' | Goal: Nordgren through ball, Vukovic finishes | Key pass, shot quality |
@@ -109,8 +109,8 @@ Storyline tests run across six seeds to make sure each signal is real, not one l
 
 ### Event coordinate and clock conventions
 
-* Absolute pitch metres, `x` in [0, 105], `y` in [0, 68]. Northvale attack `x = 105` in the first half; use `attacks_right(meta, team_id, period)`.
-* `t` is seconds into the period, stoppage included. `match_clock_s` is the broadcast clock (period 2 restarts at 2700). `elapsed_s` is monotonic playing time and is what replay and windowing use.
+- Absolute pitch metres, `x` in [0, 105], `y` in [0, 68]. Northvale attack `x = 105` in the first half; use `attacks_right(meta, team_id, period)`.
+- `t` is seconds into the period, stoppage included. `match_clock_s` is the broadcast clock (period 2 restarts at 2700). `elapsed_s` is monotonic playing time and is what replay and windowing use.
 
 ## Status
 
