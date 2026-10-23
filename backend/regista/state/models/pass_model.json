@@ -1,0 +1,26 @@
+{
+  "name": "pass_model",
+  "features": [
+    "length_m",
+    "passer_defenders_5m",
+    "receiver_defenders_5m",
+    "high"
+  ],
+  "intercept": 4.215837,
+  "coef": {
+    "length_m": -0.086768,
+    "passer_defenders_5m": -0.743628,
+    "receiver_defenders_5m": -0.359645,
+    "high": -0.636817
+  },
+  "label": "P(pass complete)",
+  "trained_on_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "n_train": 5941,
+  "train_base_rate": 0.793301
+}
