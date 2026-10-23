@@ -26,15 +26,17 @@ React + TypeScript overlay with fan controls (mode, club, player focus, language
 ```text
 backend/regista/contracts/  Pydantic contracts. SINGLE SOURCE OF TRUTH for events, Insight, OverlayPayload, FanProfile
 backend/regista/sim/        Simulator: roster.py (fictional teams), director.py (storylines + script), engine.py, __main__.py (CLI)
-backend/scripts/            export_schemas.py (Pydantic -> JSON Schema), hello_foundry.py (agent smoke test)
-backend/tests/              test_simulator.py (invariants + storylines across 6 seeds), test_contracts.py (schema drift guard)
+backend/regista/state/      Hot-path metrics: core.py (MatchState, rolling windows), models.py (+ models/*.json), momentum.py,
+                            control.py, press.py (gated CUSUM), records.py (speeds, milestones). build_state(meta) wires all
+backend/regista/detect/     detectors.py (9 kinds), pipeline.py (InsightPipeline, cooldown/dedupe, run_match), __main__.py (CLI)
+backend/scripts/            export_schemas.py (Pydantic -> JSON Schema), hello_foundry.py (agent smoke test), fit_models.py
+backend/tests/              simulator, contracts, state/models/momentum/control/press/records, test_detect.py (acceptance)
 contracts/schema/           Exported JSON Schemas (generated, committed)
 frontend/src/contracts/     TS types generated from contracts/schema (generated, committed, never hand-edit)
 data/                       Canonical demo match (seed 7) + truth file
 ```
 
-Planned (not yet built): `backend/regista/state/` (metrics engine), `backend/regista/detect/` (moment detectors),
-`backend/regista/agents/` (Analyst, Narrator, Verifier, orchestration), `backend/regista/api/` (FastAPI + WebSocket replay),
+Planned (not yet built): `backend/regista/agents/` (Analyst, Narrator, Verifier, orchestration), `backend/regista/api/` (FastAPI + WebSocket replay),
 `frontend/` Vite app, `infra/` Bicep + `azure.yaml`.
 
 ## Commands
@@ -46,6 +48,8 @@ pytest -q                                   # must stay green
 ruff check . && ruff format .               # line length 140
 python -m regista.sim generate --seed 7 --out ../data
 python -m regista.sim summary ../data/RGS-2026-0001.json
+python -m regista.detect ../data/RGS-2026-0001.json   # insight timeline + per-event latency
+python scripts/fit_models.py                # refit pass/xG models on seeds 1-5, report vs truth on seed 7
 python scripts/hello_foundry.py             # needs .env (see .env.example) + az login
 
 # after changing any contract model:

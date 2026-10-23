@@ -70,3 +70,87 @@ OpenAI via `OpenAIChatClient` is the fallback when only an AOAI resource exists.
 No Azure subscription at build start. `regista/llm.py` selects foundry, azure_openai, foundry_local, openai_compat or none
 from env. Build and test against a local model or templates; switch to Foundry for the recorded demo and deployment, which
 the rubric (hero technologies, runs on Azure) needs. Agents must degrade to deterministic templates when the client is None.
+
+## D13. State engine: one incremental object, pluggable components
+
+`MatchState.apply(event)` updates core counters (per-team rolling 5 and 10 minute sums plus match totals), then runs
+components in a fixed order: pass difficulty, xG, momentum, control vs chaos, press, records. It returns `MetricUpdate`s
+whose window bounds (in `elapsed_s`) double as `EvidenceRef` windows. Events must arrive in non-decreasing `elapsed_s`
+(out-of-order raises). Rolling windows run across half-time, because `elapsed_s` has no break gap. Momentum and the press
+CUSUM reset per half on purpose. About 25 us per event in pure Python, no numpy needed.
+
+## D14. Pass difficulty model
+
+Logistic on length, passer and receiver defenders within 5 m, and high-ball flag, fitted by Newton-Raphson on seeds 1-5
+(5,941 passes). The slopes land near the simulator's truth (length -0.087 vs -0.075, receiver pressure -0.36 vs -0.35,
+high -0.64 vs -0.60). The intercept (4.22 vs 3.60) absorbs the per-team pass-skill offset that the features cannot see,
+and passer pressure (-0.74 vs -0.55) also absorbs the chaos spell, where pressure and low skill coincide. Seed 7 Brier:
+0.129 vs 0.165 for the constant training rate. 5-bin calibration is within 0.03 in every bin.
+`python scripts/fit_models.py` refits and prints all of this.
+
+## D15. xG fitted on soft labels
+
+Organic shots never score (D6), so binary outcomes carry no signal: 3 goals per match, all scripted. The fit script uses
+`xg_true` as soft labels (cross-entropy). The truth file is read by the script only, never at runtime. Because `xg_true`
+is a noiseless logistic of the same four features, this recovers the truth coefficients exactly, so seed 7 calibration
+matches by construction. Expected Brier on seed 7: 0.136 vs 0.163 for mean xG. As an honest robustness check, the script
+also fits on Bernoulli(`xg_true`) outcomes (seeded, 22 goals in 150 shots): 0.142, still better than baseline.
+
+## D16. Momentum signal
+
+Impulse EWMA per team, half-life 4 minutes on `elapsed_s`, reset at each period start. Weights: completed pass ending in
+the attacking final third 1.0, carry ending there 0.5, shot 10 x xG. The index is (H - A) / (H + A). Both teams decay at
+the same rate, so the index only changes when someone adds threat. The detector fires when a different team becomes
+dominant (|index| >= 0.4, released below 0.1). It waits 6 minutes into a half and needs a minimum activity level, so the
+half-time reset does not produce "100% momentum" noise.
+
+## D17. Control vs chaos weights
+
+Chaos = 0.4 x turnover rate (open-play turnovers per team per minute, / 2.0, clipped) + 0.3 x sequence shortness
+(1 - (passes per possession - 1) / 7, clipped) + 0.3 x conditional Shannon entropy (bits) of "does the next on-ball
+action stay with this team". Team control = 1 - chaos on the team's own possessions. Scales come from observed ranges:
+S1 about 0.4 match chaos, S2 about 0.87. Regimes have hysteresis (chaos at >= 0.70, held >= 0.60; control at <= 0.45,
+held <= 0.55). "Control" also needs a dominant side: control >= 0.6, 0.1 above the opponent, and >= 55% of the passes.
+Without that, a calm game flip-flops between "X in control" and "Y in control".
+
+## D18. Press change: gated CUSUM on the pressed-pass indicator
+
+Reported metric, as planned: pressing team's pressure events per opponent pass (PPDA-like) over 5 and 10 minutes,
+plus the share of opponent passes made with a defender within 5 m.
+
+Change-point design, and why it differs from the plan:
+
+- **The S2 confound is real.** During the chaos spell both teams press at 0.65, while SLM sit off at 0.25 in S1. With a
+  first-half baseline from S1, SLM's pressure per pass rises about 3x in S2, the same relative jump as S3. Every
+  ungated CUSUM variant false-alarmed in 25-40' on 7-10 of 12 seeds. Only the absolute size of the shift separates
+  them (S2 about +0.3, S3 about +0.6 pressures per pass).
+- **Stability gate.** A press change means a team presses harder while keeping its own game. In S2, SLM's own
+  completion collapses (about 0.5 vs 0.8); in S3 it does not. The CUSUM resets while the presser's completion is
+  below its baseline (last 3 min by 0.12, or its last 5 passes by 0.25). That rise is reported by control vs chaos.
+- **CUSUM input.** The input is the per-pass indicator "passer had a defender within 5 m", not raw pressure counts.
+  Pressure events are bursty (several per possession), and the count CUSUM was much noisier for the same delay.
+- **Baseline and confirmation.** k = 0.25 is set from the minimum shift worth reporting, not from noise; h = 2.5.
+  The baseline is the first 20 minutes of each half, in-control samples only, and the CUSUM arms after 5 minutes.
+  S3 starts 13 minutes into the second half, so waiting for the full 20-minute baseline would detect too late.
+  An alarm also needs the 3-minute pressed share to exceed baseline + 0.25; until then S is held.
+- **One insight per press spell.** The detector re-arms only when the pressed share falls back near baseline.
+
+Measured on 40 seeds: SLM false alarm before 55' on 2, miss of 58-66' on 2. Seeds 1-5 and 7 are clean. On held-out
+seeds 8-25 (end-to-end), 15/18 pass every acceptance criterion; all three failures are press timing (one at 66.9').
+Remaining false alarms are noise during the first-half baseline window.
+
+## D19. Detector conventions
+
+- Insight ids are `<match>-INS-<n>`. Fact ids are `<insight>-F<n>`. `created_at` = kickoff + `elapsed_s`, so replays
+  are byte-identical.
+- Cooldowns apply per (kind, scope); scope is team, player or match. Dedupe keys come from the triggering event or
+  regime. Detectors with regimes (momentum, control vs chaos, press) learn through the `admitted` hook whether the
+  pipeline accepted a draft.
+- Numbers are rounded once, in the fact, so renderings and the Verifier see the same value. Shares are integer percent.
+- Speed records are announced only after 10 minutes and above a floor (sprint 30, shot 100, pass 70 km/h). Milestones
+  use roster career totals before the match plus match events. Evidence is goal event ids plus a
+  `<player>.career_goals_before_match` metric ref.
+- Long ball = non-cross pass over 32 m, or lofted non-cross pass over 25 m. The simulator's long balls often land at
+  25-32 m, and length alone missed S4 on seed 7.
+- G2's press -> turnover -> goal chain is built from the possession that produced the goal: who won it, seconds to goal,
+  distance from goal, and the pressed share if the scoring team has an active press alarm.

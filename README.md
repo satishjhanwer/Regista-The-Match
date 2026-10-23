@@ -117,7 +117,11 @@ Storyline tests run across six seeds to make sure each signal is real, not one l
 - [x] Event and overlay contracts, JSON Schema, generated TypeScript types
 - [x] Synthetic simulator with planted storylines and ground truth
 - [x] Foundry + Agent Framework smoke test
-- [ ] Match state engine and moment detectors
+- [x] Match state engine and moment detectors (`backend/regista/state`, `backend/regista/detect`): pass difficulty and xG
+      models fitted on seeds 1-5 (seed 7 Brier 0.129 vs 0.165 baseline for passes; expected Brier 0.136 vs 0.163 for xG),
+      momentum EWMA, control vs chaos, PPDA-like press with a gated CUSUM change-point, speed records, milestones, nine
+      detectors emitting evidence-backed `Insight`s. Seed 7 replay: 40 insights from 2,406 events in about 70 ms,
+      p95 under 0.05 ms per event. Try `python -m regista.detect ../data/RGS-2026-0001.json` from `backend/`.
 - [ ] Analyst, Narrator, Verifier agents and recap
 - [ ] React overlay and fan controls
 - [ ] Azure Container Apps deployment with `azd up`, OpenTelemetry tracing

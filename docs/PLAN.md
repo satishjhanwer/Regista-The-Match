@@ -12,21 +12,23 @@ Update the checkboxes as stages land.
 - [x] Provider-agnostic LLM factory (`regista/llm.py`): foundry, azure_openai, foundry_local, openai_compat, none
 - [ ] Get Azure access (free account) and run `hello_foundry.py` against Foundry; meanwhile run it on a local model
 
-## Fri 23 Oct: match state engine + detectors
+## Fri 23 Oct: match state engine + detectors (done)
 
 Package `backend/regista/state/` and `backend/regista/detect/`.
 
-- [ ] `MatchState.apply(event)` incremental, O(1) per event, keyed by `elapsed_s`
-- [ ] Pass difficulty: own logistic `P(complete | length, passer pressure, receiver pressure, height)`, difficulty = 1 - P.
+- [x] `MatchState.apply(event)` incremental, O(1) per event, keyed by `elapsed_s`
+- [x] Pass difficulty: own logistic `P(complete | length, passer pressure, receiver pressure, height)`, difficulty = 1 - P.
       Fit on seeds other than 7, report calibration vs truth coefficients.
-- [ ] xG: logistic on distance, angle, header, defenders within 5 m. Report Brier score vs `xg_true`.
-- [ ] Momentum: EWMA of territorial/threat delta per team (half-life 3 to 5 min, on `elapsed_s`)
-- [ ] Control vs chaos: rolling turnover rate + mean sequence length + Shannon entropy of possession transitions
-- [ ] Press intensity: opponent pressures per pass (PPDA-like) in rolling window; CUSUM change-point for press shifts
-- [ ] Speed/threshold tagging: sprint >= 30 km/h, shot speed, pass ball speed, match-max records
-- [ ] Milestones: brace/hat-trick, career goal/appearance landmarks from roster
-- [ ] Detectors emit `Insight` with facts + evidence; dedupe and cooldown per kind
-- [ ] Tests: each storyline S1-S4 and moments G1-G3, M1 detected within its window on seeds 1-5, 7; no false press-shift in 0-55'
+- [x] xG: logistic on distance, angle, header, defenders within 5 m. Report Brier score vs `xg_true`.
+- [x] Momentum: EWMA of territorial/threat delta per team (half-life 3 to 5 min, on `elapsed_s`)
+- [x] Control vs chaos: rolling turnover rate + mean sequence length + Shannon entropy of possession transitions
+- [x] Press intensity: opponent pressures per pass (PPDA-like) in rolling window; CUSUM change-point for press shifts
+- [x] Speed/threshold tagging: sprint >= 30 km/h, shot speed, pass ball speed, match-max records
+- [x] Milestones: brace/hat-trick, career goal/appearance landmarks from roster
+- [x] Detectors emit `Insight` with facts + evidence; dedupe and cooldown per kind
+- [x] Tests: each storyline S1-S4 and moments G1-G3, M1 detected within its window on seeds 1-5, 7; no false press-shift in 0-55'
+      Press: all six acceptance seeds pass; on 40 seeds the gated CUSUM has 2 false SLM alarms before 55' and 2 misses
+      in 58-66' (see D18). S4 is covered at metric level (long-ball share), no dedicated detector. Replay: `python -m regista.detect ../data/RGS-2026-0001.json` (p95 ~50 us per event).
 
 ## Sat 24 Oct: agents + API
 
