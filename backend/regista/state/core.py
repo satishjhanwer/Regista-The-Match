@@ -81,6 +81,7 @@ class MatchState:
         self.last_event = None
         self.score = {t: 0 for t in self.team_ids}
         self.player_goals: dict[str, int] = defaultdict(int)
+        self.goal_events: dict[str, list[str]] = defaultdict(list)  # player_id -> goal event ids, in order
         self.totals: dict[str, dict[str, float]] = {t: defaultdict(float) for t in self.team_ids}
         self.windows: dict[str, TeamWindows] = {t: TeamWindows() for t in self.team_ids}
         self.passes: dict[str, object] = {}  # event_id -> PassEvent, for assist / key-pass lookups
@@ -90,6 +91,7 @@ class MatchState:
         self.poss_id = -1
         self.poss_team: str | None = None
         self.poss_passes = 0
+        self.poss_start = None  # the possession_change event that started the current possession
         self.last_on_ball_team: str | None = None
         self._attacks_right: dict[tuple[str, int], bool] = {(t, p): attacks_right(meta, t, p) for t in self.team_ids for p in (1, 2)}
         self.components: list[Component] = list(components or [])
@@ -97,6 +99,10 @@ class MatchState:
     # ------------------------------------------------------------------ #
     # Helpers
     # ------------------------------------------------------------------ #
+    def component(self, cls):
+        """The first plugged-in component of type ``cls``, or None."""
+        return next((c for c in self.components if isinstance(c, cls)), None)
+
     def opp(self, team_id: str) -> str:
         return self.away_id if team_id == self.home_id else self.home_id
 
@@ -157,6 +163,7 @@ class MatchState:
             if ev.outcome == "goal":
                 self.score[ev.team_id] += 1
                 self.player_goals[ev.player_id] += 1
+                self.goal_events[ev.player_id].append(ev.event_id)
                 self.emit(out, f"{ev.team_id}.goals", self.score[ev.team_id])
 
         for comp in self.components:
@@ -179,7 +186,7 @@ class MatchState:
         if frm is not None and ev.cause in TURNOVER_CAUSES:
             self.count(frm, "turnovers_lost")
             self.emit(out, f"{frm}.turnovers_lost_5m", self.window(frm, "turnovers_lost"), "5m")
-        self.poss_id, self.poss_team, self.poss_passes = ev.possession_id, ev.to_team_id, 0
+        self.poss_id, self.poss_team, self.poss_passes, self.poss_start = ev.possession_id, ev.to_team_id, 0, ev
 
     def _on_pass(self, ev, out: list[MetricUpdate]) -> None:
         team = ev.team_id
