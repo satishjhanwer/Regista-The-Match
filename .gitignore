@@ -16,6 +16,7 @@ venv/
 node_modules/
 dist/
 .vite/
+.history
 
 # Azure
 .azure/
