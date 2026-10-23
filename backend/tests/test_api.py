@@ -31,7 +31,9 @@ def test_rest_basics(client):
     st = client.post("/api/replay", json={"action": "seek", "minute": 30}).json()
     assert st["clock"]["display"].startswith("30:") and not st["playing"]
     assert client.post("/api/replay", json={"action": "speed", "value": 20}).json()["speed"] == 20
-    assert client.post("/api/replay", json={"action": "bogus"}).status_code == 400
+    assert client.post("/api/replay", json={"action": "bogus"}).status_code == 422
+    series = client.get("/api/momentum").json()
+    assert series[0]["minute"] == 0 and 29.5 < series[-1]["minute"] <= 30.5 and all(-1 <= p["index"] <= 1 for p in series)
     kinds = {i["kind"] for i in client.get("/api/insights").json()}
     assert "control_vs_chaos" in kinds and "goal" not in kinds
 
@@ -104,3 +106,32 @@ def test_recorded_run_is_served_from_cache(sims, tmp_path, monkeypatch):
             c.post("/api/replay", json={"action": "step", "value": 60})
             overlay = drain_until(ws, "overlay")
             assert overlay["trace"][0]["agent"] == "cache" and overlay["payload"]["rendered"]["language"] == "es"
+
+
+def test_every_message_matches_the_stream_contract(client):
+    from pydantic import TypeAdapter
+
+    from regista.contracts.stream import StreamMessage
+
+    adapter = TypeAdapter(StreamMessage)
+    client.post("/api/replay", json={"action": "seek", "minute": 37})
+    seen = set()
+    with client.websocket_connect("/ws?profile=casual-en-nvl") as ws:
+        ws.send_json({"type": "control", "action": "nope"})
+        ws.send_json({"type": "control", "action": "step", "value": 120})
+        for _ in range(40):
+            msg = ws.receive_json()
+            adapter.validate_python(msg)
+            seen.add(msg["type"])
+            if "overlay" in seen and "error" in seen:
+                break
+    assert {"hello", "tick", "events", "overlay", "error"} <= seen
+
+
+def test_serves_built_frontend_next_to_the_api(sims, tmp_path, monkeypatch):
+    (tmp_path / "index.html").write_text("<!doctype html><title>Regista</title>", encoding="utf-8")
+    monkeypatch.setenv("REGISTA_STATIC", str(tmp_path))
+    match, _ = sims[7]
+    with TestClient(create_app(match, client=None, autoplay=False)) as c:
+        assert "<title>Regista</title>" in c.get("/").text
+        assert c.get("/api/health").json()["ok"]

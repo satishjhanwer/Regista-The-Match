@@ -16,6 +16,9 @@ from ..agents.recap import build_recap
 from ..contracts.events import MatchFile, format_clock, match_minute
 from ..contracts.insight import Insight
 from ..detect import InsightPipeline
+from ..state import Momentum
+
+MOMENTUM_SAMPLE_MIN = 0.25
 
 
 @dataclass
@@ -37,6 +40,7 @@ class Replay:
         self.cursor = 0
         self.clock_s = 0.0
         self.history = []
+        self.momentum: list[tuple[float, float]] = []  # (match minute, home-positive index), sampled
 
     @property
     def state(self):
@@ -57,6 +61,7 @@ class Replay:
             ev = self.events[self.cursor]
             self.cursor += 1
             step.events.append(ev)
+            self._sample_momentum(ev)
             for ins in self.pipe.process(ev):
                 ctx = capture(self.pipe.state, ins)
                 step.moments.append(ctx)
@@ -66,6 +71,14 @@ class Replay:
         self.history.extend(step.moments)
         self.clock_s = max(self.clock_s, target)
         return step
+
+    def _sample_momentum(self, ev) -> None:
+        minute = match_minute(ev.period, ev.t)
+        if self.momentum and minute - self.momentum[-1][0] < MOMENTUM_SAMPLE_MIN:
+            return
+        mom = self.pipe.state.component(Momentum)
+        if mom is not None:
+            self.momentum.append((round(minute, 2), round(mom.index(self.pipe.state), 3)))
 
     def seek(self, elapsed_s: float) -> Step:
         """Jump to ``elapsed_s``; the returned step holds everything replayed on the way (for history, not for display)."""

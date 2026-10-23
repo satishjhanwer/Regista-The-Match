@@ -8,6 +8,7 @@ Environment:
     REGISTA_SPEED         replay speed, match seconds per wall second (default 10)
     REGISTA_AUTOPLAY      1 to start playing on boot (default 1)
     REGISTA_CORS_ORIGINS  comma-separated origins (default *)
+    REGISTA_STATIC        built frontend to serve at / (default ../frontend/dist when it exists)
     + the LLM provider variables in regista/llm.py (none configured = template Narrator)
 """
 
@@ -20,22 +21,19 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
+from pydantic import ValidationError
 
 from ..agents.orchestrator import WarmPath
 from ..agents.profiles import PRESETS, profile_from_params
 from ..contracts.events import MatchFile
+from ..contracts.stream import ControlRequest, ErrorMessage, MomentumPoint, RenderResponse, ReplayStatus
 from ..llm import build_chat_client, resolve_provider
-from .hub import Hub, Viewer
+from .hub import Hub, Viewer, trace_steps
 from .replay import Replay
 
 DEFAULT_MATCH = Path(__file__).resolve().parents[3] / "data" / "RGS-2026-0001.json"
-
-
-class Control(BaseModel):
-    action: str  # play | pause | speed | seek | step | restart
-    value: float | None = None
-    minute: float | None = None
+DEFAULT_STATIC = Path(__file__).resolve().parents[3] / "frontend" / "dist"
 
 
 def load_match(path: Path) -> MatchFile:
@@ -87,15 +85,20 @@ def create_app(
         return [p.model_dump() for p in PRESETS.values()]
 
     @app.get("/api/replay")
-    async def replay_status():
+    async def replay_status() -> ReplayStatus:
         return hub().status()
 
     @app.post("/api/replay")
-    async def replay_control(body: Control):
+    async def replay_control(body: ControlRequest) -> ReplayStatus:
         try:
             return await hub().control(body.action, body.value, body.minute)
         except ValueError as exc:
             raise HTTPException(400, str(exc)) from exc
+
+    @app.get("/api/momentum")
+    async def momentum() -> list[MomentumPoint]:
+        """Momentum history up to the replay clock, so a viewer joining mid-match sees the whole ribbon."""
+        return [MomentumPoint(minute=m, index=i) for m, i in hub().replay.momentum]
 
     @app.get("/api/insights")
     async def insights():
@@ -109,13 +112,13 @@ def create_app(
         lang: str | None = None,
         team: str | None = None,
         player: str | None = None,
-    ):
+    ) -> RenderResponse:
         """Render an insight for any profile on demand (the side-by-side compare view)."""
         ctx = next((c for c in hub().replay.history if c.insight.insight_id == insight_id), None)
         if ctx is None:
             raise HTTPException(404, "insight not reached yet")
         res = await hub().warm.render(ctx, profile_from_params(profile, mode, lang, team, player))
-        return res.to_json()
+        return RenderResponse(insight=res.insight, rendered=res.rendered, trace=trace_steps(res.trace), source=res.source)
 
     @app.websocket("/ws")
     async def ws(
@@ -132,15 +135,20 @@ def create_app(
         try:
             while True:
                 msg = await websocket.receive_json()  # viewers may also drive the replay
-                if isinstance(msg, dict) and msg.get("type") == "control":
+                if isinstance(msg, dict) and msg.pop("type", None) == "control":
                     try:
-                        await hub().control(msg.get("action", ""), msg.get("value"), msg.get("minute"))
-                    except ValueError as exc:
-                        await websocket.send_json({"type": "error", "error": str(exc)})
+                        req = ControlRequest.model_validate(msg)
+                        await hub().control(req.action, req.value, req.minute)
+                    except (ValidationError, ValueError) as exc:
+                        await websocket.send_json(ErrorMessage(error=str(exc)[:300]).model_dump(mode="json"))
         except WebSocketDisconnect:
             pass
         finally:
             hub().disconnect(viewer)
+
+    static = Path(os.getenv("REGISTA_STATIC", DEFAULT_STATIC))
+    if static.is_dir():  # one service in production: the API and the built overlay app
+        app.mount("/", StaticFiles(directory=static, html=True), name="web")
 
     return app
 

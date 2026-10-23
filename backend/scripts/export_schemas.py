@@ -13,6 +13,7 @@ from pathlib import Path
 
 from regista.contracts.events import GroundTruth, MatchFile
 from regista.contracts.insight import FanProfile, OverlayPayload
+from regista.contracts.stream import StreamContract
 
 OUT = Path(__file__).resolve().parents[2] / "contracts" / "schema"
 
@@ -21,6 +22,7 @@ SCHEMAS = {
     "ground-truth": GroundTruth,
     "overlay-payload": OverlayPayload,
     "fan-profile": FanProfile,
+    "stream": StreamContract,
 }
 
 

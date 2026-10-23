@@ -9,7 +9,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const schemaDir = resolve(root, "contracts", "schema");
 const outDir = resolve(root, "frontend", "src", "contracts");
 
-const schemas = ["match-file", "ground-truth", "overlay-payload", "fan-profile"];
+const schemas = ["match-file", "ground-truth", "overlay-payload", "fan-profile", "stream"];
 const banner = "/* Generated from contracts/schema by `npm run contracts`. Do not edit by hand. */";
 
 await mkdir(outDir, { recursive: true });

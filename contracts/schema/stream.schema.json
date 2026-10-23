@@ -1,0 +1,1310 @@
+{
+  "$defs": {
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "fact_ids": {
+          "description": "Facts this sentence relies on; empty means opinion/colour only",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "fact_ids"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "ControlRequest": {
+      "additionalProperties": false,
+      "description": "POST /api/replay, or {\"type\": \"control\", ...} on the socket.",
+      "properties": {
+        "action": {
+          "enum": [
+            "play",
+            "pause",
+            "speed",
+            "seek",
+            "step",
+            "restart"
+          ],
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "minute": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "action",
+        "value",
+        "minute"
+      ],
+      "title": "ControlRequest",
+      "type": "object"
+    },
+    "DisplayDirective": {
+      "additionalProperties": false,
+      "properties": {
+        "slot": {
+          "enum": [
+            "lower_third",
+            "top_bar",
+            "side_panel",
+            "ticker",
+            "player_tag"
+          ],
+          "type": "string"
+        },
+        "template_id": {
+          "type": "string"
+        },
+        "show_at_match_clock_s": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "ttl_ms": {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        "priority": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "slot",
+        "template_id",
+        "show_at_match_clock_s",
+        "ttl_ms",
+        "priority"
+      ],
+      "title": "DisplayDirective",
+      "type": "object"
+    },
+    "Entities": {
+      "additionalProperties": false,
+      "properties": {
+        "team_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "player_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "team_ids",
+        "player_ids"
+      ],
+      "title": "Entities",
+      "type": "object"
+    },
+    "ErrorMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "error",
+          "default": "error",
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "error"
+      ],
+      "title": "ErrorMessage",
+      "type": "object"
+    },
+    "EventsMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "events",
+          "default": "events",
+          "type": "string"
+        },
+        "events": {
+          "items": {
+            "$ref": "#/$defs/StreamEvent"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "events"
+      ],
+      "title": "EventsMessage",
+      "type": "object"
+    },
+    "EvidenceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "event",
+            "metric"
+          ],
+          "type": "string"
+        },
+        "ref": {
+          "description": "event_id for events, metric key (e.g. 'away.ppda') for metrics",
+          "type": "string"
+        },
+        "window_start_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "window_end_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "ref",
+        "window_start_s",
+        "window_end_s"
+      ],
+      "title": "EvidenceRef",
+      "type": "object"
+    },
+    "Fact": {
+      "additionalProperties": false,
+      "properties": {
+        "fact_id": {
+          "type": "string"
+        },
+        "key": {
+          "description": "Stable machine key, e.g. 'home.pass_completion_own_half'",
+          "type": "string"
+        },
+        "label": {
+          "description": "Human label in English; renderers localize",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "previous_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Baseline the value is compared against, for deltas"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "fact_id",
+        "key",
+        "label",
+        "value",
+        "unit",
+        "previous_value",
+        "evidence"
+      ],
+      "title": "Fact",
+      "type": "object"
+    },
+    "FanProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "profile_id": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "analyst",
+            "casual",
+            "player_focus"
+          ],
+          "type": "string"
+        },
+        "language": {
+          "description": "BCP 47 tag, e.g. en, hi, es",
+          "type": "string"
+        },
+        "favorite_team_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "focus_player_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "metric_of_interest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "profile_id",
+        "mode",
+        "language",
+        "favorite_team_id",
+        "focus_player_id",
+        "metric_of_interest"
+      ],
+      "title": "FanProfile",
+      "type": "object"
+    },
+    "HelloMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "hello",
+          "default": "hello",
+          "type": "string"
+        },
+        "match": {
+          "$ref": "#/$defs/MatchMeta"
+        },
+        "profile": {
+          "$ref": "#/$defs/FanProfile"
+        },
+        "replay": {
+          "$ref": "#/$defs/ReplayStatus"
+        }
+      },
+      "required": [
+        "type",
+        "match",
+        "profile",
+        "replay"
+      ],
+      "title": "HelloMessage",
+      "type": "object"
+    },
+    "Insight": {
+      "additionalProperties": false,
+      "properties": {
+        "insight_id": {
+          "type": "string"
+        },
+        "match_id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "goal",
+            "momentum_shift",
+            "press_change",
+            "control_vs_chaos",
+            "rhythm_shift",
+            "shot_quality",
+            "key_pass",
+            "player_tag",
+            "milestone",
+            "period_summary",
+            "recap"
+          ],
+          "type": "string"
+        },
+        "priority": {
+          "description": "5 = interrupt-worthy",
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "clock": {
+          "$ref": "#/$defs/MatchClock"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "ttl_ms": {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        "entities": {
+          "$ref": "#/$defs/Entities"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/Fact"
+          },
+          "type": "array"
+        },
+        "why_it_matters_hint": {
+          "description": "Deterministic detector rationale handed to the agents, never shown verbatim",
+          "type": "string"
+        }
+      },
+      "required": [
+        "insight_id",
+        "match_id",
+        "kind",
+        "priority",
+        "clock",
+        "created_at",
+        "ttl_ms",
+        "entities",
+        "facts",
+        "why_it_matters_hint"
+      ],
+      "title": "Insight",
+      "type": "object"
+    },
+    "LiveMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "momentum_index": {
+          "description": "Home-positive momentum index in [-1, 1]",
+          "type": "number"
+        },
+        "momentum": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Team id -> share of momentum, 0..1",
+          "type": "object"
+        },
+        "chaos": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Match chaos index over 5 min, 0 calm .. 1 chaotic"
+        },
+        "control": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Team id -> control score over 5 min, 0..1",
+          "type": "object"
+        },
+        "xg": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "type": "object"
+        },
+        "pressed_share": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Pressing team id -> share of opponent passes under pressure (5 min)",
+          "type": "object"
+        },
+        "press_cusum": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "momentum_index",
+        "momentum",
+        "chaos",
+        "control",
+        "xg",
+        "pressed_share",
+        "press_cusum"
+      ],
+      "title": "LiveMetrics",
+      "type": "object"
+    },
+    "MatchClock": {
+      "additionalProperties": false,
+      "properties": {
+        "period": {
+          "enum": [
+            1,
+            2
+          ],
+          "type": "integer"
+        },
+        "t": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "match_clock_s": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "display": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "period",
+        "t",
+        "match_clock_s",
+        "display"
+      ],
+      "title": "MatchClock",
+      "type": "object"
+    },
+    "MatchMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "1.0",
+          "type": "string"
+        },
+        "match_id": {
+          "type": "string"
+        },
+        "competition": {
+          "type": "string"
+        },
+        "venue": {
+          "type": "string"
+        },
+        "kickoff_utc": {
+          "type": "string"
+        },
+        "home": {
+          "$ref": "#/$defs/Team"
+        },
+        "away": {
+          "$ref": "#/$defs/Team"
+        },
+        "home_attacks_right_first_half": {
+          "type": "boolean"
+        },
+        "seed": {
+          "type": "integer"
+        },
+        "generator": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "match_id",
+        "competition",
+        "venue",
+        "kickoff_utc",
+        "home",
+        "away",
+        "home_attacks_right_first_half",
+        "seed",
+        "generator"
+      ],
+      "title": "MatchMeta",
+      "type": "object"
+    },
+    "MomentumPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "minute": {
+          "description": "Football minute (stoppage folded into 45 / 90)",
+          "type": "number"
+        },
+        "index": {
+          "description": "Home-positive momentum index in [-1, 1]",
+          "type": "number"
+        }
+      },
+      "required": [
+        "minute",
+        "index"
+      ],
+      "title": "MomentumPoint",
+      "type": "object"
+    },
+    "OverlayMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "overlay",
+          "default": "overlay",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "llm",
+            "llm_revised",
+            "template",
+            "template_fallback",
+            "cache"
+          ],
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/OverlayPayload"
+        },
+        "trace": {
+          "items": {
+            "$ref": "#/$defs/TraceStep"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "source",
+        "payload",
+        "trace"
+      ],
+      "title": "OverlayMessage",
+      "type": "object"
+    },
+    "OverlayPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "1.0",
+          "type": "string"
+        },
+        "insight": {
+          "$ref": "#/$defs/Insight"
+        },
+        "rendered": {
+          "$ref": "#/$defs/RenderedInsight"
+        },
+        "display": {
+          "$ref": "#/$defs/DisplayDirective"
+        }
+      },
+      "required": [
+        "schema_version",
+        "insight",
+        "rendered",
+        "display"
+      ],
+      "title": "OverlayPayload",
+      "type": "object"
+    },
+    "Player": {
+      "additionalProperties": false,
+      "properties": {
+        "player_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "short_name": {
+          "type": "string"
+        },
+        "shirt": {
+          "type": "integer"
+        },
+        "position": {
+          "enum": [
+            "GK",
+            "DEF",
+            "MID",
+            "FWD"
+          ],
+          "type": "string"
+        },
+        "role": {
+          "description": "Tactical role in the formation, e.g. LCB, CDM, RW",
+          "type": "string"
+        },
+        "career_appearances": {
+          "description": "Appearances before this match",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "career_goals": {
+          "description": "Goals before this match",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "player_id",
+        "name",
+        "short_name",
+        "shirt",
+        "position",
+        "role",
+        "career_appearances",
+        "career_goals"
+      ],
+      "title": "Player",
+      "type": "object"
+    },
+    "RenderResponse": {
+      "additionalProperties": false,
+      "description": "GET /api/render/{insight_id}.",
+      "properties": {
+        "insight": {
+          "$ref": "#/$defs/Insight"
+        },
+        "rendered": {
+          "$ref": "#/$defs/RenderedInsight"
+        },
+        "trace": {
+          "items": {
+            "$ref": "#/$defs/TraceStep"
+          },
+          "type": "array"
+        },
+        "source": {
+          "enum": [
+            "llm",
+            "llm_revised",
+            "template",
+            "template_fallback",
+            "cache"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "insight",
+        "rendered",
+        "trace",
+        "source"
+      ],
+      "title": "RenderResponse",
+      "type": "object"
+    },
+    "RenderedInsight": {
+      "additionalProperties": false,
+      "properties": {
+        "insight_id": {
+          "type": "string"
+        },
+        "profile_id": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "analyst",
+            "casual",
+            "player_focus"
+          ],
+          "type": "string"
+        },
+        "headline": {
+          "maxLength": 80,
+          "type": "string"
+        },
+        "body": {
+          "maxLength": 320,
+          "type": "string"
+        },
+        "stat_callout": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StatCallout"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "type": "array"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        }
+      },
+      "required": [
+        "insight_id",
+        "profile_id",
+        "language",
+        "mode",
+        "headline",
+        "body",
+        "stat_callout",
+        "claims",
+        "verification"
+      ],
+      "title": "RenderedInsight",
+      "type": "object"
+    },
+    "ReplayStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "playing": {
+          "type": "boolean"
+        },
+        "speed": {
+          "description": "Match seconds per wall-clock second",
+          "type": "number"
+        },
+        "finished": {
+          "type": "boolean"
+        },
+        "clock": {
+          "$ref": "#/$defs/StreamClock"
+        },
+        "viewers": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "playing",
+        "speed",
+        "finished",
+        "clock",
+        "viewers"
+      ],
+      "title": "ReplayStatus",
+      "type": "object"
+    },
+    "ResetMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "reset",
+          "default": "reset",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "ResetMessage",
+      "type": "object"
+    },
+    "StatCallout": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "fact_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value",
+        "fact_id"
+      ],
+      "title": "StatCallout",
+      "type": "object"
+    },
+    "StreamClock": {
+      "additionalProperties": false,
+      "properties": {
+        "period": {
+          "enum": [
+            1,
+            2
+          ],
+          "type": "integer"
+        },
+        "t": {
+          "type": "number"
+        },
+        "match_clock_s": {
+          "type": "number"
+        },
+        "elapsed_s": {
+          "type": "number"
+        },
+        "display": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "period",
+        "t",
+        "match_clock_s",
+        "elapsed_s",
+        "display"
+      ],
+      "title": "StreamClock",
+      "type": "object"
+    },
+    "StreamEvent": {
+      "additionalProperties": false,
+      "description": "A match event compacted for the pitch view (absolute pitch metres).",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "period": {
+          "enum": [
+            1,
+            2
+          ],
+          "type": "integer"
+        },
+        "t": {
+          "type": "number"
+        },
+        "team": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "player": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "end_x": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "end_y": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "height": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "is_cross": {
+          "default": false,
+          "type": "boolean"
+        },
+        "is_through_ball": {
+          "default": false,
+          "type": "boolean"
+        },
+        "top_speed_kmh": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "shot_speed_kmh": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "cause": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "period",
+        "t",
+        "team",
+        "player",
+        "x",
+        "y",
+        "end_x",
+        "end_y",
+        "outcome",
+        "height",
+        "is_cross",
+        "is_through_ball",
+        "top_speed_kmh",
+        "shot_speed_kmh",
+        "cause"
+      ],
+      "title": "StreamEvent",
+      "type": "object"
+    },
+    "Team": {
+      "additionalProperties": false,
+      "properties": {
+        "team_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "short_name": {
+          "type": "string"
+        },
+        "primary_color": {
+          "type": "string"
+        },
+        "secondary_color": {
+          "type": "string"
+        },
+        "formation": {
+          "type": "string"
+        },
+        "players": {
+          "items": {
+            "$ref": "#/$defs/Player"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "team_id",
+        "name",
+        "short_name",
+        "primary_color",
+        "secondary_color",
+        "formation",
+        "players"
+      ],
+      "title": "Team",
+      "type": "object"
+    },
+    "TickMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "tick",
+          "default": "tick",
+          "type": "string"
+        },
+        "clock": {
+          "$ref": "#/$defs/StreamClock"
+        },
+        "score": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "type": "object"
+        },
+        "playing": {
+          "type": "boolean"
+        },
+        "speed": {
+          "type": "number"
+        },
+        "metrics": {
+          "$ref": "#/$defs/LiveMetrics"
+        }
+      },
+      "required": [
+        "type",
+        "clock",
+        "score",
+        "playing",
+        "speed",
+        "metrics"
+      ],
+      "title": "TickMessage",
+      "type": "object"
+    },
+    "TraceStep": {
+      "additionalProperties": false,
+      "properties": {
+        "agent": {
+          "enum": [
+            "analyst",
+            "narrator",
+            "verifier",
+            "template",
+            "cache"
+          ],
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "rejected",
+            "error",
+            "fallback"
+          ],
+          "type": "string"
+        },
+        "ms": {
+          "type": "number"
+        },
+        "detail": {
+          "additionalProperties": true,
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "agent",
+        "action",
+        "status",
+        "ms",
+        "detail"
+      ],
+      "title": "TraceStep",
+      "type": "object"
+    },
+    "Verification": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "verified",
+            "revised",
+            "rejected"
+          ],
+          "type": "string"
+        },
+        "checked_claims": {
+          "default": 0,
+          "type": "integer"
+        },
+        "rejected_claims": {
+          "default": 0,
+          "type": "integer"
+        },
+        "notes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "checked_claims",
+        "rejected_claims",
+        "notes"
+      ],
+      "title": "Verification",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Schema root that bundles the wire types for code generation. Never sent itself.",
+  "properties": {
+    "message": {
+      "discriminator": {
+        "mapping": {
+          "error": "#/$defs/ErrorMessage",
+          "events": "#/$defs/EventsMessage",
+          "hello": "#/$defs/HelloMessage",
+          "overlay": "#/$defs/OverlayMessage",
+          "reset": "#/$defs/ResetMessage",
+          "tick": "#/$defs/TickMessage"
+        },
+        "propertyName": "type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/HelloMessage"
+        },
+        {
+          "$ref": "#/$defs/TickMessage"
+        },
+        {
+          "$ref": "#/$defs/EventsMessage"
+        },
+        {
+          "$ref": "#/$defs/OverlayMessage"
+        },
+        {
+          "$ref": "#/$defs/ResetMessage"
+        },
+        {
+          "$ref": "#/$defs/ErrorMessage"
+        }
+      ]
+    },
+    "render": {
+      "$ref": "#/$defs/RenderResponse"
+    },
+    "control": {
+      "$ref": "#/$defs/ControlRequest"
+    },
+    "status": {
+      "$ref": "#/$defs/ReplayStatus"
+    },
+    "momentum": {
+      "items": {
+        "$ref": "#/$defs/MomentumPoint"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "message",
+    "render",
+    "control",
+    "status",
+    "momentum"
+  ],
+  "title": "StreamContract",
+  "type": "object"
+}
