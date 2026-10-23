@@ -195,3 +195,29 @@ Moments skipped by a seek go to history, not to screens.
 `python -m regista.agents record` renders every insight (recaps included) for the preset profiles and writes a
 JSON cache. `REGISTA_AGENT_CACHE` makes the API serve it, with a "cache" step at the head of each trace. A video take
 then never depends on model latency or rate limits, and the trace shown is the recorded one, not a staged one.
+
+## D25. The wire protocol is a contract too
+
+WebSocket messages (`hello`, `tick`, `events`, `overlay`, `reset`, `error`), the render response, control requests
+and momentum history are Pydantic models in `contracts/stream.py`. They are exported to `stream.schema.json` and
+generated into `frontend/src/contracts/stream.ts`, like every other contract. The hub builds each message from the
+models, and a test validates every message on a live socket against the discriminated union. The frontend therefore
+cannot drift from the backend, and CI's stale-contract check covers the protocol.
+
+## D26. Overlay scheduling on an "air clock"
+
+`frontend/src/lib/overlayQueue.ts` is a small, pure graphics scheduler with unit tests:
+- One graphic per slot. A higher priority preempts the one on air, which goes back to the queue with its remaining
+  time.
+- Equal priority waits, and anything that waited more than 12 s is dropped because the moment has passed.
+- Nothing airs before its `show_at_match_clock_s`.
+- TTLs run on an air clock that advances only while the replay plays, so pausing (for a demo or a studio break)
+  holds the graphics instead of letting them expire unseen.
+
+## D27. Server-side history, one service in production
+
+A viewer who joins mid-match or seeks would otherwise see an empty momentum ribbon. `Replay` samples the momentum
+index every 0.25 match minutes as it replays, and `/api/momentum` serves it. The client backfills the ribbon and its
+goal / press / chaos markers (from `/api/insights`) whenever a tick jumps past its last sample. Seeks leave visible
+gaps rather than interpolated ramps. FastAPI serves `frontend/dist` at `/` when it exists, so the deployed app is a
+single container: one origin, no CORS, the same `/ws` path as in development (Vite proxies it there).

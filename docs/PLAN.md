@@ -44,16 +44,18 @@ Package `backend/regista/agents/` and `backend/regista/api/`.
 - [x] Record a cached agent-output run for deterministic demo recording (`python -m regista.agents record`)
 - [ ] Record the demo cache with the real model once one is configured, and check a Verifier rejection shows up in it
 
-## Sun 25 Oct: frontend
+## Sun 25 Oct: frontend (done, built Fri ahead of the model run)
 
-Vite + React + TypeScript in `frontend/`, types from `src/contracts`.
+Vite + React + TypeScript in `frontend/`, types from `src/contracts` (incl. the generated stream protocol).
 
-- [ ] Pitch view with live events, broadcast clock, score bug
-- [ ] Overlay slots: lower third, top bar, player tag, ticker; TTL + priority queue keyed to match clock
-- [ ] Momentum ribbon, control vs chaos meter
-- [ ] Fan control panel: mode (analyst/casual/player focus), favorite club, focus player, language (en + hi or es)
-- [ ] Side-by-side compare view (same moment, two profiles) for the demo
-- [ ] Agent trace panel: Analyst -> Narrator -> Verifier, showing a rejected claim
+- [x] Pitch view with live events, broadcast clock, score bug
+- [x] Overlay slots: lower third, top bar, player tag, ticker; TTL + priority queue keyed to match clock
+      (side panel too; air clock pauses with the replay; scheduler unit-tested)
+- [x] Momentum ribbon, control vs chaos meter (ribbon backfills from `/api/momentum` on join and seek)
+- [x] Fan control panel: mode (analyst/casual/player focus), favorite club, focus player, language (en + hi + es)
+- [x] Side-by-side compare view (same moment, two profiles) for the demo
+- [x] Agent trace panel: Analyst -> Narrator -> Verifier, claims mapped to facts and evidence
+- [ ] Trace showing a real rejected claim: needs the live model run (UI already renders rejected drafts and notes)
 
 ## Mon 26 Oct: ship and harden
 

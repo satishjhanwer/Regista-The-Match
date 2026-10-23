@@ -78,6 +78,15 @@ python -m regista.agents record ../data/RGS-2026-0001.json --out ../data/RGS-202
 REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.json python -m regista.api   # serve a recorded run
 ```
 
+Run the overlay app (two terminals):
+
+```bash
+cd backend && python -m regista.api        # API + WebSocket on :8000
+cd frontend && npm install && npm run dev  # http://localhost:5173 (proxies /api and /ws)
+```
+
+`npm run build` writes `frontend/dist`, which the API then serves at `/` as a single service.
+
 Regenerate contracts after changing a model:
 
 ```bash
@@ -137,7 +146,9 @@ Storyline tests run across six seeds to make sure each signal is real, not one l
       Foundry run pending.
 - [x] Replay API (`backend/regista/api`): shared replay clock, `/ws?profile=` stream of ticks, events and verified
       overlays, per-profile fan-out with caching, recorded runs for demos. Protocol in [`docs/API.md`](docs/API.md).
-- [ ] React overlay and fan controls
+- [x] React overlay and fan controls (`frontend/`): live pitch with event trail, score bug, broadcast graphics
+      slots with a priority/TTL scheduler, momentum ribbon, control vs chaos meter, fan panel (mode, language, club,
+      focus player, metric), agent trace with claim-to-fact evidence, and a two-viewer compare view
 - [ ] Azure Container Apps deployment with `azd up`, OpenTelemetry tracing
 
 Out of scope for this submission: computer-vision auto-eventing from video (planned as a separate producer behind the same event contract), real club or league data, multi-match scale.
