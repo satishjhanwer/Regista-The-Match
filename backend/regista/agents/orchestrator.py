@@ -78,6 +78,7 @@ class WarmPath:
         self.timeout_s = timeout_s
         self.cache: dict[tuple[str, str], RenderResult] = cache if cache is not None else {}
         self._briefs: dict[str, asyncio.Future] = {}
+        self._inflight: dict[tuple[str, str], asyncio.Future] = {}
         self._brief_steps: dict[str, list[TraceStep]] = {}
 
     # ------------------------------------------------------------------ #
@@ -117,7 +118,13 @@ class WarmPath:
         hit = self.cache.get(key)
         if hit is not None:
             return hit
-        result = await self._render(ctx, profile)
+        fut = self._inflight.get(key)
+        if fut is None:  # single-flight: viewers sharing a profile share one render
+            fut = self._inflight[key] = asyncio.ensure_future(self._render(ctx, profile))
+        try:
+            result = await fut
+        finally:
+            self._inflight.pop(key, None)
         self.cache[key] = result
         return result
 
