@@ -84,6 +84,8 @@ class MatchState:
         self.totals: dict[str, dict[str, float]] = {t: defaultdict(float) for t in self.team_ids}
         self.windows: dict[str, TeamWindows] = {t: TeamWindows() for t in self.team_ids}
         self.passes: dict[str, object] = {}  # event_id -> PassEvent, for assist / key-pass lookups
+        self.pass_p: dict[str, float] = {}  # event_id -> P(complete), filled by PassDifficulty
+        self.shot_xg: dict[str, float] = {}  # event_id -> xG, filled by ExpectedGoals
 
         self.poss_id = -1
         self.poss_team: str | None = None

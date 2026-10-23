@@ -1,0 +1,26 @@
+{
+  "name": "xg_model",
+  "features": [
+    "distance_m",
+    "angle_rad",
+    "header",
+    "defenders_5m"
+  ],
+  "intercept": -0.89972,
+  "coef": {
+    "distance_m": -0.110014,
+    "angle_rad": 1.199862,
+    "header": -0.800032,
+    "defenders_5m": -0.350083
+  },
+  "label": "P(goal | shot)",
+  "trained_on_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "n_train": 150,
+  "train_mean_xg": 0.175758
+}
