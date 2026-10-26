@@ -137,3 +137,16 @@ def test_hindi_rendering_must_be_in_devanagari(seed7):
     english = [Claim(text="Saltmere Athletic are pressing high.", fact_ids=[])]
     bad = r.model_copy(update={"claims": english, "body": english[0].text})
     assert any("not in Hindi" in n for n in v.verify(bad, ins).verification.notes)
+
+
+def test_spanish_rendering_must_be_spanish(seed7):
+    match, insights = seed7
+    ins = press_insight(insights)
+    v = Verifier(match.meta)
+    r = TemplateNarrator(match.meta).render(ins, PRESETS["casual-es-slm"])
+    assert v.verify(r, ins).ok
+    # what qwen2.5:3b produced for the Spanish casual viewer
+    text = "Northvale FC now passes under pressure: 64% against Saltmere Athletic, up from 24% earlier."
+    english = [Claim(text=text, fact_ids=[ins.facts[0].fact_id])]
+    bad = r.model_copy(update={"claims": english, "body": text})
+    assert any("not in the requested language (es)" in n for n in v.verify(bad, ins).verification.notes)

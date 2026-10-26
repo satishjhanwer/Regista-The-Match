@@ -22,7 +22,7 @@ from ..contracts.events import MatchMeta
 from ..contracts.insight import FanProfile, Insight, RenderedInsight, Verification
 from .analyst import Analyst, Brief, rule_brief
 from .context import InsightContext
-from .narrator import LLMNarrator
+from .narrator import DraftShapeError, LLMNarrator
 from .templates import TemplateNarrator
 from .verifier import Verifier
 
@@ -161,6 +161,11 @@ class WarmPath:
                 t0 = time.perf_counter()
                 try:
                     draft = await asyncio.wait_for(self.narrator.render(brief, profile, feedback), self.timeout_s)
+                except DraftShapeError as exc:  # too long to display: a rejection with feedback, not an error
+                    trace.append(TraceStep("narrator", f"draft {attempt}", "ok", _ms(t0), {}))
+                    trace.append(TraceStep("verifier", f"check draft {attempt}", "rejected", 0.0, {"notes": [str(exc)], "claims": 0}))
+                    feedback = str(exc)
+                    continue
                 except Exception as exc:
                     trace.append(
                         TraceStep("narrator", f"draft {attempt}", "error", _ms(t0), {"error": f"{type(exc).__name__}: {exc}"[:300]})

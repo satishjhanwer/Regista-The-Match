@@ -27,6 +27,11 @@ from ..contracts.events import MatchMeta
 from ..contracts.insight import Claim, Fact, Insight, RenderedInsight, Verification
 
 HEADLINE_MAX, BODY_MAX = 80, 320
+# Function words for a mechanical language check of es / en renderings (names and numbers are language-neutral).
+_STOP = {
+    "en": {"the", "of", "and", "is", "are", "was", "with", "for", "from", "their", "his", "her", "they", "now", "in", "to", "has"},
+    "es": {"el", "la", "los", "las", "de", "del", "y", "que", "en", "con", "por", "su", "sus", "se", "un", "una", "es", "al"},
+}
 _DEVANAGARI_LETTER = re.compile(r"[ऀ-ॿ]")
 _DEVANAGARI = str.maketrans("०१२३४५६७८९", "0123456789")
 _NUMBER = re.compile(r"(?<![\w.])\d+(?:\.\d+)?")
@@ -159,6 +164,15 @@ class Verifier:
             latin_only = [i + 1 for i, c in enumerate(rendered.claims) if not _DEVANAGARI_LETTER.search(c.text)]
             if latin_only:
                 notes.append(f"claims {latin_only} are not in Hindi (Devanagari)")
+        elif rendered.language in _STOP:
+            other = "es" if rendered.language == "en" else "en"
+            wrong = [
+                i + 1
+                for i, c in enumerate(rendered.claims)
+                if _language_votes(c.text, other) >= 2 and _language_votes(c.text, rendered.language) == 0
+            ]
+            if wrong:
+                notes.append(f"claims {wrong} are not in the requested language ({rendered.language})")
         if rendered.body.strip() != " ".join(c.text.strip() for c in rendered.claims):
             notes.append("body must be exactly the claims joined by spaces")
         sc = rendered.stat_callout
@@ -176,6 +190,10 @@ class Verifier:
             claim_issues,
             headline_issues,
         )
+
+
+def _language_votes(text: str, lang: str) -> int:
+    return sum(1 for w in re.findall(r"[^\W\d_]+", text.lower()) if w in _STOP[lang])
 
 
 def _substantive(text: str) -> bool:

@@ -33,6 +33,8 @@ Hard rules, checked by a Verifier that rejects violations:
 - The moment's "what_happened" is the detector's verified account. Your story must agree with it, and any number
   you take from it must be cited through the fact that holds it. Prefer facts with a priority (the Analyst's picks).
 - Write real sentences. Never output placeholders such as "..." or empty strings.
+- Do not add context no fact states: no tournaments, seasons, records, "first ever", injuries or history.
+- Write every sentence in the requested language, even if the facts' labels are in English.
 - Only name players and teams that appear in the facts or entities given.
 - headline at most 80 characters; all sentences together at most 320 characters.
 Reply with JSON only:
@@ -74,6 +76,10 @@ def narration_prompt(brief: Brief, profile: FanProfile, meta: MatchMeta, feedbac
     return text
 
 
+class DraftShapeError(ValueError):
+    """A draft that cannot even be represented (too long for the overlay). Sent back to the Narrator as feedback."""
+
+
 class LLMNarrator:
     def __init__(self, client, meta: MatchMeta) -> None:
         self.client = client
@@ -94,13 +100,19 @@ class LLMNarrator:
         fact = next((f for f in brief.insight.facts if f.fact_id == fid), None)
         if fact is not None:
             stat = stat_callout(fact, FactView(brief.insight, self.meta), profile.language)
+        headline = str(data.get("headline", "")).strip()
+        body = " ".join(c.text for c in claims)
+        too_long = [f"headline is {len(headline)} characters; the limit is 80"] if len(headline) > 80 else []
+        too_long += [f"sentences total {len(body)} characters; the limit is 320"] if len(body) > 320 else []
+        if too_long:
+            raise DraftShapeError("; ".join(too_long))
         return RenderedInsight(
             insight_id=brief.insight.insight_id,
             profile_id=profile.profile_id,
             language=profile.language,
             mode=profile.mode,
-            headline=str(data.get("headline", ""))[:80],
-            body=" ".join(c.text for c in claims)[:320],
+            headline=headline,
+            body=body,
             stat_callout=stat,
             claims=claims,
             verification=Verification(status="pending"),

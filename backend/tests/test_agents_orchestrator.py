@@ -225,3 +225,20 @@ def test_placeholder_drafts_are_rejected(seed7):
     res = run(WarmPath(match.meta, client_for(dots)).render(contexts[ins.insight_id], PRESETS["analyst-en"]))
     assert res.source == "template_fallback"
     assert "placeholder" in " ".join(res.trace[2].detail["notes"])
+
+
+def test_overlong_headline_goes_back_as_feedback(seed7):
+    match, insights, contexts = seed7
+    ins = first(insights, "press_change")
+    calls = []
+
+    def long_then_short(messages):
+        calls.append(message_texts(messages)[-1])
+        draft = json.loads(Narration(wrong_first=False)(messages))
+        if len(calls) == 1:
+            draft["headline"] = "Saltmere Athletic increased their press intensity significantly to sixty-four percent under pressure"
+        return json.dumps(draft)
+
+    res = run(WarmPath(match.meta, client_for(long_then_short)).render(contexts[ins.insight_id], PRESETS["analyst-en"]))
+    assert res.source == "llm_revised"
+    assert "limit is 80" in calls[1]
