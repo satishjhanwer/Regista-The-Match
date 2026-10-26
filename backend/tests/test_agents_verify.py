@@ -101,3 +101,39 @@ def test_profile_from_params():
     p = profile_from_params("casual-es-slm", language="hi", player="SLM-11")
     assert p.language == "hi" and p.focus_player_id == "SLM-11" and p.profile_id == "casual-hi-SLM-SLM-11-_"
     assert profile_from_params(language="xx").language == "en"
+
+
+def test_verifier_rejects_numbers_pinned_on_the_wrong_subject(seed7):
+    """The draft llama3.2:3b actually produced for the 61' press change: numbers right, meaning wrong."""
+    match, insights = seed7
+    ins = press_insight(insights)
+    f1, f2 = ins.facts[0], ins.facts[1]  # Northvale FC passes under pressure; Saltmere pressures per Northvale pass
+    v = Verifier(match.meta)
+    text = "The player completed 64% of passes under pressure, while Saltmere Athletic applied 0.57 pressures per pass."
+    wrong = Claim(text=text, fact_ids=[f1.fact_id, f2.fact_id])
+    issues = v._attribution_issues(wrong, "Tactical Shift", ins)
+    assert issues == ["cites 'Northvale FC passes under pressure' but does not say who it is about (name Northvale FC)"]
+    right = Claim(text="Northvale now play 64% of their passes under pressure.", fact_ids=[f1.fact_id])
+    assert v._attribution_issues(right, "Saltmere squeeze", ins) == []
+    follow_up = Claim(text="They complete just 57% of them.", fact_ids=[ins.facts[2].fact_id])
+    assert v._attribution_issues(follow_up, "x " + right.text, ins) == []
+
+
+def test_extract_json_takes_the_first_object():
+    from regista.agents.analyst import extract_json
+
+    assert extract_json('Sure! ```json\n{"a": 1, "b": {"c": 2}}\n``` and also {"a": 9}') == {"a": 1, "b": {"c": 2}}
+    assert extract_json('{"broken": } then {"ok": true}') == {"ok": True}
+    with pytest.raises(ValueError):
+        extract_json("no json at all")
+
+
+def test_hindi_rendering_must_be_in_devanagari(seed7):
+    match, insights = seed7
+    ins = press_insight(insights)
+    r = TemplateNarrator(match.meta).render(ins, PRESETS["focus-hi-nvl09"])
+    v = Verifier(match.meta)
+    assert v.verify(r, ins).ok
+    english = [Claim(text="Saltmere Athletic are pressing high.", fact_ids=[])]
+    bad = r.model_copy(update={"claims": english, "body": english[0].text})
+    assert any("not in Hindi" in n for n in v.verify(bad, ins).verification.notes)

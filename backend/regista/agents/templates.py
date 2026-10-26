@@ -315,12 +315,13 @@ class TemplateNarrator:
             n,
         )
         if ins.kind == "period_summary":
+            sprinter = self._player_name(ins.entities.player_ids[0]) if ins.entities.player_ids else ""
             head = Line("period_summary.h2" if second else "period_summary.h1", {"score": "match.score"}, n)
             analyst = [
                 Line("period_summary.a1", {"hp": "home.possession_share", "ap": "away.possession_share"}, n),
                 Line("period_summary.a2", {"hs": "home.shots", "as_": "away.shots", "hx": "home.xg_total", "ax": "away.xg_total"}),
                 Line("period_summary.a3", {"hc": "home.pass_completion", "ac": "away.pass_completion"}, n),
-                Line("period_summary.a4", {"sprint": "match.max_sprint_kmh"}),
+                Line("period_summary.a4", {"sprint": "match.max_sprint_kmh"}, {"player": sprinter}),
             ]
             return head, self._pick(profile.mode, analyst, [xg], [xg]), ["match.score"]
         head = Line("recap.h2" if second else "recap.h1", {"score": "match.score"}, n)

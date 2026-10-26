@@ -9,6 +9,9 @@ not itself be able to hallucinate. Rules, per claim:
    value as a percentage, or the moment's own clock. A claim with no citations ("colour") may contain no numbers.
 3. Every player named is an entity of the insight or the value of a cited fact.
    Every team named appears in the insight (entities, or fact keys, labels or values).
+4. Attribution: when a cited numeric fact's label names a team or player ("Northvale FC passes
+   under pressure"), that subject must be named in the claim, the previous claim or the headline.
+   Numbers that match but are pinned on the wrong subject (or on nobody) are rejected.
 
 The headline is checked against all of the insight's facts. Length limits come from the contract.
 Numbers are read after normalizing Devanagari digits and decimal commas, so the
@@ -24,6 +27,7 @@ from ..contracts.events import MatchMeta
 from ..contracts.insight import Claim, Fact, Insight, RenderedInsight, Verification
 
 HEADLINE_MAX, BODY_MAX = 80, 320
+_DEVANAGARI_LETTER = re.compile(r"[ऀ-ॿ]")
 _DEVANAGARI = str.maketrans("०१२३४५६७८९", "0123456789")
 _NUMBER = re.compile(r"(?<![\w.])\d+(?:\.\d+)?")
 _DECIMAL_COMMA = re.compile(r"(?<=\d),(?=\d)")
@@ -76,7 +80,8 @@ class Verifier:
         for team in (meta.home, meta.away):
             for p in team.players:
                 self.players[p.player_id] = (p.name, p.short_name)
-        self.teams = {t.team_id: (t.name, t.short_name, t.team_id) for t in (meta.home, meta.away)}
+        # name, short name, id, plus the bare first word broadcasters use ("Northvale", "Saltmere")
+        self.teams = {t.team_id: (t.name, t.short_name, t.team_id, t.name.split()[0]) for t in (meta.home, meta.away)}
 
     # ------------------------------------------------------------------ #
     def _entity_issues(self, text: str, insight: Insight, facts: list[Fact]) -> list[str]:
@@ -103,6 +108,24 @@ class Verifier:
         allowed |= set(numbers_in(insight.clock.display))
         return [f"number {_fmt(n)} does not match any cited fact" for n in nums if not _matches(n, allowed)]
 
+    def _subjects(self, label: str) -> list[tuple[str, ...]]:
+        """Name variants of each team or player that a fact label names."""
+        out = [names for names in self.players.values() if any(_word_in(n, label) for n in names)]
+        out += [names for names in self.teams.values() if any(_word_in(n, label) for n in names)]
+        return out
+
+    def _attribution_issues(self, claim: Claim, context: str, insight: Insight) -> list[str]:
+        by_id = {f.fact_id: f for f in insight.facts}
+        issues = []
+        for fid in claim.fact_ids:
+            f = by_id.get(fid)
+            if f is None or isinstance(f.value, str) or not numbers_in(claim.text):
+                continue
+            subjects = self._subjects(f.label)
+            if subjects and not any(_word_in(n, f"{claim.text} {context}") for names in subjects for n in names):
+                issues.append(f"cites '{f.label}' but does not say who it is about (name {subjects[0][0]})")
+        return issues
+
     def check_claim(self, claim: Claim, insight: Insight) -> list[str]:
         by_id = {f.fact_id: f for f in insight.facts}
         unknown = [fid for fid in claim.fact_ids if fid not in by_id]
@@ -115,7 +138,8 @@ class Verifier:
         notes: list[str] = []
         claim_issues: dict[int, list[str]] = {}
         for i, c in enumerate(rendered.claims):
-            issues = self.check_claim(c, insight)
+            context = rendered.headline + (" " + rendered.claims[i - 1].text if i else "")
+            issues = self.check_claim(c, insight) or self._attribution_issues(c, context, insight)
             if issues:
                 claim_issues[i] = issues
         headline_issues = self._number_issues(rendered.headline, insight.facts, insight, False)
@@ -126,6 +150,10 @@ class Verifier:
             notes.append(f"headline longer than {HEADLINE_MAX} characters")
         if len(rendered.body) > BODY_MAX:
             notes.append(f"body longer than {BODY_MAX} characters")
+        if rendered.language == "hi":  # names stay in Latin script, but the sentences must be Hindi
+            latin_only = [i + 1 for i, c in enumerate(rendered.claims) if not _DEVANAGARI_LETTER.search(c.text)]
+            if latin_only:
+                notes.append(f"claims {latin_only} are not in Hindi (Devanagari)")
         if rendered.body.strip() != " ".join(c.text.strip() for c in rendered.claims):
             notes.append("body must be exactly the claims joined by spaces")
         sc = rendered.stat_callout

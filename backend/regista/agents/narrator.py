@@ -28,6 +28,9 @@ Hard rules, checked by a Verifier that rejects violations:
 - Every sentence is a claim with the fact_ids it relies on. Every number in a sentence must equal a value or
   previous_value of a cited fact (you may write a 0-1 value as a percentage). Do not round differently.
 - A sentence with no fact_ids (fan colour) must contain no numbers.
+- Say who every number is about, in the terms of its fact label. "Northvale FC passes under pressure: 64%" means
+  64% of Northvale's passes were made under pressure; it is not a completion rate and not about one player.
+- The moment's "what_happened" is the detector's verified account. Your story must agree with it.
 - Only name players and teams that appear in the facts or entities given.
 - headline at most 80 characters; all sentences together at most 320 characters.
 Reply with JSON only:
@@ -40,7 +43,7 @@ def narration_prompt(brief: Brief, profile: FanProfile, meta: MatchMeta, feedbac
     names = {p.player_id: p.short_name for t in (meta.home, meta.away) for p in t.players}
     teams = {t.team_id: t.name for t in (meta.home, meta.away)}
     body = {
-        "moment": {"kind": ins.kind, "clock": ins.clock.display, "angle": brief.angle},
+        "moment": {"kind": ins.kind, "clock": ins.clock.display, "what_happened": ins.why_it_matters_hint, "angle": brief.angle},
         "viewer": {
             "language": LANGUAGE_NAMES.get(profile.language, profile.language),
             "mode": MODE_STYLE[profile.mode],

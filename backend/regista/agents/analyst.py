@@ -21,6 +21,7 @@ a player's match stats, a team's recent form in a window, the score and momentum
 Rules:
 - Never compute or invent numbers. Every number you want told must be a fact_id from get_facts or from a tool result.
 - Pick 2 to 6 fact ids, most important first. Prefer the detector's facts; add at most 2 tool facts.
+- The detector_rationale is the verified account of what happened; your angle must agree with it and name the team or player.
 - Reply with JSON only: {"fact_ids": ["..."], "angle": "one sentence on why this moment matters, no numbers"}"""
 
 
@@ -34,11 +35,16 @@ class Brief:
 
 
 def extract_json(text: str) -> dict:
-    """First JSON object in a model reply (tolerates code fences and prose around it)."""
-    m = re.search(r"\{.*\}", text, re.DOTALL)
-    if not m:
-        raise ValueError("no JSON object in reply")
-    return json.loads(m.group(0))
+    """First complete JSON object in a model reply. Tolerates code fences, prose, and a second object after it."""
+    decoder = json.JSONDecoder()
+    for m in re.finditer(r"\{", text):
+        try:
+            obj, _ = decoder.raw_decode(text, m.start())
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict):
+            return obj
+    raise ValueError("no JSON object in reply")
 
 
 def rule_brief(ctx: InsightContext) -> Brief:
