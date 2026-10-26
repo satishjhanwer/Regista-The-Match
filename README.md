@@ -110,6 +110,7 @@ profile presets, open **Compare viewers** for one moment told two ways, and clic
 | --- | --- |
 | `REGISTA_LLM_PROVIDER=none` | Verified templates only, instant, no model needed |
 | `REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.json` | The recorded model run, with its real Verifier rejections in the trace (best for a demo) |
+| `REGISTA_LLM_PROVIDER=foundry_local` + `FOUNDRY_LOCAL_MODEL` | Live narration on Microsoft Foundry Local, on this machine (`winget install Microsoft.FoundryLocal`, then `foundry model download <model>`; Regista starts the service and loads the model) |
 | `REGISTA_LLM_PROVIDER=openai_compat` + `OPENAI_BASE_URL` / `OPENAI_MODEL` | Live narration from any OpenAI-compatible model, e.g. Ollama |
 | `REGISTA_LLM_PROVIDER=foundry` + `FOUNDRY_PROJECT_ENDPOINT` / `FOUNDRY_MODEL` | Microsoft Foundry through Agent Framework (`az login`) |
 
