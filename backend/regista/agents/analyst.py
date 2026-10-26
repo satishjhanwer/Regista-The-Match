@@ -22,7 +22,7 @@ Rules:
 - Never compute or invent numbers. Every number you want told must be a fact_id from get_facts or from a tool result.
 - Pick 2 to 6 fact ids, most important first. Prefer the detector's facts; add at most 2 tool facts.
 - The detector_rationale is the verified account of what happened; your angle must agree with it and name the team or player.
-- Reply with JSON only: {"fact_ids": ["..."], "angle": "one sentence on why this moment matters, no numbers"}"""
+- Reply with JSON only: {"fact_ids": ["<fact_id>", "<fact_id>"], "angle": "<one sentence on why this moment matters, no numbers>"}"""
 
 
 @dataclass

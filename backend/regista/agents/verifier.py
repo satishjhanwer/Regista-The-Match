@@ -38,6 +38,72 @@ _NUMBER = re.compile(r"(?<![\w.])\d+(?:\.\d+)?")
 _DECIMAL_COMMA = re.compile(r"(?<=\d),(?=\d)")
 
 
+# Number words and ordinals count as numbers when they quantify a football noun ("second goal", "only one
+# shot", "segundo gol"). Restricting them to these nouns keeps "second half" or "no one" from false rejections.
+_WORD_VALUES = {
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+    "first": 1,
+    "second": 2,
+    "third": 3,
+    "fourth": 4,
+    "fifth": 5,
+    "sixth": 6,
+    "seventh": 7,
+    "eighth": 8,
+    "ninth": 9,
+    "tenth": 10,
+    "once": 1,
+    "twice": 2,
+    "brace": 2,
+    "hat-trick": 3,
+    "uno": 1,  # not "un" / "una": in Spanish they are usually the article "a"
+    "dos": 2,
+    "tres": 3,
+    "cuatro": 4,
+    "cinco": 5,
+    "seis": 6,
+    "siete": 7,
+    "ocho": 8,
+    "nueve": 9,
+    "diez": 10,
+    "primer": 1,
+    "primero": 1,
+    "primera": 1,
+    "segundo": 2,
+    "segunda": 2,
+    "tercer": 3,
+    "tercero": 3,
+    "tercera": 3,
+    "cuarto": 4,
+    "cuarta": 4,
+    "quinto": 5,
+    "quinta": 5,
+}
+_COUNTED = (
+    r"goals?|shots?|assists?|saves?|chances?|appearances?|games?|matches|match|"
+    r"goles?|gol|tiros?|disparos?|asistencias?|paradas?|ocasi[oó]n|ocasiones|partidos?"
+)
+_NUMBER_WORD = re.compile(
+    rf"(?<![\w-])({'|'.join(sorted(map(re.escape, _WORD_VALUES), key=len, reverse=True))})\s+(?:[^\W\d_]+\s+)?(?:{_COUNTED})\b",
+    re.IGNORECASE,
+)
+_NON_LATIN_LETTER = re.compile(r"[^\W\d_a-zA-Z\u00C0-\u024F]")
+
+
+def counted_words(text: str) -> list[float]:
+    """Values of number words that quantify a football noun, e.g. 'his second goal' -> [2.0]."""
+    return [float(_WORD_VALUES[m.group(1).lower()]) for m in _NUMBER_WORD.finditer(text)]
+
+
 def numbers_in(text: str) -> list[float]:
     text = _DECIMAL_COMMA.sub(".", text.translate(_DEVANAGARI))
     return [float(m) for m in _NUMBER.findall(text)]
@@ -106,7 +172,7 @@ class Verifier:
         return issues
 
     def _number_issues(self, text: str, facts: list[Fact], insight: Insight, colour: bool) -> list[str]:
-        nums = numbers_in(text)
+        nums = numbers_in(text) + counted_words(text)
         if colour and nums:
             return [f"number {_fmt(nums[0])} with no cited fact"]
         allowed = set().union(*(allowed_numbers(f) for f in facts)) if facts else set()
@@ -165,6 +231,9 @@ class Verifier:
             if latin_only:
                 notes.append(f"claims {latin_only} are not in Hindi (Devanagari)")
         elif rendered.language in _STOP:
+            foreign = [i + 1 for i, c in enumerate(rendered.claims) if _NON_LATIN_LETTER.search(c.text)]
+            if foreign or _NON_LATIN_LETTER.search(rendered.headline):
+                notes.append(f"text outside the Latin script in a {rendered.language} rendering (claims {foreign})")
             other = "es" if rendered.language == "en" else "en"
             wrong = [
                 i + 1
@@ -198,7 +267,7 @@ def _language_votes(text: str, lang: str) -> int:
 
 def _substantive(text: str) -> bool:
     """At least two whitespace-separated tokens containing a letter: rules out "", "...", "-" and similar
-    placeholders. Token-based because Devanagari vowel signs are combining marks, not \w letters."""
+    placeholders. Token-based because Devanagari vowel signs are combining marks, not word characters."""
     return sum(1 for tok in text.split() if re.search(r"[^\W\d_]", tok)) >= 2
 
 

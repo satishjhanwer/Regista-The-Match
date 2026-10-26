@@ -150,3 +150,26 @@ def test_spanish_rendering_must_be_spanish(seed7):
     english = [Claim(text=text, fact_ids=[ins.facts[0].fact_id])]
     bad = r.model_copy(update={"claims": english, "body": text})
     assert any("not in the requested language (es)" in n for n in v.verify(bad, ins).verification.notes)
+
+
+def test_number_words_and_foreign_script_are_checked(seed7):
+    """Drafts qwen2.5:3b actually got past the digit-only checks in the first recording."""
+    from regista.agents.verifier import counted_words
+
+    assert counted_words("Shapira scored his second goal of the match") == [2.0]
+    assert counted_words("Saltmere took only one shot") == [1.0]
+    assert counted_words("Vukovic anota su segundo gol") == [2.0]
+    assert counted_words("early in the second half, no one could stop him") == []
+
+    match, insights = seed7
+    goal = next(i for i in insights if i.kind == "goal" and i.entities.player_ids[0] == "SLM-09")
+    v = Verifier(match.meta)
+    scorer = next(f for f in goal.facts if f.key == "goal.scorer")
+    tally = next(f for f in goal.facts if f.key == "SLM-09.match_goals")
+    claim = Claim(text="Shapira scored his second goal of the match.", fact_ids=[scorer.fact_id, tally.fact_id])
+    assert v.check_claim(claim, goal) == ["number 2 does not match any cited fact"]
+
+    r = TemplateNarrator(match.meta).render(goal, PRESETS["casual-es-slm"])
+    mixed = [Claim(text="Shapira anota su gol en la比赛中.", fact_ids=[scorer.fact_id])]
+    bad = r.model_copy(update={"claims": mixed, "body": mixed[0].text})
+    assert any("outside the Latin script" in n for n in v.verify(bad, goal).verification.notes)

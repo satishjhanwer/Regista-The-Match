@@ -42,7 +42,8 @@ Package `backend/regista/agents/` and `backend/regista/api/`.
 - [x] FastAPI: replay service (speed x10/x20, pause, seek), WebSocket `/ws?profile=...` streaming `OverlayPayload`
 - [x] Per-profile fan-out: one Insight -> N RenderedInsights (cache by insight_id + profile)
 - [x] Record a cached agent-output run for deterministic demo recording (`python -m regista.agents record`)
-- [ ] Record the demo cache with the real model once one is configured, and check a Verifier rejection shows up in it
+- [x] First live-model runs (Ollama, qwen2.5:3b on CPU): real Verifier rejections and revisions, rules hardened (D28)
+- [ ] Record the demo cache with Foundry once Azure is available (a qwen2.5:3b recording exists meanwhile)
 
 ## Sun 25 Oct: frontend (done, built Fri ahead of the model run)
 
@@ -55,7 +56,7 @@ Vite + React + TypeScript in `frontend/`, types from `src/contracts` (incl. the 
 - [x] Fan control panel: mode (analyst/casual/player focus), favorite club, focus player, language (en + hi + es)
 - [x] Side-by-side compare view (same moment, two profiles) for the demo
 - [x] Agent trace panel: Analyst -> Narrator -> Verifier, claims mapped to facts and evidence
-- [ ] Trace showing a real rejected claim: needs the live model run (UI already renders rejected drafts and notes)
+- [x] Trace showing a real rejected claim (recorded run: e.g. 64' goal, Spanish casual: attribution reject, then revised)
 
 ## Mon 26 Oct: ship and harden
 

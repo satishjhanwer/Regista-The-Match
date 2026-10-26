@@ -221,3 +221,28 @@ index every 0.25 match minutes as it replays, and `/api/momentum` serves it. The
 goal / press / chaos markers (from `/api/insights`) whenever a tick jumps past its last sample. Seeks leave visible
 gaps rather than interpolated ramps. FastAPI serves `frontend/dist` at `/` when it exists, so the deployed app is a
 single container: one origin, no CORS, the same `/ws` path as in development (Vite proxies it there).
+
+## D28. What a real model taught the Verifier
+
+First live runs used Ollama on an 8 GB CPU-only laptop (llama3.2:3b, then qwen2.5:3b). Each real failure became a
+mechanical, tested rule:
+
+| Observed draft (real) | New rule |
+| --- | --- |
+| "The player completed 64% of passes under pressure" (numbers right, subject wrong) | Attribution: if a cited numeric fact's label names a team or player, the claim, previous claim or headline must name them |
+| Headline and claim `"..."` | Placeholder: at least two tokens that contain a letter |
+| English sentences for a Hindi or Spanish viewer | Language: Devanagari required for `hi`; a stopword vote rejects English for `es` (and Spanish for `en`) |
+| JSON followed by a second object | Parse the first complete JSON object |
+| 92-character headline truncated mid-word | Over-length drafts go back to the Narrator as feedback instead of being truncated |
+| "3 s before the goal" rejected though true (fact not selected) | Narrator gets every detector fact; the Analyst's picks are marked as priority |
+
+The attribution rule also caught one of our own templates (it named a sprint speed without the sprinter).
+
+**What stays out of reach of a mechanical check:** invented colour with no numbers or names ("his first goal of
+the tournament"), and the meaning of Hindi prose from a 3B model (it transliterated names into Devanagari and
+wrote nonsense). Prompts now forbid unstated context. `REGISTA_LLM_LANGUAGES` limits LLM narration to languages
+that have been validated by hand: en and es for qwen2.5:3b. Hindi then comes from the verified templates, and the
+trace says why. With a Foundry-class model, `hi` can be switched on after a manual check.
+
+Latency on that laptop: 25-85 s per render (Analyst plus 1-2 drafts). That is fine for a recorded run, too slow
+for live. Production would use Foundry (seconds), and the template path keeps the live overlay instant either way.

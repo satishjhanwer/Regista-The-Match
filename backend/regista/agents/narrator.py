@@ -32,13 +32,15 @@ Hard rules, checked by a Verifier that rejects violations:
   64% of Northvale's passes were made under pressure; it is not a completion rate and not about one player.
 - The moment's "what_happened" is the detector's verified account. Your story must agree with it, and any number
   you take from it must be cited through the fact that holds it. Prefer facts with a priority (the Analyst's picks).
-- Write real sentences. Never output placeholders such as "..." or empty strings.
+- Write real sentences. The <...> slots above describe what goes there; never output them or "..." literally.
+- Write numbers as digits, never as words ("2 goals", not "two goals" or "second goal").
 - Do not add context no fact states: no tournaments, seasons, records, "first ever", injuries or history.
 - Write every sentence in the requested language, even if the facts' labels are in English.
 - Only name players and teams that appear in the facts or entities given.
 - headline at most 80 characters; all sentences together at most 320 characters.
 Reply with JSON only:
-{"headline": "...", "claims": [{"text": "...", "fact_ids": ["..."]}], "stat_callout_fact_id": "... or null"}"""
+{"headline": "<your headline, max 80 characters>", "claims": [{"text": "<one sentence>", "fact_ids": ["<fact_id>"]}],
+ "stat_callout_fact_id": "<fact_id or null>"}"""
 
 
 def narration_prompt(brief: Brief, profile: FanProfile, meta: MatchMeta, feedback: str | None = None) -> str:
