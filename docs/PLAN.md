@@ -59,14 +59,13 @@ Vite + React + TypeScript in `frontend/`, types from `src/contracts` (incl. the 
 - [x] Agent trace panel: Analyst -> Narrator -> Verifier, claims mapped to facts and evidence
 - [x] Trace showing a real rejected claim (recorded run: e.g. 64' goal, Spanish casual: attribution reject, then revised)
 
-## Mon 26 Oct: ship and harden
+## Mon 26 Oct: ship and harden (no Azure subscription: shipping local)
 
-- [ ] Azure access confirmed no later than Sunday night, otherwise ship with local model + templates and say so in README
-- [ ] `azure.yaml` + Bicep: Container Apps (api, web), managed identity to Foundry, Log Analytics + App Insights
-- [ ] `azd up` works from clean clone
-- [ ] OpenTelemetry traces of agent runs
-- [ ] Groundedness eval script (Foundry evals) over recorded run; report number in README
-- [ ] README: architecture diagram, latency table, eval results, setup
+- [x] Azure access not available: ship with a local model on Microsoft Foundry Local plus verified templates, said so in README
+- [~] ~~`azure.yaml` + Bicep, `azd up`, managed identity, Log Analytics + App Insights~~ dropped: no Azure subscription
+- [~] ~~OpenTelemetry traces to Application Insights~~ dropped with Azure; the in-app agent trace covers the explainability story
+- [x] Eval over the recorded run instead of Foundry evals: `scripts/eval_run.py` (first-draft pass rate, rejections by rule, on-air audit)
+- [x] README: architecture diagram, measured results, eval, setup
 
 ## Tue 27 Oct: video + submit
 

@@ -50,12 +50,14 @@ class RenderResult:
     """A finished rendering with the insight it cites (including any Analyst-promoted facts) and its trace.
 
     ``source`` is llm, llm_revised (passed after Verifier feedback), template, template_fallback or cache.
+    ``narrated_by`` records which model produced it (``provider/model``), or ``templates`` when no model was asked.
     """
 
     insight: Insight
     rendered: RenderedInsight
     trace: list[TraceStep]
     source: str
+    narrated_by: str | None = None
 
     def to_json(self) -> dict:
         """JSON-ready dict, as stored in a recorded run."""
@@ -64,6 +66,7 @@ class RenderResult:
             "rendered": json.loads(self.rendered.model_dump_json()),
             "trace": [asdict(s) for s in self.trace],
             "source": self.source,
+            "narrated_by": self.narrated_by,
         }
 
     @classmethod
@@ -74,6 +77,7 @@ class RenderResult:
             RenderedInsight.model_validate(d["rendered"]),
             [TraceStep(**s) for s in d["trace"]],
             d["source"],
+            d.get("narrated_by"),
         )
 
 
@@ -89,14 +93,23 @@ class WarmPath:
     """
 
     def __init__(
-        self, meta: MatchMeta, client=None, *, analyst=None, narrator=None, cache: dict | None = None, timeout_s: float | None = None
+        self,
+        meta: MatchMeta,
+        client=None,
+        *,
+        analyst=None,
+        narrator=None,
+        cache: dict | None = None,
+        timeout_s: float | None = None,
+        label: str | None = None,
     ):
         self.meta = meta
         self.analyst = analyst or Analyst(client)
         self.narrator = narrator if narrator is not None else (LLMNarrator(client, meta) if client is not None else None)
         self.templates = TemplateNarrator(meta)
         self.verifier = Verifier(meta)
-        # read at construction, after any .env has been loaded
+        self.label = label or ("llm" if client is not None else "templates")
+        # Settings are read here, at construction, so a .env loaded at startup applies.
         # Languages the LLM Narrator is trusted with (validated by hand); others render from verified templates.
         langs = os.getenv("REGISTA_LLM_LANGUAGES", "")
         self.llm_languages = {x.strip() for x in langs.split(",") if x.strip()} or None
@@ -208,9 +221,8 @@ class WarmPath:
                         rejected_claims=0,
                         notes=[] if attempt == 1 else ["revised after Verifier feedback"],
                     )
-                    return RenderResult(
-                        insight, draft.model_copy(update={"verification": v}), trace, "llm" if attempt == 1 else "llm_revised"
-                    )
+                    source = "llm" if attempt == 1 else "llm_revised"
+                    return RenderResult(insight, draft.model_copy(update={"verification": v}), trace, source, self.label)
                 feedback = report.feedback()
         # Template narration over the detector's facts only (it never cites Analyst-promoted facts).
         t0 = time.perf_counter()
@@ -227,7 +239,8 @@ class WarmPath:
             rejected_claims=report.verification.rejected_claims,
             notes=notes + report.verification.notes,
         )
-        return RenderResult(ctx.insight, r.model_copy(update={"verification": v}), trace, "template_fallback" if use_llm else "template")
+        source, by = ("template_fallback", self.label) if use_llm else ("template", "templates")
+        return RenderResult(ctx.insight, r.model_copy(update={"verification": v}), trace, source, by)
 
     def save_cache(self, path: Path) -> None:
         """Write every render to a recorded-run file."""

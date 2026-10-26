@@ -19,7 +19,7 @@ from collections import Counter
 from pathlib import Path
 
 from ..contracts.events import MatchFile
-from ..llm import build_chat_client, resolve_provider
+from ..llm import build_chat_client, describe_provider, resolve_provider
 from .orchestrator import WarmPath
 from .profiles import PRESETS, display_for
 from .verifier import Verifier
@@ -43,7 +43,7 @@ async def record(
         loaded = WarmPath.load_cache(resume)
         cache = {k: r for k, r in loaded.items() if verifier.verify(r.rendered, r.insight).ok}
         print(f"resume: kept {len(cache)} of {len(loaded)} recorded renders that pass the current Verifier", flush=True)
-    warm = WarmPath(match.meta, build_chat_client(provider), cache=cache)
+    warm = WarmPath(match.meta, build_chat_client(provider), cache=cache, label=describe_provider(provider))
     replay = Replay(match)
     replay.advance_to(replay.end_s)
     moments = [c for c in replay.history if kinds is None or c.insight.kind in kinds]

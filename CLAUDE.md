@@ -19,7 +19,8 @@ and moment detectors emit a canonical `Insight` carrying `facts` with `evidence`
 The **warm path** runs only on detected moments: Microsoft Agent Framework agents on a Microsoft Foundry model.
 Analyst (tools over match state, never invents numbers), Narrator (renders per `FanProfile`), Verifier (every sentence's
 `fact_ids` must resolve and match; reject and retry otherwise). Output is an `OverlayPayload` pushed over WebSocket to a
-React + TypeScript overlay with fan controls (mode, club, player focus, language). Hosting: Azure Container Apps via `azd`.
+React + TypeScript overlay with fan controls (mode, club, player focus, language). Runs locally; FastAPI serves the built
+frontend as one service. No Azure deployment (no subscription).
 
 ## Repo layout
 
@@ -86,10 +87,12 @@ CI (`.github/workflows/ci.yml`) runs ruff, pytest, and fails if generated schema
 
 ## LLM access (important)
 
-The owner has **no Azure subscription yet**. All agent code must get its client from `regista.llm.build_chat_client()`,
+The owner has **no Azure subscription** (and will not for this submission). All agent code must get its client from `regista.llm.build_chat_client()`,
 never construct a client directly. Providers: `foundry` (submission target), `azure_openai`, `foundry_local`,
 `openai_compat` (Ollama etc.), `none` (deterministic templates). Every agent path must work with `none` so tests, CI and
-an offline demo never need a model. Switch to `foundry` for the recorded demo once Azure is available.
+an offline demo never need a model. The demo model runs on Microsoft Foundry Local (`foundry_local`, CPU variant of
+qwen2.5-3b; `llm.foundry_local_endpoint` works around agent-framework-foundry-local pinning an SDK older than the
+current Foundry Local CLI).
 
 ## Agent Framework notes (verified 23 Oct 2026, agent-framework-core 1.22)
 

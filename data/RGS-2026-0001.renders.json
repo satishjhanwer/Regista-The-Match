@@ -126,7 +126,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0001",
@@ -253,7 +254,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0007",
@@ -465,7 +467,8 @@
      }
     }
    ],
-   "source": "template_fallback"
+   "source": "template_fallback",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0007",
@@ -616,7 +619,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0013",
@@ -853,7 +857,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0013",
@@ -1147,7 +1152,8 @@
      }
     }
    ],
-   "source": "template_fallback"
+   "source": "template_fallback",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0013",
@@ -1383,7 +1389,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0015",
@@ -1609,7 +1616,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0015",
@@ -1770,7 +1778,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0021",
@@ -1974,7 +1983,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0021",
@@ -2178,7 +2188,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0021",
@@ -2379,7 +2390,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0024",
@@ -2754,7 +2766,8 @@
      }
     }
    ],
-   "source": "template_fallback"
+   "source": "template_fallback",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0024",
@@ -3052,7 +3065,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0024",
@@ -3346,7 +3360,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0029",
@@ -3559,7 +3574,8 @@
      }
     }
    ],
-   "source": "template_fallback"
+   "source": "template_fallback",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0030",
@@ -3720,7 +3736,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0030",
@@ -3881,7 +3898,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0030",
@@ -4042,7 +4060,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0036",
@@ -4297,7 +4316,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0036",
@@ -4556,7 +4576,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0036",
@@ -4810,7 +4831,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0038",
@@ -4968,7 +4990,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0038",
@@ -5185,7 +5208,8 @@
      }
     }
    ],
-   "source": "template_fallback"
+   "source": "template_fallback",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-INS-0038",
@@ -5340,7 +5364,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-RECAP-1",
@@ -5573,7 +5598,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-RECAP-1",
@@ -5802,7 +5828,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-RECAP-1",
@@ -6037,7 +6064,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   },
   {
    "insight_id": "RGS-2026-0001-RECAP-2",
@@ -6355,7 +6383,8 @@
      }
     }
    ],
-   "source": "llm"
+   "source": "llm",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-RECAP-2",
@@ -6767,7 +6796,8 @@
      }
     }
    ],
-   "source": "template_fallback"
+   "source": "template_fallback",
+   "narrated_by": "openai_compat/qwen2.5:3b (Ollama)"
   },
   {
    "insight_id": "RGS-2026-0001-RECAP-2",
@@ -7111,7 +7141,8 @@
      }
     }
    ],
-   "source": "template"
+   "source": "template",
+   "narrated_by": "templates"
   }
  ]
 }

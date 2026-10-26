@@ -28,7 +28,7 @@ api = [
     "python-dotenv>=1.0",
 ]
 local = [
-    "agent-framework-foundry-local>=1.0",
+    "agent-framework-foundry-local>=1.0.0b261015",
 ]
 dev = [
     "pytest>=8.0",

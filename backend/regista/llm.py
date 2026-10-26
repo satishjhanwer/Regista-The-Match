@@ -4,7 +4,8 @@ Selected with REGISTA_LLM_PROVIDER:
 
     foundry        Microsoft Foundry project (target for submission). FOUNDRY_PROJECT_ENDPOINT, FOUNDRY_MODEL
     azure_openai   Azure OpenAI resource. AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_MODEL, optional AZURE_OPENAI_API_KEY
-    foundry_local  Microsoft Foundry Local on this machine, no cloud account. FOUNDRY_LOCAL_MODEL (e.g. qwen2.5-7b)
+    foundry_local  Microsoft Foundry Local on this machine, no cloud account. FOUNDRY_LOCAL_MODEL (alias, e.g. qwen2.5-3b),
+                   optional FOUNDRY_LOCAL_ENDPOINT (default: discovered with the foundry CLI)
     openai_compat  Any OpenAI-compatible endpoint (Ollama, LM Studio, a hosted API). OPENAI_BASE_URL, OPENAI_MODEL, OPENAI_API_KEY
     none           No LLM. Agents fall back to deterministic templates (tests, CI, offline demo)
 
@@ -14,7 +15,10 @@ Imports are lazy so the core package and tests never need the agent extras insta
 
 from __future__ import annotations
 
+import json
 import os
+import shutil
+import subprocess
 from typing import Any
 
 PROVIDERS = ("foundry", "azure_openai", "foundry_local", "openai_compat", "none")
@@ -45,6 +49,22 @@ def resolve_provider(env: dict[str, str] | None = None) -> str:
     return "none"
 
 
+_MODEL_VAR = {
+    "foundry": "FOUNDRY_MODEL",
+    "azure_openai": "AZURE_OPENAI_MODEL",
+    "foundry_local": "FOUNDRY_LOCAL_MODEL",
+    "openai_compat": "OPENAI_MODEL",
+}
+
+
+def describe_provider(provider: str | None = None) -> str:
+    """``provider/model`` for provenance in traces and recordings, or ``templates`` when no model is configured."""
+    provider = provider or resolve_provider()
+    if provider == "none":
+        return "templates"
+    return f"{provider}/{os.getenv(_MODEL_VAR[provider], '?')}"
+
+
 def build_chat_client(provider: str | None = None) -> Any | None:
     """Return an Agent Framework chat client, or None for the deterministic fallback."""
     provider = provider or resolve_provider()
@@ -70,9 +90,11 @@ def build_chat_client(provider: str | None = None) -> Any | None:
         return OpenAIChatClient(credential=DefaultAzureCredential(), azure_endpoint=endpoint, model=model)
 
     if provider == "foundry_local":
-        from agent_framework.foundry import FoundryLocalClient
+        from agent_framework.openai import OpenAIChatCompletionClient
 
-        return FoundryLocalClient(model=os.environ["FOUNDRY_LOCAL_MODEL"])
+        # Chat completions, as FoundryLocalClient uses: Foundry Local does not keep Responses API history.
+        endpoint, model_id = foundry_local_endpoint(os.environ["FOUNDRY_LOCAL_MODEL"])
+        return OpenAIChatCompletionClient(base_url=f"{endpoint}/v1", model=model_id, api_key="foundry-local")
 
     if provider == "openai_compat":
         from agent_framework.openai import OpenAIChatClient
@@ -84,3 +106,34 @@ def build_chat_client(provider: str | None = None) -> Any | None:
         )
 
     return None
+
+
+def _foundry(*args: str) -> dict:
+    exe = shutil.which("foundry")
+    if exe is None:
+        raise RuntimeError("Foundry Local is not installed (winget install Microsoft.FoundryLocal)")
+    out = subprocess.run([exe, *args, "--output", "json"], capture_output=True, text=True, timeout=600, check=True).stdout
+    return json.loads(out[out.index("{") :])
+
+
+def foundry_local_endpoint(alias: str) -> tuple[str, str]:
+    """Start Foundry Local if needed, load ``alias``, and return (endpoint, model id) of its OpenAI-compatible API.
+
+    Agent Framework's ``FoundryLocalClient`` pins ``foundry-local-sdk`` 0.5.1, which discovers the service with
+    ``foundry service status``; current Foundry Local CLIs (0.12+) renamed that to ``foundry server``. Underneath it is
+    an OpenAI chat-completions client on the local Foundry service, so we discover the same endpoint with the current
+    CLI and talk to it through Agent Framework's OpenAI chat-completions client.
+    """
+    endpoint = os.getenv("FOUNDRY_LOCAL_ENDPOINT")
+    if not endpoint:
+        status = _foundry("server", "status")
+        if not status.get("running"):
+            _foundry("server", "start")
+            status = _foundry("server", "status")
+        endpoint = status["webUrls"][0]
+    _foundry("model", "load", alias)
+    loaded = _foundry("model", "list", "--loaded")["models"]
+    model_id = next((m["id"] for m in loaded if alias in (m["alias"], m["id"])), None)
+    if model_id is None:
+        raise RuntimeError(f"Foundry Local did not load {alias!r}")
+    return endpoint.rstrip("/"), model_id
