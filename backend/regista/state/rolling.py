@@ -21,6 +21,7 @@ class RollingSum:
         self._sum = 0.0
 
     def add(self, t: float, v: float = 1.0) -> None:
+        """Record value ``v`` at time ``t``."""
         self._q.append((t, v))
         self._sum += v
 
@@ -32,14 +33,17 @@ class RollingSum:
             self._sum = 0.0  # drop accumulated float error whenever the window empties
 
     def sum(self, now: float) -> float:
+        """Sum of the samples still inside the window at ``now``."""
         self._evict(now)
         return self._sum
 
     def count(self, now: float) -> int:
+        """Number of samples still inside the window at ``now``."""
         self._evict(now)
         return len(self._q)
 
     def clear(self) -> None:
+        """Forget every sample."""
         self._q.clear()
         self._sum = 0.0
 
@@ -60,12 +64,15 @@ class DecayedSum:
             self._t = now
 
     def add(self, now: float, w: float) -> None:
+        """Decay to ``now``, then add an impulse of weight ``w``."""
         self._decay_to(now)
         self._value += w
 
     def value(self, now: float) -> float:
+        """The decayed sum at ``now``."""
         self._decay_to(now)
         return self._value
 
     def reset(self, now: float) -> None:
+        """Restart from zero at ``now``."""
         self._value, self._t = 0.0, now

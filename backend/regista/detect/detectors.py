@@ -31,17 +31,15 @@ def _clock_at(st: MatchState, elapsed_s: float) -> str:
     return format_clock(st.period, max(0.0, elapsed_s - st.period_start_s))
 
 
-# --------------------------------------------------------------------------- #
-# Goals, chances, key passes
-# --------------------------------------------------------------------------- #
-
-
 class GoalDetector(Detector):
+    """Every goal: scorer, score, chance quality, assist and, when the ball was won in open play, the turnover chain."""
+
     kind = "goal"
     turnover_link_s = 20.0
     press_link_s = 600.0
 
     def detect(self, ev, updates, st):
+        """A goal insight on each goal."""
         if ev.type != "shot" or ev.outcome != "goal":
             return []
         team, opp, pid = ev.team_id, st.opp(ev.team_id), ev.player_id
@@ -106,11 +104,14 @@ class GoalDetector(Detector):
 
 
 class ShotQualityDetector(Detector):
+    """Big chances that were not scored (xG at least 0.25)."""
+
     kind = "shot_quality"
     cooldown_s = 120.0
     min_xg = 0.25
 
     def detect(self, ev, updates, st):
+        """A chance insight for a big chance."""
         if ev.type != "shot" or ev.outcome == "goal":
             return []
         xg = st.shot_xg.get(ev.event_id, 0.0)
@@ -135,6 +136,8 @@ class ShotQualityDetector(Detector):
 
 
 class KeyPassDetector(Detector):
+    """The pass behind a shot, when it was a through ball, hard, a cross for a big chance, or an assist."""
+
     kind = "key_pass"
     cooldown_s = 120.0
     min_difficulty = 0.4
@@ -142,6 +145,7 @@ class KeyPassDetector(Detector):
     min_cross_xg = 0.3
 
     def detect(self, ev, updates, st):
+        """A key-pass insight when a shot follows a notable pass."""
         if ev.type != "shot" or not ev.assist_event_id:
             return []
         p = st.passes.get(ev.assist_event_id)
@@ -175,11 +179,6 @@ class KeyPassDetector(Detector):
         ]
 
 
-# --------------------------------------------------------------------------- #
-# Momentum, press, control vs chaos
-# --------------------------------------------------------------------------- #
-
-
 class MomentumShiftDetector(Detector):
     """Fires when a different team becomes dominant: |index| >= 0.4, released below 0.1 (hysteresis)."""
 
@@ -196,6 +195,7 @@ class MomentumShiftDetector(Detector):
         self._pending: dict[str, int] = {}
 
     def detect(self, ev, updates, st):
+        """A momentum insight when a different team becomes dominant."""
         if ev.type == "period_start":
             self.regime = None
         if not _has(updates, "match.momentum_index"):
@@ -240,6 +240,7 @@ class MomentumShiftDetector(Detector):
         return [Draft("momentum_shift", 3, 10000, facts, hint, f"momentum:{team}:{ev.event_id}", "match", [team], [])]
 
     def admitted(self, draft: Draft) -> None:
+        """Remember the announced team and both teams' shares at that moment."""
         self.announced = draft.team_ids[0]
         self.shares_at_announce = self._pending
 
@@ -257,6 +258,7 @@ class PressChangeDetector(Detector):
         self._baseline: dict[str, float] = {}
 
     def detect(self, ev, updates, st):
+        """A press insight on a confirmed CUSUM alarm, unless that team's spell is already announced."""
         if ev.type == "period_start":
             self.active.clear()
         for team, base in list(self.active.items()):
@@ -315,6 +317,7 @@ class PressChangeDetector(Detector):
         return out
 
     def admitted(self, draft: Draft) -> None:
+        """Mark the team's press spell as announced."""
         team = draft.team_ids[0]
         self.active[team] = self._baseline[team]
 
@@ -339,6 +342,7 @@ class ControlChaosDetector(Detector):
         self.chaos_at_announce: float | None = None
 
     def detect(self, ev, updates, st):
+        """An insight when the match enters a chaos regime or one side takes control."""
         if not _has(updates, "match.chaos_5m") or st.now - st.period_start_s < self.warmup_s:
             return []
         cc = st.component(ControlChaos)
@@ -423,16 +427,14 @@ class ControlChaosDetector(Detector):
         return None
 
     def admitted(self, draft: Draft) -> None:
+        """Remember the announced regime and its chaos index."""
         self.announced = self.regime
         self.chaos_at_announce = next(f.value for f in draft.facts if f.key == "match.chaos_5m")
 
 
-# --------------------------------------------------------------------------- #
-# Players: speed tags and milestones
-# --------------------------------------------------------------------------- #
-
-
 class PlayerTagDetector(Detector):
+    """Speed tags: sprints over 30 km/h and new match records for sprint, shot and pass speed."""
+
     kind = "player_tag"
     cooldown_s = 120.0
     min_record_kmh = {"sprint": 30.0, "shot_speed": 100.0, "pass_speed": 70.0}
@@ -441,6 +443,7 @@ class PlayerTagDetector(Detector):
         self._seen = 0
 
     def detect(self, ev, updates, st):
+        """A tag for each new notable speed."""
         rec = st.component(Records)
         new, self._seen = rec.marks[self._seen :], len(rec.marks)
         out = []
@@ -470,12 +473,15 @@ class PlayerTagDetector(Detector):
 
 
 class MilestoneDetector(Detector):
+    """Braces, hat-tricks and career landmarks, one insight per player per event."""
+
     kind = "milestone"
 
     def __init__(self) -> None:
         self._seen = 0
 
     def detect(self, ev, updates, st):
+        """A milestone insight for each player with new milestones."""
         rec = st.component(Records)
         new, self._seen = rec.milestones[self._seen :], len(rec.milestones)
         groups: dict[str, list] = {}
@@ -516,15 +522,13 @@ class MilestoneDetector(Detector):
         return out
 
 
-# --------------------------------------------------------------------------- #
-# Period summary
-# --------------------------------------------------------------------------- #
-
-
 class PeriodSummaryDetector(Detector):
+    """Half-time and full-time numbers: score, share of passes, shots, xG, completion, fastest sprint."""
+
     kind = "period_summary"
 
     def detect(self, ev, updates, st):
+        """A summary at the end of each period."""
         if ev.type != "period_end":
             return []
         end = event_ref(ev.event_id)
@@ -576,6 +580,7 @@ class PeriodSummaryDetector(Detector):
 
 
 def default_detectors() -> list[Detector]:
+    """The nine detectors, in the order they run."""
     return [
         GoalDetector(),
         KeyPassDetector(),

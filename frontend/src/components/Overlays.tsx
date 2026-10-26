@@ -1,4 +1,6 @@
-// Broadcast graphics: score bug plus one component per overlay slot.
+/**
+ * Broadcast graphics: score bug plus one component per overlay slot.
+ */
 
 import type { CSSProperties } from "react";
 
@@ -6,6 +8,7 @@ import type { MatchMeta, OverlayMessage, StreamClock, StreamEvent } from "../con
 import { KIND_LABEL, type Palette } from "../lib/format";
 import { progress, type OnAir, type Slot } from "../lib/overlayQueue";
 
+/** Team kits, score and broadcast clock. */
 export function ScoreBug({ meta, score, clock, colors }: { meta: MatchMeta; score: Record<string, number>; clock: StreamClock | null; colors: Palette }) {
   const h = meta.home;
   const a = meta.away;
@@ -59,6 +62,7 @@ function accent(item: OnAir, colors: Palette): string {
   return t.length === 1 ? (colors.ink[t[0]] ?? "var(--accent)") : "var(--accent)";
 }
 
+/** Main story graphic: kind, headline, body and stat callout. */
 export function LowerThird({ item, air, colors, onSelect }: SlotProps) {
   const { rendered, insight } = item.msg.payload;
   return (
@@ -83,6 +87,7 @@ export function LowerThird({ item, air, colors, onSelect }: SlotProps) {
   );
 }
 
+/** Analysis card listing every claim; fan-colour claims are shown in italics. */
 export function SidePanel({ item, air, colors, onSelect }: SlotProps) {
   const { rendered, insight } = item.msg.payload;
   return (
@@ -111,6 +116,7 @@ export function SidePanel({ item, air, colors, onSelect }: SlotProps) {
   );
 }
 
+/** Summary strip across the top of the frame. */
 export function TopBar({ item, air, onSelect }: SlotProps) {
   const { rendered } = item.msg.payload;
   return (
@@ -122,6 +128,7 @@ export function TopBar({ item, air, onSelect }: SlotProps) {
   );
 }
 
+/** One-line crawl along the bottom of the frame. */
 export function Ticker({ item, onSelect }: SlotProps) {
   const { rendered, insight } = item.msg.payload;
   return (
@@ -149,6 +156,7 @@ export function PlayerTag({ item, air, colors, onSelect, events }: SlotProps & {
   );
 }
 
+/** Draws whatever the scheduler has on air, one component per slot. */
 export function OverlayLayer({
   onAir,
   air,

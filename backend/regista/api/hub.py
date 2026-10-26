@@ -43,6 +43,7 @@ _EVENT_EXTRAS = ("end_x", "end_y", "outcome", "height", "is_cross", "is_through_
 
 
 def compact_event(ev) -> StreamEvent:
+    """A match event in the compact form the pitch view draws."""
     extras = {k: v for k in _EVENT_EXTRAS if (v := getattr(ev, k, None)) is not None}
     return StreamEvent(
         id=ev.event_id, type=ev.type, period=ev.period, t=ev.t, team=ev.team_id, player=ev.player_id, x=ev.x, y=ev.y, **extras
@@ -50,16 +51,21 @@ def compact_event(ev) -> StreamEvent:
 
 
 def trace_steps(steps) -> list[TraceStep]:
+    """Orchestrator trace steps as stream contract models."""
     return [TraceStep.model_validate(asdict(s)) for s in steps]
 
 
 class Viewer:
+    """A connected socket and the fan profile it renders for."""
+
     def __init__(self, send, profile: FanProfile) -> None:
         self.send = send  # async callable taking a JSON-ready dict
         self.profile = profile
 
 
 class Hub:
+    """The shared replay clock and its viewers (see module docstring)."""
+
     def __init__(self, replay: Replay, warm: WarmPath, *, speed: float = 10.0, tick_s: float = 0.1, autoplay: bool = True) -> None:
         self.replay = replay
         self.warm = warm
@@ -70,11 +76,12 @@ class Hub:
         self._task: asyncio.Task | None = None
         self._renders: set[asyncio.Task] = set()
 
-    # ------------------------------------------------------------------ #
     async def start(self) -> None:
+        """Start the background tick loop."""
         self._task = asyncio.create_task(self._run())
 
     async def stop(self) -> None:
+        """Stop the tick loop and cancel in-flight renders."""
         if self._task:
             self._task.cancel()
             with contextlib.suppress(asyncio.CancelledError):
@@ -92,6 +99,7 @@ class Hub:
                     await self.broadcast(self.tick_message())
 
     async def step(self, match_seconds: float) -> None:
+        """Advance the replay, push ticks and events, and dispatch new insights to every viewer."""
         step = self.replay.advance_to(self.replay.clock_s + match_seconds)
         if step.events:
             await self.broadcast(EventsMessage(events=[compact_event(e) for e in step.events]))
@@ -105,7 +113,6 @@ class Hub:
         while self._renders:
             await asyncio.gather(*list(self._renders), return_exceptions=True)
 
-    # ------------------------------------------------------------------ #
     def _dispatch(self, ctx: InsightContext, viewer: Viewer) -> None:
         if display_for(ctx.insight, viewer.profile) is None:
             return
@@ -134,6 +141,7 @@ class Hub:
             self.viewers.discard(viewer)
 
     async def broadcast(self, msg: Model) -> None:
+        """Send one message to every viewer (serialized once); viewers that fail are dropped."""
         data = msg.model_dump(mode="json")  # serialize once for every viewer
         for viewer in list(self.viewers):
             try:
@@ -141,17 +149,19 @@ class Hub:
             except Exception:
                 self.viewers.discard(viewer)
 
-    # ------------------------------------------------------------------ #
     async def connect(self, viewer: Viewer) -> None:
+        """Register a viewer and send it ``hello`` and the current tick."""
         self.viewers.add(viewer)
         hello = HelloMessage(match=self.replay.match.meta, profile=viewer.profile, replay=self.status())
         await viewer.send(hello.model_dump(mode="json"))
         await viewer.send(self.tick_message().model_dump(mode="json"))
 
     def disconnect(self, viewer: Viewer) -> None:
+        """Forget a viewer."""
         self.viewers.discard(viewer)
 
     async def control(self, action: str, value: float | None = None, minute: float | None = None) -> ReplayStatus:
+        """Apply a replay control (play, pause, speed, seek, step, restart) and return the new status."""
         if action == "play":
             if self.replay.finished:
                 await self._seek(0.0)
@@ -181,6 +191,7 @@ class Hub:
             await self.broadcast(ResetMessage())
 
     def status(self) -> ReplayStatus:
+        """Replay status for REST and ``hello``."""
         return ReplayStatus(
             playing=self.playing,
             speed=self.speed,
@@ -190,6 +201,7 @@ class Hub:
         )
 
     def tick_message(self) -> TickMessage:
+        """Clock, score and live metrics as a tick message."""
         st = self.replay.state
         mom, cc, press = st.component(Momentum), st.component(ControlChaos), st.component(Press)
         metrics = LiveMetrics(

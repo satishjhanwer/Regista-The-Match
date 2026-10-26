@@ -1,5 +1,6 @@
 {
   "additionalProperties": false,
+  "description": "Who is watching: viewing mode, language, favourite club, focus player, metric of interest.",
   "properties": {
     "profile_id": {
       "type": "string"

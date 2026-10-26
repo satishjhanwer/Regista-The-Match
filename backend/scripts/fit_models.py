@@ -38,6 +38,7 @@ TRUTH_XG_KEYS = ("distance_per_m", "angle_per_rad", "header", "defenders_5m")
 
 
 def pass_data(seeds):
+    """Pass features and completion labels for the given seeds."""
     rows, y = [], []
     for seed in seeds:
         match, _ = simulate(seed=seed)
@@ -49,6 +50,7 @@ def pass_data(seeds):
 
 
 def print_coefs(fitted: LogisticModel, truth: dict[str, float], truth_keys: tuple[str, ...]) -> None:
+    """Fitted coefficients next to the simulator's true ones."""
     print(f"  {'term':<24}{'fitted':>10}{'truth':>10}")
     print(f"  {'intercept':<24}{fitted.intercept:>10.3f}{truth['intercept']:>10.3f}")
     for f, c, tk in zip(fitted.features, fitted.coef, truth_keys, strict=True):
@@ -56,12 +58,14 @@ def print_coefs(fitted: LogisticModel, truth: dict[str, float], truth_keys: tupl
 
 
 def print_calibration(p, y) -> None:
+    """Five equal-count calibration bins."""
     print(f"  {'bin':<5}{'n':>6}{'mean pred':>11}{'observed':>10}")
     for i, (n, mp, mo) in enumerate(calibration(p, y, 5)):
         print(f"  {i + 1:<5}{n:>6}{mp:>11.3f}{mo:>10.3f}")
 
 
 def fit_pass(write: bool) -> LogisticModel:
+    """Fit, report and optionally write the pass difficulty model."""
     rows, y = pass_data(TRAIN_SEEDS)
     b0, b = fit_logistic(rows, y)
     base_rate = sum(y) / len(y)
@@ -99,6 +103,7 @@ def shot_data(seeds):
 
 
 def fit_xg(write: bool) -> LogisticModel:
+    """Fit, report and optionally write the xG model (soft labels), with a binary-outcome robustness check."""
     rows, q = shot_data(TRAIN_SEEDS)
     b0, b = fit_logistic(rows, q)
     mean_xg = sum(q) / len(q)
@@ -138,6 +143,7 @@ def fit_xg(write: bool) -> LogisticModel:
 
 
 def main() -> None:
+    """Fit both models; ``--dry-run`` reports without writing."""
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()

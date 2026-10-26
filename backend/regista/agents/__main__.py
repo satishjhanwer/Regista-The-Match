@@ -28,6 +28,11 @@ from .verifier import Verifier
 async def record(
     match: MatchFile, out: Path, profiles: list[str], concurrency: int, kinds: set[str] | None = None, resume: Path | None = None
 ) -> None:
+    """Replay the match and render its moments for the given profiles, then save the warm-path cache to ``out``.
+
+    ``kinds`` limits which insight kinds are rendered. ``resume`` re-audits an existing recording: renders that
+    still pass today's Verifier are kept, the rest are rendered again.
+    """
     from ..api.replay import Replay
 
     provider = resolve_provider()
@@ -61,6 +66,7 @@ async def record(
 
 
 def show(path: Path, profile: str | None) -> None:
+    """Print one line per recorded render (optionally for one profile)."""
     data = json.loads(path.read_text(encoding="utf-8"))
     for row in data["renders"]:
         if profile and row["profile_id"] != profile:
@@ -70,6 +76,7 @@ def show(path: Path, profile: str | None) -> None:
 
 
 def main() -> None:
+    """Command-line entry point: ``record`` or ``show``."""
     ap = argparse.ArgumentParser(prog="regista.agents")
     sub = ap.add_subparsers(dest="cmd", required=True)
     rec = sub.add_parser("record")

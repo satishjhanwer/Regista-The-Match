@@ -21,6 +21,9 @@ export interface MatchFile {
     | PossessionChangeEvent
   )[];
 }
+/**
+ * Match metadata: teams, venue, kickoff and which way the home side attacks first.
+ */
 export interface MatchMeta {
   schema_version: string;
   match_id: string;
@@ -33,6 +36,9 @@ export interface MatchMeta {
   seed: number;
   generator: string;
 }
+/**
+ * A club and its eleven.
+ */
 export interface Team {
   team_id: string;
   name: string;
@@ -42,6 +48,9 @@ export interface Team {
   formation: string;
   players: Player[];
 }
+/**
+ * A squad member, with career totals before this match.
+ */
 export interface Player {
   player_id: string;
   name: string;
@@ -61,6 +70,9 @@ export interface Player {
    */
   career_goals: number;
 }
+/**
+ * Kickoff of a period.
+ */
 export interface PeriodStartEvent {
   event_id: string;
   seq: number;
@@ -85,6 +97,9 @@ export interface PeriodStartEvent {
   y: number;
   type: "period_start";
 }
+/**
+ * End of a period, with the score.
+ */
 export interface PeriodEndEvent {
   event_id: string;
   seq: number;
@@ -111,6 +126,9 @@ export interface PeriodEndEvent {
   home_score: number;
   away_score: number;
 }
+/**
+ * A pass with its outcome, length, height, ball speed and the pressure on passer and receiver.
+ */
 export interface PassEvent {
   event_id: string;
   seq: number;
@@ -150,11 +168,17 @@ export interface PassEvent {
   is_cross: boolean;
   is_through_ball: boolean;
 }
+/**
+ * Opponents around a player at the moment of an action.
+ */
 export interface Pressure {
   defenders_within_5m: number;
   nearest_defender_m: number;
   nearest_defender_id: string | null;
 }
+/**
+ * A player running with the ball.
+ */
 export interface CarryEvent {
   event_id: string;
   seq: number;
@@ -184,6 +208,9 @@ export interface CarryEvent {
   duration_s: number;
   top_speed_kmh: number;
 }
+/**
+ * A shot with outcome, body part, speed, goal geometry, pressure, assist and freeze frame.
+ */
 export interface ShotEvent {
   event_id: string;
   seq: number;
@@ -222,11 +249,17 @@ export interface ShotEvent {
   assist_event_id: string | null;
   freeze_frame: FreezeFramePlayer[];
 }
+/**
+ * A player's position in a shot's freeze frame.
+ */
 export interface FreezeFramePlayer {
   player_id: string;
   x: number;
   y: number;
 }
+/**
+ * A goalkeeper save.
+ */
 export interface SaveEvent {
   event_id: string;
   seq: number;
@@ -252,6 +285,9 @@ export interface SaveEvent {
   type: "save";
   shot_event_id: string;
 }
+/**
+ * A defender closing down the ball carrier.
+ */
 export interface PressureEvent {
   event_id: string;
   seq: number;
@@ -279,6 +315,9 @@ export interface PressureEvent {
   distance_m: number;
   duration_s: number;
 }
+/**
+ * A tackle.
+ */
 export interface TackleEvent {
   event_id: string;
   seq: number;
@@ -305,6 +344,9 @@ export interface TackleEvent {
   opponent_id: string;
   outcome: "won" | "lost";
 }
+/**
+ * An intercepted pass.
+ */
 export interface InterceptionEvent {
   event_id: string;
   seq: number;
@@ -330,6 +372,9 @@ export interface InterceptionEvent {
   type: "interception";
   pass_event_id: string;
 }
+/**
+ * A defensive clearance.
+ */
 export interface ClearanceEvent {
   event_id: string;
   seq: number;
@@ -356,6 +401,9 @@ export interface ClearanceEvent {
   end_x: number;
   end_y: number;
 }
+/**
+ * A foul, with any card.
+ */
 export interface FoulEvent {
   event_id: string;
   seq: number;
@@ -412,6 +460,9 @@ export interface SprintEvent {
   distance_m: number;
   duration_s: number;
 }
+/**
+ * The ball changes team, and why.
+ */
 export interface PossessionChangeEvent {
   event_id: string;
   seq: number;

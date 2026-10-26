@@ -16,6 +16,7 @@ def default_components() -> list:
 
 
 def build_state(meta: MatchMeta) -> MatchState:
+    """A MatchState with every default component plugged in."""
     return MatchState(meta, default_components())
 
 

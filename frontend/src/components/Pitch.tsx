@@ -1,4 +1,6 @@
-// Live pitch: markings plus a fading trail of the latest on-ball actions, in absolute pitch metres.
+/**
+ * Live pitch: markings plus a fading trail of the latest on-ball actions, in absolute pitch metres.
+ */
 
 import type { StreamEvent } from "../contracts/stream";
 import type { Palette } from "../lib/format";
@@ -73,6 +75,7 @@ function EventMark({ e, color, opacity, latest }: { e: StreamEvent; color: strin
   }
 }
 
+/** Where the ball is after the latest on-ball event, and who has it. */
 export function ballAt(events: StreamEvent[]): { x: number; y: number; team: string | null; player: string | null } | null {
   for (let i = events.length - 1; i >= 0; i--) {
     const e = events[i];
@@ -83,6 +86,7 @@ export function ballAt(events: StreamEvent[]): { x: number; y: number; team: str
   return null;
 }
 
+/** Live pitch: markings plus a fading trail of the latest on-ball actions. */
 export function Pitch({ events, colors, names }: { events: StreamEvent[]; colors: Palette; names: Record<string, string> }) {
   const trail = events.filter((e) => DRAWN.has(e.type)).slice(-TRAIL);
   const ball = ballAt(events);

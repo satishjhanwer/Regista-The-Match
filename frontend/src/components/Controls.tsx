@@ -1,4 +1,6 @@
-// Replay transport and the fan control panel.
+/**
+ * Replay transport and the fan control panel.
+ */
 
 import { useState } from "react";
 
@@ -8,6 +10,7 @@ import { LANGS } from "../lib/format";
 
 const SPEEDS = [1, 5, 10, 20, 60];
 
+/** Play/pause, restart, seek slider and speed buttons for the shared replay. */
 export function Transport({ playing, speed, minute }: { playing: boolean; speed: number; minute: number }) {
   const [drag, setDrag] = useState<number | null>(null);
   const send = (action: "play" | "pause" | "speed" | "seek" | "restart", extra: { value?: number; minute?: number } = {}) =>
@@ -59,6 +62,7 @@ const METRICS = [
   { id: "speed", label: "Speed" },
 ];
 
+/** Profile presets and the controls for mode, language, club, focus player and metric. */
 export function FanPanel({ meta, presets, params, onChange }: { meta: MatchMeta; presets: FanProfile[]; params: ProfileParams; onChange: (p: ProfileParams) => void }) {
   const set = (patch: Partial<ProfileParams>) => onChange({ ...params, profile: undefined, ...patch });
   const players = [meta.home, meta.away].flatMap((t) => t.players.map((p) => ({ ...p, team: t.short_name })));

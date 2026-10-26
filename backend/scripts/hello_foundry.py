@@ -46,6 +46,7 @@ def get_score_at(
 
 
 async def main() -> None:
+    """Run one tool-calling question against the configured provider."""
     load_dotenv()
     if not DATA.exists():
         raise SystemExit("Generate the match first: python -m regista.sim generate --out ../data")

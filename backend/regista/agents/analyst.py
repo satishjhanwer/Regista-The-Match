@@ -27,11 +27,17 @@ Rules:
 
 @dataclass
 class Brief:
-    insight: Insight  # detector facts plus promoted candidate facts
+    """What the Analyst hands to the Narrator.
+
+    ``insight`` carries the detector's facts plus any tool facts the Analyst promoted; ``fact_ids`` are its picks
+    in priority order; ``source`` is ``llm`` or ``rules``.
+    """
+
+    insight: Insight
     fact_ids: list[str]
     angle: str
     tool_calls: list[dict]
-    source: str  # "llm" or "rules"
+    source: str
 
 
 def extract_json(text: str) -> dict:
@@ -48,11 +54,13 @@ def extract_json(text: str) -> dict:
 
 
 def rule_brief(ctx: InsightContext) -> Brief:
+    """Deterministic brief: the detector's facts in order, with the detector's rationale as the angle."""
     ins = ctx.insight
     return Brief(ins, [f.fact_id for f in ins.facts], ins.why_it_matters_hint, [], "rules")
 
 
 def moment_prompt(ins: Insight) -> str:
+    """The moment summary the Analyst model starts from."""
     return json.dumps(
         {
             "kind": ins.kind,
@@ -66,10 +74,13 @@ def moment_prompt(ins: Insight) -> str:
 
 
 class Analyst:
+    """Frames a moment, through tools over the state snapshot when a model is available, otherwise by rule."""
+
     def __init__(self, client=None) -> None:
         self.client = client
 
     async def brief(self, ctx: InsightContext) -> Brief:
+        """Build the brief for one insight. Raises if the model's reply selects no known fact."""
         if self.client is None:
             return rule_brief(ctx)
         from agent_framework import Agent

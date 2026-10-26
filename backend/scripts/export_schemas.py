@@ -41,6 +41,7 @@ def strip_property_titles(node):
 
 
 def main() -> None:
+    """Write every contract's JSON Schema to contracts/schema."""
     OUT.mkdir(parents=True, exist_ok=True)
     for name, model in SCHEMAS.items():
         schema = strip_property_titles(model.model_json_schema(mode="serialization"))

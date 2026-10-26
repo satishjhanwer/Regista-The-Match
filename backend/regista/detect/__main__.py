@@ -15,6 +15,7 @@ from .pipeline import run_match
 
 
 def headline(ins, n: int = 4) -> str:
+    """The first ``n`` facts of an insight, as one readable line."""
     parts = []
     for f in ins.facts[:n]:
         unit = "" if f.unit is None else ("%" if f.unit == "%" else f" {f.unit}")
@@ -24,6 +25,7 @@ def headline(ins, n: int = 4) -> str:
 
 
 def main() -> None:
+    """Command-line entry point."""
     ap = argparse.ArgumentParser(prog="regista.detect")
     ap.add_argument("path", type=Path)
     ap.add_argument("--json", type=Path, help="also write insights as JSON lines")

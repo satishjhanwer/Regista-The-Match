@@ -33,21 +33,32 @@ LLM_TIMEOUT_S = 20.0
 
 @dataclass
 class TraceStep:
-    agent: str  # analyst | narrator | verifier | template | cache
+    """One step of a rendering's trace: which agent, what it did, the outcome, time taken and details.
+
+    ``agent`` is analyst, narrator, verifier, template or cache; ``status`` is ok, rejected, error or fallback.
+    """
+
+    agent: str
     action: str
-    status: str  # ok | rejected | error | fallback
+    status: str
     ms: float
     detail: dict = field(default_factory=dict)
 
 
 @dataclass
 class RenderResult:
-    insight: Insight  # as rendered (may carry Analyst-promoted facts)
+    """A finished rendering with the insight it cites (including any Analyst-promoted facts) and its trace.
+
+    ``source`` is llm, llm_revised (passed after Verifier feedback), template, template_fallback or cache.
+    """
+
+    insight: Insight
     rendered: RenderedInsight
     trace: list[TraceStep]
-    source: str  # llm | llm_revised | template | template_fallback | cache
+    source: str
 
     def to_json(self) -> dict:
+        """JSON-ready dict, as stored in a recorded run."""
         return {
             "insight": json.loads(self.insight.model_dump_json()),
             "rendered": json.loads(self.rendered.model_dump_json()),
@@ -57,6 +68,7 @@ class RenderResult:
 
     @classmethod
     def from_json(cls, d: dict) -> RenderResult:
+        """Inverse of ``to_json``."""
         return cls(
             Insight.model_validate(d["insight"]),
             RenderedInsight.model_validate(d["rendered"]),
@@ -70,6 +82,12 @@ def _ms(t0: float) -> float:
 
 
 class WarmPath:
+    """Analyst -> Narrator -> Verifier for each (insight, profile), with template fallback, caching and traces.
+
+    ``client`` is an Agent Framework chat client or None (templates only). ``cache`` preloads recorded renders.
+    ``timeout_s`` defaults to REGISTA_LLM_TIMEOUT_S, and REGISTA_LLM_LANGUAGES limits model narration to some languages.
+    """
+
     def __init__(
         self, meta: MatchMeta, client=None, *, analyst=None, narrator=None, cache: dict | None = None, timeout_s: float | None = None
     ):
@@ -88,8 +106,8 @@ class WarmPath:
         self._inflight: dict[tuple[str, str], asyncio.Future] = {}
         self._brief_steps: dict[str, list[TraceStep]] = {}
 
-    # ------------------------------------------------------------------ #
     async def brief(self, ctx: InsightContext) -> tuple[Brief, list[TraceStep]]:
+        """The Analyst's brief for an insight, computed once and shared by every profile."""
         iid = ctx.insight.insight_id
         fut = self._briefs.get(iid)
         if fut is None:
@@ -121,6 +139,7 @@ class WarmPath:
         return brief
 
     async def render(self, ctx: InsightContext, profile: FanProfile) -> RenderResult:
+        """Rendering for one profile: from the cache, an in-flight render, or a new one."""
         key = (ctx.insight.insight_id, profile.profile_id)
         hit = self.cache.get(key)
         if hit is not None:
@@ -210,8 +229,8 @@ class WarmPath:
         )
         return RenderResult(ctx.insight, r.model_copy(update={"verification": v}), trace, "template_fallback" if use_llm else "template")
 
-    # ------------------------------------------------------------------ #
     def save_cache(self, path: Path) -> None:
+        """Write every render to a recorded-run file."""
         rows = []
         for (iid, pid), res in sorted(self.cache.items()):
             row = {"insight_id": iid, "profile_id": pid, **res.to_json()}
@@ -221,6 +240,7 @@ class WarmPath:
 
     @staticmethod
     def load_cache(path: Path) -> dict[tuple[str, str], RenderResult]:
+        """Read a recorded-run file; each trace gets a leading ``cache`` step."""
         data = json.loads(path.read_text(encoding="utf-8"))
         out = {}
         for row in data["renders"]:

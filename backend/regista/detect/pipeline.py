@@ -18,6 +18,8 @@ from .detectors import default_detectors
 
 
 class InsightPipeline:
+    """Hot path for one match: state, detectors, dedupe and cooldowns, and deterministic insight ids."""
+
     def __init__(self, meta: MatchMeta, state: MatchState | None = None, detectors: list[Detector] | None = None) -> None:
         self.meta = meta
         self.state = state or build_state(meta)
@@ -29,6 +31,7 @@ class InsightPipeline:
         self._count = 0
 
     def process(self, ev) -> list[Insight]:
+        """Apply one event and return the insights it produced."""
         updates = self.state.apply(ev)
         new: list[Insight] = []
         for det in self.detectors:

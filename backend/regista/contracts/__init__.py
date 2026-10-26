@@ -1,3 +1,5 @@
+"""Pydantic contracts: the single source of truth for events, insights, overlays and the stream protocol."""
+
 from .events import (
     PERIOD_LENGTH_S,
     PITCH_LENGTH_M,

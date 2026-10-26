@@ -48,6 +48,12 @@ DEFAULT_COMPLETION = 0.8
 
 @dataclass(frozen=True)
 class PressAlarm:
+    """A confirmed press change for ``team_id`` (the pressing side).
+
+    ``change_start_s`` is the CUSUM change-point estimate; shares are the opponent's passes under pressure,
+    at baseline and over the last 5 minutes; ``pressure_event_ids`` are evidence.
+    """
+
     team_id: str
     period: int
     t: float
@@ -94,12 +100,15 @@ class _Cusum:
 
 
 class Press:
+    """Press intensity metrics and the gated CUSUM change-point detector, per pressing team."""
+
     def __init__(self) -> None:
         self.cusum: dict[str, _Cusum] = {}
         self.alarms: list[PressAlarm] = []
         self.recent_pressures: dict[str, deque[tuple[float, str]]] = {}
 
     def apply(self, ev, st: MatchState, out: list[MetricUpdate]) -> None:
+        """Update ratios on pressures and passes, and step the CUSUM on opponent passes."""
         if ev.type == "period_start" or not self.cusum:
             self.cusum = {t: _Cusum(st.now) for t in st.team_ids}
             self.recent_pressures = {t: deque(maxlen=32) for t in st.team_ids}
@@ -180,4 +189,5 @@ class Press:
         out.append(MetricUpdate(f"{p}.press_alarm", 1.0, st.now, c.run_start_s, st.now))
 
     def snapshot(self, st: MatchState) -> dict:
+        """Current CUSUM statistic per team."""
         return {"press_cusum": {t: round(c.s, 3) for t, c in self.cusum.items()}}

@@ -49,6 +49,7 @@ def short_id(fact_id: str, insight_id: str) -> str:
 
 
 def narration_prompt(brief: Brief, profile: FanProfile, meta: MatchMeta, feedback: str | None = None) -> str:
+    """The Narrator's input: moment, viewer, entities and every fact (short ids, Analyst priority), plus Verifier feedback on a retry."""
     ins = brief.insight
     rank = {fid: i + 1 for i, fid in enumerate(brief.fact_ids)}
     # Analyst's picks first (with their priority), then every other detector fact, so any number the
@@ -88,11 +89,14 @@ class DraftShapeError(ValueError):
 
 
 class LLMNarrator:
+    """Renders a brief for one fan profile with a model, as JSON claims that cite facts."""
+
     def __init__(self, client, meta: MatchMeta) -> None:
         self.client = client
         self.meta = meta
 
     async def render(self, brief: Brief, profile: FanProfile, feedback: str | None = None) -> RenderedInsight:
+        """Draft one rendering; ``feedback`` carries the Verifier's reasons on the retry."""
         from agent_framework import Agent
 
         agent = Agent(client=self.client, name="Narrator", instructions=NARRATOR_INSTRUCTIONS)
@@ -100,6 +104,7 @@ class LLMNarrator:
         return self.parse(reply.text, brief, profile)
 
     def parse(self, text: str, brief: Brief, profile: FanProfile) -> RenderedInsight:
+        """Turn the model's JSON into a RenderedInsight (aliases resolved). Raises DraftShapeError if too long."""
         data = extract_json(text)
         iid = brief.insight.insight_id
         real = {short_id(f.fact_id, iid): f.fact_id for f in brief.insight.facts}  # alias -> fact id; unknown ids pass through

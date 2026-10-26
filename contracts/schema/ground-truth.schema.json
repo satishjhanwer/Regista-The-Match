@@ -2,6 +2,7 @@
   "$defs": {
     "Storyline": {
       "additionalProperties": false,
+      "description": "A planted storyline window (ground truth).",
       "properties": {
         "storyline_id": {
           "type": "string"
@@ -38,6 +39,7 @@
     },
     "TruthShot": {
       "additionalProperties": false,
+      "description": "The true xG of one shot (ground truth).",
       "properties": {
         "event_id": {
           "type": "string"
@@ -57,6 +59,7 @@
     }
   },
   "additionalProperties": false,
+  "description": "Everything planted in a simulated match, for evaluation and tests only. Never streamed to the pipeline.",
   "properties": {
     "match_id": {
       "type": "string"

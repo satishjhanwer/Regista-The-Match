@@ -1,5 +1,8 @@
 /* Generated from contracts/schema by `npm run contracts`. Do not edit by hand. */
 
+/**
+ * Everything planted in a simulated match, for evaluation and tests only. Never streamed to the pipeline.
+ */
 export interface GroundTruth {
   match_id: string;
   seed: number;
@@ -18,6 +21,9 @@ export interface GroundTruth {
     [k: string]: number;
   };
 }
+/**
+ * A planted storyline window (ground truth).
+ */
 export interface Storyline {
   storyline_id: string;
   label: string;
@@ -26,6 +32,9 @@ export interface Storyline {
   description: string;
   expected_signals: string[];
 }
+/**
+ * The true xG of one shot (ground truth).
+ */
 export interface TruthShot {
   event_id: string;
   xg_true: number;

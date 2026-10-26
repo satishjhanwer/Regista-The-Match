@@ -76,10 +76,12 @@ GOAL_X, GOAL_Y, POST_HALF = L, W / 2, 3.66
 
 
 def sigmoid(z: float) -> float:
+    """Logistic function."""
     return 1.0 / (1.0 + math.exp(-z))
 
 
 def clamp(v: float, lo: float, hi: float) -> float:
+    """``v`` limited to [lo, hi]."""
     return lo if v < lo else hi if v > hi else v
 
 
@@ -93,6 +95,8 @@ def goal_geometry(xr: float, yr: float) -> tuple[float, float]:
 
 
 class MatchSimulator:
+    """One simulated match: positions, possession, director and event emission (see module docstring)."""
+
     def __init__(self, seed: int = 7, match_id: str = "RGS-2026-0001") -> None:
         self.rng = random.Random(seed)
         self.seed = seed
@@ -123,17 +127,17 @@ class MatchSimulator:
         self.possession_id = 0
         self.last_pass: PassEvent | None = None
 
-    # ------------------------------------------------------------------ #
-    # Frames, clock, geometry
-    # ------------------------------------------------------------------ #
     @property
     def clock(self) -> float:
+        """Broadcast match clock in seconds (period 2 restarts at 2700)."""
         return self.t if self.period == 1 else PERIOD_LENGTH_S + self.t
 
     def opp(self, team: str) -> str:
+        """The other team."""
         return AWAY_ID if team == HOME_ID else HOME_ID
 
     def to_abs(self, team: str, xr: float, yr: float) -> tuple[float, float]:
+        """A point from ``team``'s attacking frame to absolute pitch coordinates."""
         if attacks_right(self.meta, team, self.period):
             return xr, yr
         return L - xr, W - yr
@@ -141,9 +145,11 @@ class MatchSimulator:
     to_rel = to_abs  # the 180-degree rotation is its own inverse
 
     def players_of(self, team: str) -> list[str]:
+        """Player ids of a team."""
         return [pid for pid, t in self.team_of.items() if t == team]
 
     def pressure_at(self, defending: str, x: float, y: float) -> Pressure:
+        """Defenders within 5 m of a point and the nearest one."""
         best_d, best_id, n5 = 1e9, None, 0
         for pid in self.players_of(defending):
             d = math.hypot(self.pos[pid][0] - x, self.pos[pid][1] - y)
@@ -154,20 +160,21 @@ class MatchSimulator:
         return Pressure(defenders_within_5m=n5, nearest_defender_m=round(best_d, 2), nearest_defender_id=best_id)
 
     def nearest(self, pids: Iterable[str], x: float, y: float) -> str:
+        """The player among ``pids`` nearest to a point."""
         return min(pids, key=lambda pid: math.hypot(self.pos[pid][0] - x, self.pos[pid][1] - y))
 
     def place(self, pid: str, xr: float, yr: float) -> None:
+        """Put a player at a point given in its team's attacking frame."""
         self.pos[pid] = list(self.to_abs(self.team_of[pid], xr, yr))
 
-    # ------------------------------------------------------------------ #
-    # Movement
-    # ------------------------------------------------------------------ #
     def reset_shape(self) -> None:
+        """Both teams back into their kickoff shape."""
         for pid, team in self.team_of.items():
             bx, by = FORMATION_433[self.role_of[pid]]
             self.pos[pid] = list(self.to_abs(team, bx * 0.48, by))
 
     def update_positions(self, dt: float) -> None:
+        """Move every player ``dt`` seconds towards formation targets, with the nearest defenders pressing."""
         if dt <= 0:
             return
         a = 1.0 - math.exp(-dt / 1.8)
@@ -209,6 +216,7 @@ class MatchSimulator:
         self.pos[self.carrier] = list(self.ball)
 
     def advance(self, dt: float) -> None:
+        """Advance match time by ``dt`` and move the players."""
         self.t += dt
         # integrate long dead-ball gaps in chunks so pressers do not teleport
         remaining = dt
@@ -217,10 +225,8 @@ class MatchSimulator:
             self.update_positions(step)
             remaining -= step
 
-    # ------------------------------------------------------------------ #
-    # Emission
-    # ------------------------------------------------------------------ #
     def emit(self, cls, *, x: float, y: float, **kw):
+        """Create, number and record an event at the current time."""
         ev = cls(
             event_id=f"{self.meta.match_id}-{self.seq:05d}",
             seq=self.seq,
@@ -239,6 +245,7 @@ class MatchSimulator:
         return ev
 
     def change_possession(self, to_team: str, carrier: str, cause: str, x: float, y: float, from_team: str | None = "auto") -> None:
+        """Give the ball to ``to_team`` and emit the possession change."""
         frm = self.poss_team if from_team == "auto" else from_team
         self.possession_id += 1
         self.poss_team = to_team
@@ -256,10 +263,8 @@ class MatchSimulator:
             cause=cause,
         )
 
-    # ------------------------------------------------------------------ #
-    # Match flow
-    # ------------------------------------------------------------------ #
     def run(self) -> tuple[MatchFile, GroundTruth]:
+        """Play both periods and return the match and its ground truth."""
         for period, kickoff_team in ((1, HOME_ID), (2, AWAY_ID)):
             self.period = period
             self.t = 0.0
@@ -295,6 +300,7 @@ class MatchSimulator:
         return match, truth
 
     def kickoff(self, team: str, first: bool = False) -> None:
+        """Restart from the centre spot with a short pass."""
         self.reset_shape()
         striker = self.by_role[(team, "ST")]
         self.change_possession(team, striker, "kickoff", L / 2, W / 2, from_team=None if first else self.poss_team)
@@ -303,6 +309,7 @@ class MatchSimulator:
         self.do_pass(force_receiver=mid, force_complete=True)
 
     def step(self) -> None:
+        """One on-ball decision for the carrier: press and tackle, shot, clearance, carry or pass."""
         rng = self.rng
         team, opp, c = self.poss_team, self.opp(self.poss_team), self.carrier
         p = self.director.params(team, self.clock)
@@ -357,10 +364,8 @@ class MatchSimulator:
             return
         self.do_pass()
 
-    # ------------------------------------------------------------------ #
-    # Actions
-    # ------------------------------------------------------------------ #
     def do_carry(self, length: float | None = None, end_rel: tuple[float, float] | None = None, top_speed: float | None = None) -> None:
+        """The carrier runs with the ball; fast runs also emit a sprint."""
         rng, team, c = self.rng, self.poss_team, self.carrier
         bxr, byr = self.to_rel(team, *self.ball)
         if end_rel is None:
@@ -441,6 +446,7 @@ class MatchSimulator:
         through: bool = False,
         cross: bool = False,
     ) -> PassEvent:
+        """A pass whose completion follows the pass model; failures become interceptions or the ball going out."""
         rng, team, c = self.rng, self.poss_team, self.carrier
         opp = self.opp(team)
         p = self.director.params(team, self.clock)
@@ -544,6 +550,7 @@ class MatchSimulator:
         return ev
 
     def do_clearance(self) -> None:
+        """The carrier clears the ball upfield; either side may win it."""
         rng, team, c = self.rng, self.poss_team, self.carrier
         opp = self.opp(team)
         lx, ly = rng.uniform(55, 80), rng.uniform(8, 60)
@@ -574,6 +581,7 @@ class MatchSimulator:
                 self.pos[pid] = [clamp(self.ball[0] + dx / n * radius, 0.5, L - 0.5), clamp(self.ball[1] + dy / n * radius, 0.5, W - 0.5)]
 
     def do_shot(self, scripted_goal: str | None = None, body: str | None = None) -> ShotEvent:
+        """A shot with true xG recorded; only scripted shots score."""
         rng, team, c = self.rng, self.poss_team, self.carrier
         opp = self.opp(team)
         if scripted_goal:
@@ -662,10 +670,8 @@ class MatchSimulator:
             self.change_possession(opp, gk, "goal_kick", gx, gy)
         return ev
 
-    # ------------------------------------------------------------------ #
-    # Scripted moments
-    # ------------------------------------------------------------------ #
     def pid(self, team: str, role: str) -> str:
+        """Player id of a team's role."""
         return self.by_role[(team, role)]
 
     def ensure_possession(self, team: str, receiver: str, at_rel: tuple[float, float]) -> None:
@@ -702,6 +708,7 @@ class MatchSimulator:
         self.advance(0.8)
 
     def press_on(self, presser: str, target: str, gap_m: float) -> None:
+        """Place a presser next to ``target`` and emit the pressure."""
         tx, ty = self.pos[target]
         self.pos[presser] = [clamp(tx + gap_m * 0.8, 0.5, L - 0.5), clamp(ty + gap_m * 0.6, 0.5, W - 0.5)]
         self.emit(
@@ -717,6 +724,7 @@ class MatchSimulator:
         self.advance(0.5)
 
     def play_scripted(self, m: ScriptedMoment) -> None:
+        """Play out a scripted moment as a coherent sequence of events."""
         H, A = HOME_ID, AWAY_ID
         if m.kind == "goal_home_through_ball":
             self.ensure_possession(H, self.pid(H, "CDM"), (52.0, 33.0))
@@ -774,4 +782,5 @@ class MatchSimulator:
 
 
 def simulate(seed: int = 7, match_id: str = "RGS-2026-0001") -> tuple[MatchFile, GroundTruth]:
+    """Simulate one match; same seed, same match."""
     return MatchSimulator(seed=seed, match_id=match_id).run()

@@ -21,6 +21,7 @@ class PassDifficulty:
         self.model = model or LogisticModel.load("pass_model")
 
     def apply(self, ev, st: MatchState, out: list[MetricUpdate]) -> None:
+        """Score a pass and update completion over expected."""
         if ev.type != "pass":
             return
         p = self.model.predict(pass_features(ev))
@@ -39,6 +40,7 @@ class ExpectedGoals:
         self.model = model or LogisticModel.load("xg_model")
 
     def apply(self, ev, st: MatchState, out: list[MetricUpdate]) -> None:
+        """Score a shot and update the team's xG totals."""
         if ev.type != "shot":
             return
         xg = self.model.predict(shot_features(ev))
@@ -50,4 +52,5 @@ class ExpectedGoals:
         st.emit(out, f"{ev.team_id}.xg_10m", st.window(ev.team_id, "xg", "10m"), "10m")
 
     def snapshot(self, st: MatchState) -> dict:
+        """Match xG per team."""
         return {"xg": {t: round(st.totals[t]["xg"], 3) for t in st.team_ids}}

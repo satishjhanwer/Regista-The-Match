@@ -10,12 +10,18 @@ export interface StreamContract {
   status: ReplayStatus;
   momentum: MomentumPoint[];
 }
+/**
+ * First message on a socket: match metadata, the resolved profile and replay status.
+ */
 export interface HelloMessage {
   type: "hello";
   match: MatchMeta;
   profile: FanProfile;
   replay: ReplayStatus;
 }
+/**
+ * Match metadata: teams, venue, kickoff and which way the home side attacks first.
+ */
 export interface MatchMeta {
   schema_version: string;
   match_id: string;
@@ -28,6 +34,9 @@ export interface MatchMeta {
   seed: number;
   generator: string;
 }
+/**
+ * A club and its eleven.
+ */
 export interface Team {
   team_id: string;
   name: string;
@@ -37,6 +46,9 @@ export interface Team {
   formation: string;
   players: Player[];
 }
+/**
+ * A squad member, with career totals before this match.
+ */
 export interface Player {
   player_id: string;
   name: string;
@@ -56,6 +68,9 @@ export interface Player {
    */
   career_goals: number;
 }
+/**
+ * Who is watching: viewing mode, language, favourite club, focus player, metric of interest.
+ */
 export interface FanProfile {
   profile_id: string;
   mode: "analyst" | "casual" | "player_focus";
@@ -67,6 +82,9 @@ export interface FanProfile {
   focus_player_id: string | null;
   metric_of_interest: string | null;
 }
+/**
+ * Replay state: playing, speed, clock and viewer count.
+ */
 export interface ReplayStatus {
   playing: boolean;
   /**
@@ -77,6 +95,9 @@ export interface ReplayStatus {
   clock: StreamClock;
   viewers: number;
 }
+/**
+ * Replay clock on the wire.
+ */
 export interface StreamClock {
   period: 1 | 2;
   t: number;
@@ -84,6 +105,9 @@ export interface StreamClock {
   elapsed_s: number;
   display: string;
 }
+/**
+ * Sent every tick: clock, score, play state and live metrics.
+ */
 export interface TickMessage {
   type: "tick";
   clock: StreamClock;
@@ -94,6 +118,9 @@ export interface TickMessage {
   speed: number;
   metrics: LiveMetrics;
 }
+/**
+ * Live metrics sent with every tick.
+ */
 export interface LiveMetrics {
   /**
    * Home-positive momentum index in [-1, 1]
@@ -128,6 +155,9 @@ export interface LiveMetrics {
     [k: string]: number;
   };
 }
+/**
+ * The raw events of one tick.
+ */
 export interface EventsMessage {
   type: "events";
   events: StreamEvent[];
@@ -154,18 +184,27 @@ export interface StreamEvent {
   shot_speed_kmh: number | null;
   cause: string | null;
 }
+/**
+ * A verified rendering for this viewer, with its trace.
+ */
 export interface OverlayMessage {
   type: "overlay";
   source: "llm" | "llm_revised" | "template" | "template_fallback" | "cache";
   payload: OverlayPayload;
   trace: TraceStep[];
 }
+/**
+ * What goes over the wire to the overlay: the insight, its rendering and where to show it.
+ */
 export interface OverlayPayload {
   schema_version: string;
   insight: Insight;
   rendered: RenderedInsight;
   display: DisplayDirective;
 }
+/**
+ * A detected moment: one canonical set of facts that every rendering must stay within.
+ */
 export interface Insight {
   insight_id: string;
   match_id: string;
@@ -195,16 +234,25 @@ export interface Insight {
    */
   why_it_matters_hint: string;
 }
+/**
+ * When a moment happened, with its broadcast display string.
+ */
 export interface MatchClock {
   period: 1 | 2;
   t: number;
   match_clock_s: number;
   display: string;
 }
+/**
+ * Teams and players an insight is about.
+ */
 export interface Entities {
   team_ids: string[];
   player_ids: string[];
 }
+/**
+ * One number or value with its label, optional baseline and evidence. The unit of truth.
+ */
 export interface Fact {
   fact_id: string;
   /**
@@ -223,6 +271,9 @@ export interface Fact {
   previous_value: number | string | null;
   evidence: EvidenceRef[];
 }
+/**
+ * What a fact rests on: an event id, or a metric key with its time window (elapsed seconds).
+ */
 export interface EvidenceRef {
   kind: "event" | "metric";
   /**
@@ -232,6 +283,9 @@ export interface EvidenceRef {
   window_start_s: number | null;
   window_end_s: number | null;
 }
+/**
+ * An insight told for one fan profile.
+ */
 export interface RenderedInsight {
   insight_id: string;
   profile_id: string;
@@ -243,11 +297,17 @@ export interface RenderedInsight {
   claims: Claim[];
   verification: Verification;
 }
+/**
+ * The one stat a graphic highlights.
+ */
 export interface StatCallout {
   label: string;
   value: string;
   fact_id: string;
 }
+/**
+ * One sentence and the facts it relies on.
+ */
 export interface Claim {
   text: string;
   /**
@@ -255,12 +315,18 @@ export interface Claim {
    */
   fact_ids: string[];
 }
+/**
+ * The Verifier's verdict on a rendering.
+ */
 export interface Verification {
   status: "pending" | "verified" | "revised" | "rejected";
   checked_claims: number;
   rejected_claims: number;
   notes: string[];
 }
+/**
+ * Where and when a graphic airs, and for how long.
+ */
 export interface DisplayDirective {
   slot: "lower_third" | "top_bar" | "side_panel" | "ticker" | "player_tag";
   template_id: string;
@@ -268,6 +334,9 @@ export interface DisplayDirective {
   ttl_ms: number;
   priority: number;
 }
+/**
+ * One step of a rendering's agent trace.
+ */
 export interface TraceStep {
   agent: "analyst" | "narrator" | "verifier" | "template" | "cache";
   action: string;
@@ -277,9 +346,15 @@ export interface TraceStep {
     [k: string]: unknown;
   };
 }
+/**
+ * The replay jumped backwards: clear overlays and history.
+ */
 export interface ResetMessage {
   type: "reset";
 }
+/**
+ * A rejected client request.
+ */
 export interface ErrorMessage {
   type: "error";
   error: string;
@@ -301,6 +376,9 @@ export interface ControlRequest {
   value: number | null;
   minute: number | null;
 }
+/**
+ * One sample of the momentum index.
+ */
 export interface MomentumPoint {
   /**
    * Football minute (stoppage folded into 45 / 90)

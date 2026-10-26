@@ -94,6 +94,7 @@ AWAY_ID = "SLM"
 
 
 def build_meta(match_id: str, seed: int, generator: str) -> MatchMeta:
+    """Match metadata with the two fictional squads."""
     return MatchMeta(
         match_id=match_id,
         competition="Regista Synthetic League",

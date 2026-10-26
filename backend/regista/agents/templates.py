@@ -20,6 +20,8 @@ from .verifier import BODY_MAX, HEADLINE_MAX
 
 @dataclass
 class Line:
+    """One template sentence: a phrase id, the facts that fill its placeholders, literal values and extra citations."""
+
     msg: str
     slots: dict[str, str] = field(default_factory=dict)  # placeholder -> normalized fact key (suffix ":prev" for previous_value)
     extra: dict[str, str] = field(default_factory=dict)  # placeholder -> literal (team names)
@@ -48,6 +50,7 @@ class FactView:
                 self.map.setdefault(k, f)
 
     def get(self, key: str) -> Fact | None:
+        """The fact under a raw or normalized key, or None."""
         return self.map.get(key)
 
     def normalized_key(self, fact: Fact) -> str:
@@ -57,11 +60,13 @@ class FactView:
 
 
 def fmt_number(v: float | int, lang: str) -> str:
+    """Number for display (decimal comma in Spanish, trailing zeros dropped)."""
     s = str(v) if isinstance(v, int) else f"{v:.2f}".rstrip("0").rstrip(".")
     return s.replace(".", ",") if lang == "es" else s
 
 
 def fmt_value(v, lang: str) -> str:
+    """Fact value for display, translating English category words."""
     if isinstance(v, str):
         return VALUES[lang].get(v, v)
     return fmt_number(v, lang)
@@ -75,12 +80,13 @@ def stat_callout(fact: Fact, view: FactView, lang: str) -> StatCallout:
 
 
 class TemplateNarrator:
+    """Deterministic narration from per-language phrase templates; every claim cites its facts."""
+
     def __init__(self, meta: MatchMeta) -> None:
         self.meta = meta
         self.team_name = {t.team_id: t.name for t in (meta.home, meta.away)}
         self.short = {t.team_id: t.short_name for t in (meta.home, meta.away)}
 
-    # ------------------------------------------------------------------ #
     def _fill(self, line: Line, view: FactView, lang: str) -> tuple[str, list[str]] | None:
         values: dict[str, str] = dict(line.extra)
         cited: list[str] = []
@@ -102,6 +108,7 @@ class TemplateNarrator:
         return PHRASES[lang][line.msg].format(**values), cited
 
     def render(self, insight: Insight, profile: FanProfile) -> RenderedInsight:
+        """Render an insight for a profile; claims are dropped from the end until the body fits."""
         view = FactView(insight, self.meta)
         lang = profile.language if profile.language in PHRASES else "en"
         headline, lines, stat_keys = self._spec(insight, view, profile)
@@ -132,7 +139,6 @@ class TemplateNarrator:
             verification=Verification(status="pending"),
         )
 
-    # ------------------------------------------------------------------ #
     def _names(self, insight: Insight) -> dict[str, str]:
         home, away = self.meta.home.team_id, self.meta.away.team_id
         names = {"home": self.short[home], "away": self.short[away]}
@@ -336,7 +342,6 @@ class TemplateNarrator:
         lines.append(Line("recap.xg", {"hx": "home.xg_total", "ax": "away.xg_total"}))
         return head, lines, ["match.score"]
 
-    # ------------------------------------------------------------------ #
     @staticmethod
     def _pick(mode: str, analyst: list[Line], casual: list[Line], focus: list[Line]) -> list[Line]:
         if mode == "analyst":

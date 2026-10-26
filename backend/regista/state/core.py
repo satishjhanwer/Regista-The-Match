@@ -45,7 +45,11 @@ def is_long_ball(ev) -> bool:
 
 
 class Component(Protocol):
-    def apply(self, ev, st: MatchState, out: list[MetricUpdate]) -> None: ...
+    """An analytical add-on to ``MatchState`` (xG, momentum, press, ...)."""
+
+    def apply(self, ev, st: MatchState, out: list[MetricUpdate]) -> None:
+        """Update from ``ev`` after the core counters, appending any changed metrics to ``out``."""
+        ...
 
 
 class TeamWindows:
@@ -57,6 +61,7 @@ class TeamWindows:
         self._w: dict[str, dict[str, RollingSum]] = {}
 
     def add(self, name: str, t: float, v: float = 1.0) -> None:
+        """Add ``v`` at time ``t`` to counter ``name`` in every window; counters are created on first use."""
         w = self._w.get(name)
         if w is None:
             w = self._w[name] = {label: RollingSum(s) for label, s in WINDOWS_S.items()}
@@ -64,11 +69,22 @@ class TeamWindows:
             r.add(t, v)
 
     def sum(self, name: str, label: str, now: float) -> float:
+        """Sum of counter ``name`` over window ``label`` ending at ``now`` (0 for an unknown counter)."""
         w = self._w.get(name)
         return w[label].sum(now) if w else 0.0
 
 
 class MatchState:
+    """Everything the hot path knows about the match so far.
+
+    Attributes worth knowing beyond the obvious counters:
+        totals / windows: per-team match totals and 5 / 10 minute rolling sums, by counter name.
+        goal_events: player_id -> ids of that player's goal events, in order.
+        passes: event_id -> PassEvent, so a shot can find its assist.
+        pass_p, shot_xg: event_id -> P(complete) and xG, filled by the model components.
+        poss_start: the possession_change event that started the current possession.
+    """
+
     def __init__(self, meta: MatchMeta, components: list[Component] | None = None) -> None:
         self.meta = meta
         self.home_id, self.away_id = meta.home.team_id, meta.away.team_id
@@ -87,30 +103,28 @@ class MatchState:
         self.last_event = None
         self.score = {t: 0 for t in self.team_ids}
         self.player_goals: dict[str, int] = defaultdict(int)
-        self.goal_events: dict[str, list[str]] = defaultdict(list)  # player_id -> goal event ids, in order
+        self.goal_events: dict[str, list[str]] = defaultdict(list)
         self.player_totals: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
         self.totals: dict[str, dict[str, float]] = {t: defaultdict(float) for t in self.team_ids}
         self.windows: dict[str, TeamWindows] = {t: TeamWindows() for t in self.team_ids}
-        self.passes: dict[str, object] = {}  # event_id -> PassEvent, for assist / key-pass lookups
-        self.pass_p: dict[str, float] = {}  # event_id -> P(complete), filled by PassDifficulty
-        self.shot_xg: dict[str, float] = {}  # event_id -> xG, filled by ExpectedGoals
+        self.passes: dict[str, object] = {}
+        self.pass_p: dict[str, float] = {}
+        self.shot_xg: dict[str, float] = {}
 
         self.poss_id = -1
         self.poss_team: str | None = None
         self.poss_passes = 0
-        self.poss_start = None  # the possession_change event that started the current possession
+        self.poss_start = None
         self.last_on_ball_team: str | None = None
         self._attacks_right: dict[tuple[str, int], bool] = {(t, p): attacks_right(meta, t, p) for t in self.team_ids for p in (1, 2)}
         self.components: list[Component] = list(components or [])
 
-    # ------------------------------------------------------------------ #
-    # Helpers
-    # ------------------------------------------------------------------ #
     def component(self, cls):
         """The first plugged-in component of type ``cls``, or None."""
         return next((c for c in self.components if isinstance(c, cls)), None)
 
     def opp(self, team_id: str) -> str:
+        """The other team's id."""
         return self.away_id if team_id == self.home_id else self.home_id
 
     def rel_x(self, team_id: str, x: float, period: int | None = None) -> float:
@@ -118,16 +132,20 @@ class MatchState:
         return x if self._attacks_right[(team_id, period or self.period)] else PITCH_LENGTH_M - x
 
     def window(self, team_id: str, name: str, label: str = "5m") -> float:
+        """A team's rolling sum of counter ``name`` over window ``label``, ending now."""
         return self.windows[team_id].sum(name, label, self.now)
 
     def window_bounds(self, label: str) -> tuple[float, float]:
+        """(start, end) in ``elapsed_s`` of window ``label`` ending now; used for evidence refs."""
         return max(0.0, self.now - WINDOWS_S[label]), self.now
 
     def ratio(self, team_id: str, num: str, den: str, label: str = "5m") -> float | None:
+        """Rolling ``num / den`` for a team, or None when the denominator is zero."""
         d = self.window(team_id, den, label)
         return self.window(team_id, num, label) / d if d else None
 
     def emit(self, out: list[MetricUpdate], key: str, value: float, label: str | None = None) -> None:
+        """Append a MetricUpdate stamped now; with ``label`` it also carries that window's bounds."""
         if label is None:
             out.append(MetricUpdate(key, value, self.now))
         else:
@@ -139,10 +157,11 @@ class MatchState:
         self.totals[team_id][name] += v
         self.windows[team_id].add(name, self.now, v)
 
-    # ------------------------------------------------------------------ #
-    # Event application
-    # ------------------------------------------------------------------ #
     def apply(self, ev) -> list[MetricUpdate]:
+        """Consume one event (core counters, then each component) and return the metrics it changed.
+
+        Raises ValueError if ``ev`` is older than the last applied event.
+        """
         if ev.elapsed_s < self.now - 1e-6:
             raise ValueError(f"event {ev.event_id} out of order: elapsed_s {ev.elapsed_s} < {self.now}")
         self.now = ev.elapsed_s
@@ -182,6 +201,7 @@ class MatchState:
         return out
 
     def _on_player(self, ev) -> None:
+        """Per-player match totals, for the Analyst's ``get_player`` tool."""
         pt = self.player_totals[ev.player_id]
         typ = ev.type
         if typ == "pass":
@@ -200,12 +220,14 @@ class MatchState:
             pt["top_speed_kmh"] = ev.top_speed_kmh
 
     def _on_ball(self, ev) -> None:
+        """Count possession transitions between consecutive on-ball actions (kept vs lost), for entropy."""
         prev = self.last_on_ball_team
         if prev is not None:
             self.count(prev, "transitions_kept" if prev == ev.team_id else "transitions_lost")
         self.last_on_ball_team = ev.team_id
 
     def _on_possession_change(self, ev, out: list[MetricUpdate]) -> None:
+        """Close the previous possession sequence and count open-play turnovers."""
         if self.poss_team is not None:
             self.count(self.poss_team, "sequences")
             self.count(self.poss_team, "sequence_passes", self.poss_passes)
@@ -216,6 +238,7 @@ class MatchState:
         self.poss_id, self.poss_team, self.poss_passes, self.poss_start = ev.possession_id, ev.to_team_id, 0, ev
 
     def _on_pass(self, ev, out: list[MetricUpdate]) -> None:
+        """Pass counters, and completion, long-ball and possession shares over both windows."""
         team = ev.team_id
         self.passes[ev.event_id] = ev
         if team == self.poss_team:
@@ -237,9 +260,6 @@ class MatchState:
             total = n + self.window(self.opp(team), "passes", label)
             self.emit(out, f"{team}.possession_share_{label}", n / total, label)
 
-    # ------------------------------------------------------------------ #
-    # Read side
-    # ------------------------------------------------------------------ #
     def snapshot(self) -> dict:
         """Plain-dict view of the current state, for tools and debugging."""
         snap: dict = {"elapsed_s": self.now, "period": self.period, "score": dict(self.score), "teams": {}}

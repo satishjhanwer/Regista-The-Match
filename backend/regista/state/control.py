@@ -28,6 +28,7 @@ WINDOW_MIN = 5.0
 
 
 def binary_entropy(p: float) -> float:
+    """Shannon entropy in bits of a coin with P(heads) = ``p``."""
     if p <= 0.0 or p >= 1.0:
         return 0.0
     return -(p * math.log2(p) + (1.0 - p) * math.log2(1.0 - p))
@@ -38,11 +39,14 @@ def _clip(v: float) -> float:
 
 
 def chaos_score(turnovers_per_min: float, mean_seq_passes: float, entropy: float) -> float:
+    """Combine the three components into a chaos score in [0, 1] (weights in the module docstring)."""
     shortness = 1.0 - (mean_seq_passes - 1.0) / (SEQ_PASSES_CONTROL - 1.0)
     return W_TURNOVER * _clip(turnovers_per_min / TURNOVERS_PER_MIN_MAX) + W_SHORTNESS * _clip(shortness) + W_ENTROPY * entropy
 
 
 class ControlChaos:
+    """Per-team control scores and the match chaos index over the 5-minute window."""
+
     def __init__(self) -> None:
         self.control: dict[str, float | None] = {}
         self.chaos: float | None = None
@@ -59,6 +63,7 @@ class ControlChaos:
         return to_rate, seq_len, ent, seqs, kept + lost
 
     def apply(self, ev, st: MatchState, out: list[MetricUpdate]) -> None:
+        """Recompute the scores when a possession ends."""
         if ev.type != "possession_change":
             return
         per_team = {t: self._team(st, t) for t in st.team_ids}
@@ -86,4 +91,5 @@ class ControlChaos:
             st.emit(out, "match.chaos_5m", self.chaos, WINDOW)
 
     def snapshot(self, st: MatchState) -> dict:
+        """Current chaos index and control scores."""
         return {"chaos_5m": self.chaos, "control_5m": dict(self.control)}

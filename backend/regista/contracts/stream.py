@@ -15,6 +15,8 @@ from .insight import FanProfile, Insight, OverlayPayload, RenderedInsight
 
 
 class StreamClock(Model):
+    """Replay clock on the wire."""
+
     period: Literal[1, 2]
     t: float
     match_clock_s: float
@@ -23,6 +25,8 @@ class StreamClock(Model):
 
 
 class LiveMetrics(Model):
+    """Live metrics sent with every tick."""
+
     momentum_index: float = Field(description="Home-positive momentum index in [-1, 1]")
     momentum: dict[str, float] = Field(description="Team id -> share of momentum, 0..1")
     chaos: float | None = Field(description="Match chaos index over 5 min, 0 calm .. 1 chaotic")
@@ -33,6 +37,8 @@ class LiveMetrics(Model):
 
 
 class ReplayStatus(Model):
+    """Replay state: playing, speed, clock and viewer count."""
+
     playing: bool
     speed: float = Field(description="Match seconds per wall-clock second")
     finished: bool
@@ -41,6 +47,8 @@ class ReplayStatus(Model):
 
 
 class TraceStep(Model):
+    """One step of a rendering's agent trace."""
+
     agent: Literal["analyst", "narrator", "verifier", "template", "cache"]
     action: str
     status: Literal["ok", "rejected", "error", "fallback"]
@@ -52,6 +60,8 @@ RenderSource = Literal["llm", "llm_revised", "template", "template_fallback", "c
 
 
 class MomentumPoint(Model):
+    """One sample of the momentum index."""
+
     minute: float = Field(description="Football minute (stoppage folded into 45 / 90)")
     index: float = Field(description="Home-positive momentum index in [-1, 1]")
 
@@ -79,6 +89,8 @@ class StreamEvent(Model):
 
 
 class HelloMessage(Model):
+    """First message on a socket: match metadata, the resolved profile and replay status."""
+
     type: Literal["hello"] = "hello"
     match: MatchMeta
     profile: FanProfile
@@ -86,6 +98,8 @@ class HelloMessage(Model):
 
 
 class TickMessage(Model):
+    """Sent every tick: clock, score, play state and live metrics."""
+
     type: Literal["tick"] = "tick"
     clock: StreamClock
     score: dict[str, int]
@@ -95,11 +109,15 @@ class TickMessage(Model):
 
 
 class EventsMessage(Model):
+    """The raw events of one tick."""
+
     type: Literal["events"] = "events"
     events: list[StreamEvent]
 
 
 class OverlayMessage(Model):
+    """A verified rendering for this viewer, with its trace."""
+
     type: Literal["overlay"] = "overlay"
     source: RenderSource
     payload: OverlayPayload
@@ -107,10 +125,14 @@ class OverlayMessage(Model):
 
 
 class ResetMessage(Model):
+    """The replay jumped backwards: clear overlays and history."""
+
     type: Literal["reset"] = "reset"
 
 
 class ErrorMessage(Model):
+    """A rejected client request."""
+
     type: Literal["error"] = "error"
     error: str
 

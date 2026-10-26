@@ -1,4 +1,6 @@
-// Match-long momentum ribbon and the control vs chaos meter.
+/**
+ * Match-long momentum ribbon and the control vs chaos meter.
+ */
 
 import type { LiveMetrics, MatchMeta } from "../contracts/stream";
 import type { Palette } from "../lib/format";
@@ -9,6 +11,7 @@ const W = 1000;
 const H = 90;
 const MID = H / 2;
 
+/** Momentum index across the match, with goal, press and chaos markers and the current minute. */
 export function MomentumRibbon({
   series,
   markers,
@@ -87,6 +90,7 @@ function Bar({ value, color, label }: { value: number; color: string; label: str
   );
 }
 
+/** Chaos gauge, per-team control and press bars, and xG. */
 export function ChaosMeter({ metrics, meta, colors }: { metrics: LiveMetrics | null; meta: MatchMeta; colors: Palette }) {
   const chaos = metrics?.chaos ?? null;
   const teams = [meta.home, meta.away];

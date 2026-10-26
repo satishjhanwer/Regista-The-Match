@@ -32,6 +32,8 @@ InsightKind = Literal[
 
 
 class MatchClock(Model):
+    """When a moment happened, with its broadcast display string."""
+
     period: Literal[1, 2]
     t: float = Field(ge=0)
     match_clock_s: float = Field(ge=0)
@@ -39,6 +41,8 @@ class MatchClock(Model):
 
 
 class EvidenceRef(Model):
+    """What a fact rests on: an event id, or a metric key with its time window (elapsed seconds)."""
+
     kind: Literal["event", "metric"]
     ref: str = Field(description="event_id for events, metric key (e.g. 'away.ppda') for metrics")
     window_start_s: float | None = None
@@ -46,6 +50,8 @@ class EvidenceRef(Model):
 
 
 class Fact(Model):
+    """One number or value with its label, optional baseline and evidence. The unit of truth."""
+
     fact_id: str
     key: str = Field(description="Stable machine key, e.g. 'home.pass_completion_own_half'")
     label: str = Field(description="Human label in English; renderers localize")
@@ -56,11 +62,15 @@ class Fact(Model):
 
 
 class Entities(Model):
+    """Teams and players an insight is about."""
+
     team_ids: list[str] = []
     player_ids: list[str] = []
 
 
 class Verification(Model):
+    """The Verifier's verdict on a rendering."""
+
     status: Literal["pending", "verified", "revised", "rejected"]
     checked_claims: int = 0
     rejected_claims: int = 0
@@ -68,6 +78,8 @@ class Verification(Model):
 
 
 class Insight(Model):
+    """A detected moment: one canonical set of facts that every rendering must stay within."""
+
     insight_id: str
     match_id: str
     kind: InsightKind
@@ -84,6 +96,8 @@ ViewingMode = Literal["analyst", "casual", "player_focus"]
 
 
 class FanProfile(Model):
+    """Who is watching: viewing mode, language, favourite club, focus player, metric of interest."""
+
     profile_id: str
     mode: ViewingMode
     language: str = Field(description="BCP 47 tag, e.g. en, hi, es")
@@ -93,17 +107,23 @@ class FanProfile(Model):
 
 
 class Claim(Model):
+    """One sentence and the facts it relies on."""
+
     text: str
     fact_ids: list[str] = Field(description="Facts this sentence relies on; empty means opinion/colour only")
 
 
 class StatCallout(Model):
+    """The one stat a graphic highlights."""
+
     label: str
     value: str
     fact_id: str
 
 
 class RenderedInsight(Model):
+    """An insight told for one fan profile."""
+
     insight_id: str
     profile_id: str
     language: str
@@ -119,6 +139,8 @@ OverlaySlot = Literal["lower_third", "top_bar", "side_panel", "ticker", "player_
 
 
 class DisplayDirective(Model):
+    """Where and when a graphic airs, and for how long."""
+
     slot: OverlaySlot
     template_id: str
     show_at_match_clock_s: float = Field(ge=0)
@@ -127,6 +149,8 @@ class DisplayDirective(Model):
 
 
 class OverlayPayload(Model):
+    """What goes over the wire to the overlay: the insight, its rendering and where to show it."""
+
     schema_version: str = "1.0"
     insight: Insight
     rendered: RenderedInsight

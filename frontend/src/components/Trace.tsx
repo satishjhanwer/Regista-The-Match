@@ -1,10 +1,13 @@
-// Explainability: the insight feed and the agent trace for one rendering.
-// The trace shows Analyst -> Narrator -> Verifier steps and maps every claim to the
-// facts it cites and to the evidence behind those facts (events and metric windows).
+/**
+ * Explainability: the insight feed and the agent trace for one rendering.
+ * The trace shows Analyst -> Narrator -> Verifier steps and maps every claim to the
+ * facts it cites and to the evidence behind those facts (events and metric windows).
+ */
 
 import type { Fact, Insight, OverlayMessage, RenderedInsight, TraceStep } from "../contracts/stream";
 import { elapsedText, factText, KIND_LABEL } from "../lib/format";
 
+/** Insights received for this viewer, newest first. */
 export function Feed({ items, selected, onSelect }: { items: OverlayMessage[]; selected: string | null; onSelect: (m: OverlayMessage) => void }) {
   return (
     <section className="panel feed">
@@ -91,6 +94,7 @@ function StepDetail({ step, facts }: { step: TraceStep; facts: Map<string, Fact>
   return null;
 }
 
+/** Each claim with the facts it cites and the evidence behind each fact. */
 export function ClaimMap({ insight, rendered }: { insight: Insight; rendered: RenderedInsight }) {
   const facts = new Map(insight.facts.map((f) => [f.fact_id, f]));
   return (
@@ -124,6 +128,7 @@ export function ClaimMap({ insight, rendered }: { insight: Insight; rendered: Re
   );
 }
 
+/** Why a graphic is on screen: the agent steps that produced it and its claim-to-fact map. */
 export function TracePanel({ insight, rendered, trace, source }: { insight: Insight; rendered: RenderedInsight; trace: TraceStep[]; source: string }) {
   const facts = new Map(insight.facts.map((f) => [f.fact_id, f]));
   return (

@@ -9,7 +9,6 @@ from __future__ import annotations
 
 PHRASES: dict[str, dict[str, str]] = {
     "en": {
-        # goal
         "goal.h": "GOAL! {scorer} | {home} {score} {away}",
         "goal.finish": "{scorer} scores from {distance} m ({body_part}), a chance worth {xg} xG.",
         "goal.assist_typed": "{assister} provided the {assist_type}.",
@@ -23,24 +22,20 @@ PHRASES: dict[str, dict[str, str]] = {
         "goal.focus_scorer": "{scorer} delivers: goal number {n} today.",
         "goal.focus_assist": "{assister} set it up with the {assist_type}.",
         "goal.focus_won": "{won_by} started it by winning the ball back.",
-        # shot quality
         "shot_quality.h": "Big chance: {player}",
         "shot_quality.a1": "{player}'s {xg} xG chance from {distance} m: {outcome}.",
         "shot_quality.a2": "{team} are on {xg_total} xG for the match.",
         "shot_quality.casual": "Huge chance for {player}, {outcome}!",
-        # key pass
         "key_pass.h": "Key pass: {passer}",
         "key_pass.a1": "{passer}'s {pass_type} over {length} m had a {difficulty}% difficulty rating.",
         "key_pass.a2": "It found {receiver} for a {xg} xG chance: {outcome}.",
         "key_pass.casual": "Great {pass_type} from {passer} to {receiver}.",
-        # momentum
         "momentum_shift.h": "Momentum: {team}",
         "momentum_shift.a1_prev": "{team} now hold {share}% of the attacking momentum, up from {share_prev}%.",
         "momentum_shift.a1": "{team} now hold {share}% of the attacking momentum.",
         "momentum_shift.a2": "{n} completed passes into the final third in the last 5 minutes.",
         "momentum_shift.a3": "{xg} xG in the last 10 minutes.",
         "momentum_shift.casual": "{team} are on top right now.",
-        # press
         "press_change.h": "{team} turn up the press",
         "press_change.a1": "{opp} now play {share}% of passes under pressure, up from {share_prev}% earlier in the half.",
         "press_change.a2": "{team} make {ppp} pressures per {opp} pass, up from {ppp_prev}.",
@@ -49,7 +44,6 @@ PHRASES: dict[str, dict[str, str]] = {
         "press_change.casual": "{team} are pressing high and {opp} are feeling it.",
         "press_change.fav_for": "Your side are hunting the ball.",
         "press_change.fav_against": "{fav} need to play through this.",
-        # control vs chaos
         "chaos.h": "The game turns chaotic",
         "chaos.a1_prev": "Chaos index {chaos}, up from {chaos_prev}.",
         "chaos.a1": "Chaos index {chaos}.",
@@ -60,7 +54,6 @@ PHRASES: dict[str, dict[str, str]] = {
         "control.a1": "{team} have a control score of {ctl} and {share}% of the passes.",
         "control.a2": "{seq} passes per possession, {to} turnovers per team per minute.",
         "control.casual": "{team} are running this game.",
-        # player tags
         "sprint.h": "{player}: {speed} km/h",
         "sprint.a1": "{player} hits {speed} km/h over {dist} m.",
         "sprint.a1_nodist": "{player} hits {speed} km/h.",
@@ -71,13 +64,11 @@ PHRASES: dict[str, dict[str, str]] = {
         "pass_speed.h": "{player}: {speed} km/h pass",
         "pass_speed.a1": "{player} fires a pass at {speed} km/h.",
         "pass_speed.record": "Fastest pass of the match so far, beating {prev} km/h.",
-        # milestones
         "milestone.h": "Milestone: {player}",
         "milestone.brace": "{player} has {n} goals today: a brace.",
         "milestone.hat_trick": "{player} has {n} goals today: a hat-trick!",
         "milestone.career_goal": "That is career goal number {n} for {player}.",
         "milestone.career_appearance": "{player} makes appearance number {n} today.",
-        # period summary
         "period_summary.h1": "Half-time: {home} {score} {away}",
         "period_summary.h2": "Full-time: {home} {score} {away}",
         "period_summary.a1": "Share of passes: {home} {hp}%, {away} {ap}%.",
@@ -85,7 +76,6 @@ PHRASES: dict[str, dict[str, str]] = {
         "period_summary.a3": "Pass completion: {home} {hc}%, {away} {ac}%.",
         "period_summary.a4": "Fastest sprint of the match: {player}, {sprint} km/h.",
         "period_summary.casual": "xG {hx}-{ax}, shots {hs}-{as_}.",
-        # recap
         "recap.h1": "Half-time recap: {home} {score} {away}",
         "recap.h2": "Full-time recap: {home} {score} {away}",
         "recap.goal": "{goal}.",

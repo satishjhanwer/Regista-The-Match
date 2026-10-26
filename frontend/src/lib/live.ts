@@ -1,4 +1,6 @@
-// Live match state on the client: a pure reducer over stream messages.
+/**
+ * Live match state on the client: a pure reducer over stream messages.
+ */
 
 import type {
   FanProfile,
@@ -13,8 +15,10 @@ import type {
   TickMessage,
 } from "../contracts/stream";
 
+/** Any server message on the overlay WebSocket. */
 export type StreamMessage = StreamContract["message"];
 
+/** A moment marked on the momentum ribbon. */
 export interface Marker {
   minute: number;
   kind: "goal" | "press" | "chaos";
@@ -22,6 +26,7 @@ export interface Marker {
   label: string;
 }
 
+/** Everything the live view knows, built only from stream messages and history backfills. */
 export interface LiveState {
   connected: boolean;
   meta: MatchMeta | null;
@@ -32,14 +37,17 @@ export interface LiveState {
   speed: number;
   metrics: LiveMetrics | null;
   events: StreamEvent[];
-  momentum: { minute: number; index: number; gap: boolean }[]; // gap: a seek skipped time before this point
+  /** Sampled momentum index; `gap` marks a sample after a jump (seek or join), so no line is drawn across it. */
+  momentum: { minute: number; index: number; gap: boolean }[];
   overlays: OverlayMessage[];
   markers: Marker[];
   resets: number;
 }
 
+/** Raw events kept for the pitch trail and player-tag positions. */
 export const MAX_EVENTS = 60;
 
+/** State before the socket says hello. */
 export const initialLive: LiveState = {
   connected: false,
   meta: null,
@@ -61,6 +69,7 @@ export function matchMinute(period: number, t: number): number {
   return Math.min(t, 2699.99) / 60 + (period === 2 ? 45 : 0);
 }
 
+/** Stream messages plus the client's own connection and history-backfill actions. */
 export type LiveAction =
   | StreamMessage
   | { type: "connected"; value: boolean }
@@ -95,6 +104,7 @@ export function needsHistory(s: LiveState, m: TickMessage): boolean {
   return !last || matchMinute(m.clock.period, m.clock.t) - last.minute > 1.5;
 }
 
+/** Pure reducer from live state and one action to the next state. */
 export function reduce(s: LiveState, m: LiveAction): LiveState {
   switch (m.type) {
     case "connected":

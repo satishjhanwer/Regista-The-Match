@@ -23,11 +23,15 @@ MOMENTUM_SAMPLE_MIN = 0.25
 
 @dataclass
 class Step:
+    """What one advance produced: raw events and new insights with their state snapshots."""
+
     events: list = field(default_factory=list)
-    moments: list[InsightContext] = field(default_factory=list)  # new insights (incl. recaps) with their state snapshots
+    moments: list[InsightContext] = field(default_factory=list)
 
 
 class Replay:
+    """Deterministic replay of a match file through the hot path, with insight history and momentum samples."""
+
     def __init__(self, match: MatchFile) -> None:
         self.match = match
         self.events = match.events
@@ -36,6 +40,7 @@ class Replay:
         self.reset()
 
     def reset(self) -> None:
+        """Back to kickoff with a fresh pipeline."""
         self.pipe = InsightPipeline(self.match.meta)
         self.cursor = 0
         self.clock_s = 0.0
@@ -44,17 +49,21 @@ class Replay:
 
     @property
     def state(self):
+        """The live MatchState."""
         return self.pipe.state
 
     @property
     def insights(self) -> list[Insight]:
+        """Every insight reached so far, in order."""
         return [c.insight for c in self.history]
 
     @property
     def finished(self) -> bool:
+        """True once the last event has been applied."""
         return self.cursor >= len(self.events)
 
     def advance_to(self, elapsed_s: float) -> Step:
+        """Apply events up to ``elapsed_s``; period summaries are followed by a recap."""
         step = Step()
         target = min(elapsed_s, self.end_s)
         while self.cursor < len(self.events) and self.events[self.cursor].elapsed_s <= target:

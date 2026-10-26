@@ -21,14 +21,17 @@ XG_FEATURES = ("distance_m", "angle_rad", "header", "defenders_5m")
 
 
 def pass_features(ev) -> tuple[float, ...]:
+    """Pass model inputs, in ``PASS_FEATURES`` order."""
     return (ev.length_m, float(ev.pressure.defenders_within_5m), float(ev.receiver_defenders_within_5m), float(ev.height == "high"))
 
 
 def shot_features(ev) -> tuple[float, ...]:
+    """xG model inputs, in ``XG_FEATURES`` order."""
     return (ev.distance_m, ev.angle_rad, float(ev.body_part == "head"), float(ev.pressure.defenders_within_5m))
 
 
 def sigmoid(z: float) -> float:
+    """Numerically stable logistic function."""
     if z >= 0:
         return 1.0 / (1.0 + math.exp(-z))
     ez = math.exp(z)
@@ -37,6 +40,8 @@ def sigmoid(z: float) -> float:
 
 @dataclass(frozen=True)
 class LogisticModel:
+    """Coefficients of one fitted logistic model, plus fitting metadata in ``info`` (seeds, sample size, base rate)."""
+
     name: str
     features: tuple[str, ...]
     intercept: float
@@ -44,12 +49,14 @@ class LogisticModel:
     info: dict = field(default_factory=dict, compare=False)
 
     def predict(self, x: Sequence[float]) -> float:
+        """P(y = 1) for one feature vector."""
         z = self.intercept
         for c, v in zip(self.coef, x, strict=True):
             z += c * v
         return sigmoid(z)
 
     def to_json(self) -> str:
+        """Serialize to the JSON layout stored in ``state/models/``."""
         body = {
             "name": self.name,
             "features": list(self.features),
@@ -61,6 +68,7 @@ class LogisticModel:
 
     @classmethod
     def load(cls, name: str, directory: Path = MODELS_DIR) -> LogisticModel:
+        """Load ``<name>.json`` from the models directory."""
         d = json.loads((directory / f"{name}.json").read_text(encoding="utf-8"))
         feats = tuple(d["features"])
         info = {k: v for k, v in d.items() if k not in ("name", "features", "intercept", "coef")}

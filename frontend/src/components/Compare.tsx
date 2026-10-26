@@ -1,5 +1,7 @@
-// Same moment, two viewers: renders one insight for two profiles side by side,
-// and shows that both stand on the identical set of facts.
+/**
+ * Same moment, two viewers: renders one insight for two profiles side by side,
+ * and shows that both stand on the identical set of facts.
+ */
 
 import { useEffect, useState } from "react";
 
@@ -67,6 +69,7 @@ function Card({ res }: { res: RenderResponse | null }) {
   );
 }
 
+/** One insight rendered for two editable profiles, beside the shared facts both may cite. */
 export function CompareView({ meta }: { meta: MatchMeta }) {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [selected, setSelected] = useState<string>("");

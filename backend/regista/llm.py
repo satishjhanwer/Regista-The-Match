@@ -29,6 +29,7 @@ _REQUIRED = {
 
 
 def resolve_provider(env: dict[str, str] | None = None) -> str:
+    """Provider name from REGISTA_LLM_PROVIDER, or the first fully configured one, or ``none``."""
     env = dict(os.environ) if env is None else env
     explicit = env.get("REGISTA_LLM_PROVIDER", "").strip().lower()
     if explicit:

@@ -26,6 +26,8 @@ FALLBACK_XG = 0.1
 
 
 class Momentum:
+    """Per-team decayed threat, the momentum index and its top contributing events (see module docstring)."""
+
     def __init__(self, half_life_s: float = HALF_LIFE_S) -> None:
         self.half_life_s = half_life_s
         self.sums: dict[str, DecayedSum] = {}
@@ -37,6 +39,7 @@ class Momentum:
             self.recent = {t: deque(maxlen=16) for t in st.team_ids}
 
     def weight(self, ev, st: MatchState) -> float:
+        """Threat weight of an event for its team (0 when it adds no threat)."""
         if ev.type == "pass" and ev.outcome == "complete" and st.rel_x(ev.team_id, ev.end_x) >= FINAL_THIRD_X:
             return W_PASS_FINAL_THIRD
         if ev.type == "carry" and st.rel_x(ev.team_id, ev.end_x) >= FINAL_THIRD_X:
@@ -46,6 +49,7 @@ class Momentum:
         return 0.0
 
     def apply(self, ev, st: MatchState, out: list[MetricUpdate]) -> None:
+        """Add the event's threat, or reset at a period start."""
         self._ensure(st)
         if ev.type == "period_start":
             for t in st.team_ids:
@@ -65,6 +69,7 @@ class Momentum:
         out.append(MetricUpdate("match.momentum_index", self.index(st), st.now, lo, hi))
 
     def value(self, team_id: str, now: float) -> float:
+        """A team's decayed threat at ``now``."""
         return self.sums[team_id].value(now) if self.sums else 0.0
 
     def index(self, st: MatchState) -> float:
@@ -73,6 +78,7 @@ class Momentum:
         return (h - a) / (h + a) if h + a > 0 else 0.0
 
     def share(self, team_id: str, st: MatchState) -> float:
+        """A team's share of current momentum, in [0, 1] (0.5 when nobody has any)."""
         h, a = self.value(st.home_id, st.now), self.value(st.away_id, st.now)
         return (self.value(team_id, st.now) / (h + a)) if h + a > 0 else 0.5
 
@@ -82,4 +88,5 @@ class Momentum:
         return [eid for _, eid in sorted(scored, reverse=True)[:n]]
 
     def snapshot(self, st: MatchState) -> dict:
+        """Momentum share per team."""
         return {"momentum": {t: round(self.share(t, st), 3) for t in st.team_ids}}

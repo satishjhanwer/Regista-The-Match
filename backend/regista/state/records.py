@@ -23,7 +23,13 @@ MATCH_GOAL_MILESTONES = {2: "brace", 3: "hat_trick"}
 
 @dataclass(frozen=True)
 class SpeedMark:
-    kind: str  # sprint | shot_speed | pass_speed
+    """One notable speed: a match record and/or a sprint over the threshold.
+
+    ``kind`` is sprint, shot_speed or pass_speed; ``previous_*`` describe the record it beat, if any.
+    ``is_record`` means a new match record (only after the first 10 minutes); ``over_threshold`` a sprint of 30 km/h+.
+    """
+
+    kind: str
     value_kmh: float
     event_id: str
     player_id: str
@@ -31,13 +37,15 @@ class SpeedMark:
     elapsed_s: float
     previous_kmh: float | None = None
     previous_event_id: str | None = None
-    is_record: bool = False  # new match record (after RECORD_MIN_ELAPSED_S)
-    over_threshold: bool = False  # sprint >= SPRINT_THRESHOLD_KMH
+    is_record: bool = False
+    over_threshold: bool = False
 
 
 @dataclass(frozen=True)
 class Milestone:
-    kind: str  # brace | hat_trick | career_goal | career_appearance
+    """A player milestone: brace, hat_trick, career_goal or career_appearance, with old and new values."""
+
+    kind: str
     player_id: str
     team_id: str
     value: int
@@ -50,12 +58,15 @@ _SPEED_FIELDS = {"sprint": ("sprint", "top_speed_kmh"), "shot": ("shot_speed", "
 
 
 class Records:
+    """Speed thresholds, running match records and player milestones."""
+
     def __init__(self) -> None:
         self.best: dict[str, SpeedMark] = {}
         self.marks: list[SpeedMark] = []  # notable marks only: records and threshold hits, in order
         self.milestones: list[Milestone] = []
 
     def apply(self, ev, st: MatchState, out: list[MetricUpdate]) -> None:
+        """Check the event for speeds, goals (milestones) and kickoff (appearance landmarks)."""
         if ev.type == "period_start" and ev.period == 1:
             self._appearances(ev, st)
         spec = _SPEED_FIELDS.get(ev.type)
@@ -105,4 +116,5 @@ class Records:
                 self.milestones.append(Milestone("career_appearance", pid, st.team_of[pid], apps, apps - 1, ev.event_id, st.now))
 
     def snapshot(self, st: MatchState) -> dict:
+        """Current match record per speed kind."""
         return {"records": {k: {"kmh": m.value_kmh, "player_id": m.player_id, "event_id": m.event_id} for k, m in self.best.items()}}

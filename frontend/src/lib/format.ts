@@ -8,11 +8,13 @@ export function lighten(hex: string, amount = 0.45): string {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
+/** Per-team colours: `ink` for drawing on the dark pitch, `kit` for the score bug. */
 export interface Palette {
-  ink: Record<string, string>; // drawing colour per team id
-  kit: Record<string, string>; // primary kit colour per team id
+  ink: Record<string, string>;
+  kit: Record<string, string>;
 }
 
+/** Team colours derived from the match metadata. */
 export function palette(meta: MatchMeta | null): Palette {
   if (!meta) return { ink: {}, kit: {} };
   const teams: Team[] = [meta.home, meta.away];
@@ -22,11 +24,13 @@ export function palette(meta: MatchMeta | null): Palette {
   };
 }
 
+/** Player id to short name, for labels. */
 export function playerNames(meta: MatchMeta | null): Record<string, string> {
   if (!meta) return {};
   return Object.fromEntries([...meta.home.players, ...meta.away.players].map((p) => [p.player_id, p.short_name]));
 }
 
+/** A fact's value with its unit, as shown in chips and lists. */
 export function factText(f: Fact): string {
   const unit = f.unit === null ? "" : f.unit === "%" ? "%" : ` ${f.unit}`;
   return `${f.value}${unit}`;
@@ -38,6 +42,7 @@ export function elapsedText(s: number | null): string {
   return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 }
 
+/** Display label per insight kind. */
 export const KIND_LABEL: Record<string, string> = {
   goal: "Goal",
   shot_quality: "Big chance",
@@ -52,6 +57,7 @@ export const KIND_LABEL: Record<string, string> = {
   recap: "Recap",
 };
 
+/** Languages a fan can choose. */
 export const LANGS = [
   { code: "en", label: "English" },
   { code: "es", label: "Español" },

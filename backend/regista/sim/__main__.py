@@ -25,6 +25,7 @@ def _write(seed: int, match_id: str, out: Path) -> Path:
 
 
 def summarize(match: MatchFile, bin_min: int = 15) -> str:
+    """Per-window storyline table (completion, pressures, shots, turnovers) for a simulated match."""
     home, away = match.meta.home.team_id, match.meta.away.team_id
     bins: dict[int, dict[str, float]] = defaultdict(lambda: defaultdict(float))
     for e in match.events:
@@ -59,6 +60,7 @@ def summarize(match: MatchFile, bin_min: int = 15) -> str:
 
 
 def main() -> None:
+    """Command-line entry point: ``generate`` or ``summary``."""
     ap = argparse.ArgumentParser(prog="regista.sim")
     sub = ap.add_subparsers(dest="cmd", required=True)
     g = sub.add_parser("generate")

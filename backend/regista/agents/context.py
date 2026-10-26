@@ -36,6 +36,8 @@ PLAYER_STATS = ("goals", "passes", "passes_complete", "shots", "xg", "pressures"
 
 @dataclass
 class InsightContext:
+    """Everything the Analyst may look at for one insight, frozen when the insight fired."""
+
     insight: Insight
     elapsed_s: float
     team_names: dict[str, str]
@@ -214,4 +216,5 @@ class ToolBox:
         )
 
     def tools(self) -> list:
+        """The tool callables to hand to the Analyst agent."""
         return [self.get_facts, self.get_state, self.get_player, self.get_window_stats]

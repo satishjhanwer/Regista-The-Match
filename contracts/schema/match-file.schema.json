@@ -2,6 +2,7 @@
   "$defs": {
     "CarryEvent": {
       "additionalProperties": false,
+      "description": "A player running with the ball.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -124,6 +125,7 @@
     },
     "ClearanceEvent": {
       "additionalProperties": false,
+      "description": "A defensive clearance.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -231,6 +233,7 @@
     },
     "FoulEvent": {
       "additionalProperties": false,
+      "description": "A foul, with any card.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -346,6 +349,7 @@
     },
     "FreezeFramePlayer": {
       "additionalProperties": false,
+      "description": "A player's position in a shot's freeze frame.",
       "properties": {
         "player_id": {
           "type": "string"
@@ -367,6 +371,7 @@
     },
     "InterceptionEvent": {
       "additionalProperties": false,
+      "description": "An intercepted pass.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -466,6 +471,7 @@
     },
     "MatchMeta": {
       "additionalProperties": false,
+      "description": "Match metadata: teams, venue, kickoff and which way the home side attacks first.",
       "properties": {
         "schema_version": {
           "default": "1.0",
@@ -516,6 +522,7 @@
     },
     "PassEvent": {
       "additionalProperties": false,
+      "description": "A pass with its outcome, length, height, ball speed and the pressure on passer and receiver.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -687,6 +694,7 @@
     },
     "PeriodEndEvent": {
       "additionalProperties": false,
+      "description": "End of a period, with the score.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -790,6 +798,7 @@
     },
     "PeriodStartEvent": {
       "additionalProperties": false,
+      "description": "Kickoff of a period.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -885,6 +894,7 @@
     },
     "Player": {
       "additionalProperties": false,
+      "description": "A squad member, with career totals before this match.",
       "properties": {
         "player_id": {
           "type": "string"
@@ -937,6 +947,7 @@
     },
     "PossessionChangeEvent": {
       "additionalProperties": false,
+      "description": "The ball changes team, and why.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -1061,6 +1072,7 @@
     },
     "Pressure": {
       "additionalProperties": false,
+      "description": "Opponents around a player at the moment of an action.",
       "properties": {
         "defenders_within_5m": {
           "minimum": 0,
@@ -1092,6 +1104,7 @@
     },
     "PressureEvent": {
       "additionalProperties": false,
+      "description": "A defender closing down the ball carrier.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -1201,6 +1214,7 @@
     },
     "SaveEvent": {
       "additionalProperties": false,
+      "description": "A goalkeeper save.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -1300,6 +1314,7 @@
     },
     "ShotEvent": {
       "additionalProperties": false,
+      "description": "A shot with outcome, body part, speed, goal geometry, pressure, assist and freeze frame.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -1566,6 +1581,7 @@
     },
     "TackleEvent": {
       "additionalProperties": false,
+      "description": "A tackle.",
       "properties": {
         "event_id": {
           "type": "string"
@@ -1673,6 +1689,7 @@
     },
     "Team": {
       "additionalProperties": false,
+      "description": "A club and its eleven.",
       "properties": {
         "team_id": {
           "type": "string"

@@ -37,6 +37,7 @@ DEFAULT_STATIC = Path(__file__).resolve().parents[3] / "frontend" / "dist"
 
 
 def load_match(path: Path) -> MatchFile:
+    """Read and validate a match file."""
     return MatchFile.model_validate(json.loads(path.read_text(encoding="utf-8")))
 
 

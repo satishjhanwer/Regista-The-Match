@@ -81,6 +81,8 @@ CI (`.github/workflows/ci.yml`) runs ruff, pytest, and fails if generated schema
   Teams: Northvale FC (`NVL`, home) vs Saltmere Athletic (`SLM`). Venue: Harbourline Park.
 - **Secrets:** `.env` is gitignored. Prefer Entra ID (`DefaultAzureCredential`) over API keys.
 - **Determinism:** simulator uses one seeded `random.Random`. Same seed must produce byte-identical output (tested).
+- **Documentation:** every public module, class, function and method has a docstring (ruff `D1`, enforced in CI);
+  exported TypeScript gets TSDoc. Comments explain *why*, never restate the code. No commented-out code.
 
 ## LLM access (important)
 

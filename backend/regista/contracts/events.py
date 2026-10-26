@@ -29,17 +29,17 @@ SCHEMA_VERSION = "1.0"
 
 
 class Model(BaseModel):
+    """Base for every contract: immutable, no extra fields, defaults required in serialized schemas."""
+
     model_config = ConfigDict(extra="forbid", frozen=True, json_schema_serialization_defaults_required=True)
 
-
-# --------------------------------------------------------------------------- #
-# Match metadata
-# --------------------------------------------------------------------------- #
 
 PositionGroup = Literal["GK", "DEF", "MID", "FWD"]
 
 
 class Player(Model):
+    """A squad member, with career totals before this match."""
+
     player_id: str
     name: str
     short_name: str
@@ -51,6 +51,8 @@ class Player(Model):
 
 
 class Team(Model):
+    """A club and its eleven."""
+
     team_id: str
     name: str
     short_name: str
@@ -61,6 +63,8 @@ class Team(Model):
 
 
 class MatchMeta(Model):
+    """Match metadata: teams, venue, kickoff and which way the home side attacks first."""
+
     schema_version: str = SCHEMA_VERSION
     match_id: str
     competition: str
@@ -79,24 +83,25 @@ def attacks_right(meta: MatchMeta, team_id: str, period: int) -> bool:
     return home_right if team_id == meta.home.team_id else not home_right
 
 
-# --------------------------------------------------------------------------- #
-# Events
-# --------------------------------------------------------------------------- #
-
-
 class Pressure(Model):
+    """Opponents around a player at the moment of an action."""
+
     defenders_within_5m: int = Field(ge=0)
     nearest_defender_m: float = Field(ge=0)
     nearest_defender_id: str | None = None
 
 
 class FreezeFramePlayer(Model):
+    """A player's position in a shot's freeze frame."""
+
     player_id: str
     x: float
     y: float
 
 
 class BaseEvent(Model):
+    """Fields every event shares: ids, order, three clocks, actor and pitch position."""
+
     event_id: str
     seq: int = Field(ge=0)
     match_id: str
@@ -112,16 +117,22 @@ class BaseEvent(Model):
 
 
 class PeriodStartEvent(BaseEvent):
+    """Kickoff of a period."""
+
     type: Literal["period_start"] = "period_start"
 
 
 class PeriodEndEvent(BaseEvent):
+    """End of a period, with the score."""
+
     type: Literal["period_end"] = "period_end"
     home_score: int
     away_score: int
 
 
 class PassEvent(BaseEvent):
+    """A pass with its outcome, length, height, ball speed and the pressure on passer and receiver."""
+
     type: Literal["pass"] = "pass"
     end_x: float = Field(ge=0, le=PITCH_LENGTH_M)
     end_y: float = Field(ge=0, le=PITCH_WIDTH_M)
@@ -138,6 +149,8 @@ class PassEvent(BaseEvent):
 
 
 class CarryEvent(BaseEvent):
+    """A player running with the ball."""
+
     type: Literal["carry"] = "carry"
     end_x: float = Field(ge=0, le=PITCH_LENGTH_M)
     end_y: float = Field(ge=0, le=PITCH_WIDTH_M)
@@ -147,6 +160,8 @@ class CarryEvent(BaseEvent):
 
 
 class ShotEvent(BaseEvent):
+    """A shot with outcome, body part, speed, goal geometry, pressure, assist and freeze frame."""
+
     type: Literal["shot"] = "shot"
     outcome: Literal["goal", "saved", "off_target", "blocked", "woodwork"]
     body_part: Literal["right_foot", "left_foot", "head"]
@@ -159,11 +174,15 @@ class ShotEvent(BaseEvent):
 
 
 class SaveEvent(BaseEvent):
+    """A goalkeeper save."""
+
     type: Literal["save"] = "save"
     shot_event_id: str
 
 
 class PressureEvent(BaseEvent):
+    """A defender closing down the ball carrier."""
+
     type: Literal["pressure"] = "pressure"
     target_player_id: str
     distance_m: float = Field(ge=0)
@@ -171,23 +190,31 @@ class PressureEvent(BaseEvent):
 
 
 class TackleEvent(BaseEvent):
+    """A tackle."""
+
     type: Literal["tackle"] = "tackle"
     opponent_id: str
     outcome: Literal["won", "lost"]
 
 
 class InterceptionEvent(BaseEvent):
+    """An intercepted pass."""
+
     type: Literal["interception"] = "interception"
     pass_event_id: str
 
 
 class ClearanceEvent(BaseEvent):
+    """A defensive clearance."""
+
     type: Literal["clearance"] = "clearance"
     end_x: float = Field(ge=0, le=PITCH_LENGTH_M)
     end_y: float = Field(ge=0, le=PITCH_WIDTH_M)
 
 
 class FoulEvent(BaseEvent):
+    """A foul, with any card."""
+
     type: Literal["foul"] = "foul"
     fouled_player_id: str
     card: Literal["yellow", "red"] | None = None
@@ -215,6 +242,8 @@ PossessionCause = Literal[
 
 
 class PossessionChangeEvent(BaseEvent):
+    """The ball changes team, and why."""
+
     type: Literal["possession_change"] = "possession_change"
     from_team_id: str | None
     to_team_id: str
@@ -246,12 +275,9 @@ class MatchFile(Model):
     events: list[MatchEvent]
 
 
-# --------------------------------------------------------------------------- #
-# Ground truth (never streamed to the pipeline; used for evaluation only)
-# --------------------------------------------------------------------------- #
-
-
 class Storyline(Model):
+    """A planted storyline window (ground truth)."""
+
     storyline_id: str
     label: str
     start_clock_s: float
@@ -261,11 +287,15 @@ class Storyline(Model):
 
 
 class TruthShot(Model):
+    """The true xG of one shot (ground truth)."""
+
     event_id: str
     xg_true: float = Field(ge=0, le=1)
 
 
 class GroundTruth(Model):
+    """Everything planted in a simulated match, for evaluation and tests only. Never streamed to the pipeline."""
+
     match_id: str
     seed: int
     final_score: dict[str, int]

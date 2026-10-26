@@ -1,10 +1,13 @@
-// REST helpers and the WebSocket hook for the Regista replay API (see docs/API.md).
+/**
+ * REST helpers and the WebSocket hook for the Regista replay API (see docs/API.md).
+ */
 
 import { useEffect, useReducer, useRef } from "react";
 
 import type { ControlRequest, FanProfile, Insight, MomentumPoint, RenderResponse, ReplayStatus } from "../contracts/stream";
 import { initialLive, needsHistory, reduce, type LiveState, type StreamMessage } from "./live";
 
+/** Fan profile as query parameters: a preset id, optionally overridden field by field. */
 export interface ProfileParams {
   profile?: string;
   mode?: FanProfile["mode"];
@@ -14,6 +17,7 @@ export interface ProfileParams {
   metric?: string;
 }
 
+/** URL query string for a profile (undefined fields are left out). */
 export function profileQuery(p: ProfileParams): string {
   const q = new URLSearchParams();
   for (const [k, v] of Object.entries(p)) if (v !== undefined) q.set(k, v);
@@ -25,6 +29,7 @@ async function json<T>(res: Response): Promise<T> {
   return (await res.json()) as T;
 }
 
+/** Typed REST calls to the replay API. */
 export const api = {
   control: (body: ControlRequest) =>
     fetch("/api/replay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }).then(json<ReplayStatus>),

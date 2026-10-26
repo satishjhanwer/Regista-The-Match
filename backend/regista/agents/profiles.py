@@ -89,6 +89,7 @@ def relevance(insight: Insight, profile: FanProfile) -> int | None:
 
 
 def display_for(insight: Insight, profile: FanProfile) -> DisplayDirective | None:
+    """Overlay placement for the insight and viewer, or None when this viewer should not see it."""
     prio = relevance(insight, profile)
     if prio is None:
         return None

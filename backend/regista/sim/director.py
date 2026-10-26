@@ -17,6 +17,8 @@ from .roster import AWAY_ID, HOME_ID
 
 @dataclass(frozen=True)
 class TeamParams:
+    """Behaviour knobs for one team: pass skill, press, defensive line, long-ball rate, tempo, directness."""
+
     pass_skill: float = 0.0  # additive logit offset on pass completion
     press: float = 0.4  # 0..1 pressing intensity out of possession
     line_push_m: float = 0.0  # extra defensive-line height out of possession
@@ -34,6 +36,8 @@ BASE: dict[str, TeamParams] = {
 
 @dataclass(frozen=True)
 class Window:
+    """A storyline: a time window and the TeamParams overrides that plant it."""
+
     storyline_id: str
     label: str
     start_min: float
@@ -102,6 +106,8 @@ WINDOWS: list[Window] = [
 
 @dataclass(frozen=True)
 class ScriptedMoment:
+    """A scripted moment (goal or sprint) and when it happens."""
+
     moment_id: str
     kind: str  # goal_home_through_ball | goal_away_high_press | goal_home_header | sprint_counter
     period: int
@@ -149,10 +155,13 @@ STOPPAGE_S = {1: 125.0, 2: 250.0}
 
 
 class Director:
+    """Applies storyline overrides by match clock and releases each scripted moment once."""
+
     def __init__(self) -> None:
         self._done: set[str] = set()
 
     def params(self, team_id: str, match_clock_s: float) -> TeamParams:
+        """Team parameters at a match clock, with any storyline overrides applied."""
         p = BASE[team_id]
         minute = match_clock_s / 60.0
         for w in WINDOWS:
@@ -161,6 +170,7 @@ class Director:
         return p
 
     def due(self, period: int, t: float) -> ScriptedMoment | None:
+        """The next scripted moment due at this time, or None. Each moment is released once."""
         for m in SCRIPT:
             if m.moment_id not in self._done and m.period == period and t >= m.t:
                 self._done.add(m.moment_id)
@@ -169,6 +179,7 @@ class Director:
 
     @staticmethod
     def storylines() -> list[Storyline]:
+        """The planted storylines, for the truth file."""
         return [
             Storyline(
                 storyline_id=w.storyline_id,

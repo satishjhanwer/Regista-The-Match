@@ -15,6 +15,7 @@ import { emptyQueue, enqueue, tick, type QueueState } from "./lib/overlayQueue";
 const DEFAULT_PARAMS: ProfileParams = { profile: "analyst-en", mode: "analyst", lang: "en", team: "", player: "", metric: "" };
 const AIR_TICK_MS = 100;
 
+/** Live broadcast view and compare view, driven by one WebSocket per fan profile. */
 export default function App() {
   const [params, setParams] = useState<ProfileParams>(DEFAULT_PARAMS);
   const [presets, setPresets] = useState<FanProfile[]>([]);

@@ -108,11 +108,13 @@ def counted_words(text: str) -> list[float]:
 
 
 def numbers_in(text: str) -> list[float]:
+    """Every number written in digits, after normalizing Devanagari digits and decimal commas."""
     text = _DECIMAL_COMMA.sub(".", text.translate(_DEVANAGARI))
     return [float(m) for m in _NUMBER.findall(text)]
 
 
 def allowed_numbers(fact: Fact) -> set[float]:
+    """Numbers a claim citing ``fact`` may contain."""
     out: set[float] = set(numbers_in(fact.label))  # e.g. the window in "xG (10 min)"
     for v in (fact.value, fact.previous_value):
         if v is None:
@@ -133,15 +135,19 @@ def _matches(n: float, allowed: set[float]) -> bool:
 
 @dataclass
 class VerifierReport:
+    """The Verifier's verdict, with reasons per claim and for the headline."""
+
     verification: Verification
     claim_issues: dict[int, list[str]] = field(default_factory=dict)  # claim index -> reasons
     headline_issues: list[str] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
+        """True when the rendering passed every check."""
         return self.verification.status == "verified"
 
     def feedback(self) -> str:
+        """Reasons as plain lines, sent back to the Narrator for its retry."""
         lines = [f"headline: {r}" for r in self.headline_issues]
         lines += [f"claim {i + 1}: {r}" for i, rs in sorted(self.claim_issues.items()) for r in rs]
         lines += [n for n in self.verification.notes if not n.startswith(("headline:", "claim "))]
@@ -149,6 +155,8 @@ class VerifierReport:
 
 
 class Verifier:
+    """Mechanical grounding check of renderings against their insight (rules in the module docstring)."""
+
     def __init__(self, meta: MatchMeta) -> None:
         self.players: dict[str, tuple[str, ...]] = {}
         for team in (meta.home, meta.away):
@@ -157,7 +165,6 @@ class Verifier:
         # name, short name, id, plus the bare first word broadcasters use ("Northvale", "Saltmere")
         self.teams = {t.team_id: (t.name, t.short_name, t.team_id, t.name.split()[0]) for t in (meta.home, meta.away)}
 
-    # ------------------------------------------------------------------ #
     def _entity_issues(self, text: str, insight: Insight, facts: list[Fact]) -> list[str]:
         issues = []
         fact_strings = {str(f.value) for f in facts} | {str(f.previous_value) for f in facts if f.previous_value is not None}
@@ -201,6 +208,7 @@ class Verifier:
         return issues
 
     def check_claim(self, claim: Claim, insight: Insight) -> list[str]:
+        """Citation, number and entity issues of one claim (empty list when it passes)."""
         by_id = {f.fact_id: f for f in insight.facts}
         unknown = [fid for fid in claim.fact_ids if fid not in by_id]
         if unknown:
@@ -209,6 +217,7 @@ class Verifier:
         return self._number_issues(claim.text, cited, insight, not cited) + self._entity_issues(claim.text, insight, cited)
 
     def verify(self, rendered: RenderedInsight, insight: Insight) -> VerifierReport:
+        """Check a whole rendering: every claim, attribution, the headline, language, shape and the stat callout."""
         notes: list[str] = []
         claim_issues: dict[int, list[str]] = {}
         for i, c in enumerate(rendered.claims):
