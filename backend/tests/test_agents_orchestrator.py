@@ -199,3 +199,29 @@ def test_recap_is_grounded_in_earlier_insights(seed7):
         assert verifier.verify(r, recap).ok, (profile.profile_id, r.body)
     half = build_recap(match.meta, insights, [i for i in insights if i.kind == "period_summary"][0])
     assert [f.key for f in half.facts if f.key.startswith("recap.goal")] == ["recap.goal1"]
+
+
+def test_llm_languages_gate_routes_others_to_templates(seed7, monkeypatch):
+    match, insights, contexts = seed7
+    ins = first(insights, "press_change")
+    monkeypatch.setenv("REGISTA_LLM_LANGUAGES", "en,es")
+    narration = Narration(wrong_first=False)
+    wp = WarmPath(match.meta, client_for(narration))
+    hi = run(wp.render(contexts[ins.insight_id], PRESETS["focus-hi-nvl09"]))
+    assert hi.source == "template" and narration.calls == 0
+    assert "not enabled for 'hi'" in hi.trace[-2].detail["reason"]
+    en = run(wp.render(contexts[ins.insight_id], PRESETS["analyst-en"]))
+    assert en.source == "llm" and narration.calls == 1
+
+
+def test_placeholder_drafts_are_rejected(seed7):
+    match, insights, contexts = seed7
+    ins = first(insights, "press_change")
+
+    def dots(messages):
+        f = json.loads(message_texts(messages)[-1].split("\n")[0])["facts"]
+        return json.dumps({"headline": "...", "claims": [{"text": "...", "fact_ids": [f[0]["fact_id"]]}]})
+
+    res = run(WarmPath(match.meta, client_for(dots)).render(contexts[ins.insight_id], PRESETS["analyst-en"]))
+    assert res.source == "template_fallback"
+    assert "placeholder" in " ".join(res.trace[2].detail["notes"])

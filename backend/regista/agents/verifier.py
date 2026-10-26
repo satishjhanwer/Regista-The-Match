@@ -146,6 +146,11 @@ class Verifier:
         headline_issues += self._entity_issues(rendered.headline, insight, insight.facts)
         if not rendered.claims:
             notes.append("no claims")
+        if not _substantive(rendered.headline):
+            notes.append("headline is empty or a placeholder")
+        for i, c in enumerate(rendered.claims):
+            if not _substantive(c.text):
+                notes.append(f"claim {i + 1} is empty or a placeholder")
         if len(rendered.headline) > HEADLINE_MAX:
             notes.append(f"headline longer than {HEADLINE_MAX} characters")
         if len(rendered.body) > BODY_MAX:
@@ -171,6 +176,12 @@ class Verifier:
             claim_issues,
             headline_issues,
         )
+
+
+def _substantive(text: str) -> bool:
+    """At least two whitespace-separated tokens containing a letter: rules out "", "...", "-" and similar
+    placeholders. Token-based because Devanagari vowel signs are combining marks, not \w letters."""
+    return sum(1 for tok in text.split() if re.search(r"[^\W\d_]", tok)) >= 2
 
 
 def _word_in(word: str, text: str) -> bool:

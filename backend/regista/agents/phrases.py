@@ -92,7 +92,7 @@ PHRASES: dict[str, dict[str, str]] = {
         "recap.press": "{team} turned up the press from {start}.",
         "recap.chaos": "A chaotic spell from {start}.",
         "recap.milestone": "{milestone}.",
-        "recap.xg": "xG {hx}-{ax}.",
+        "recap.xg": "Expected goals (xG): {hx}-{ax}.",
     },
     "es": {
         "goal.h": "¡GOL! {scorer} | {home} {score} {away}",
@@ -168,7 +168,7 @@ PHRASES: dict[str, dict[str, str]] = {
         "recap.press": "{team} subieron la presión desde el {start}.",
         "recap.chaos": "Una fase caótica desde el {start}.",
         "recap.milestone": "{milestone}.",
-        "recap.xg": "xG {hx}-{ax}.",
+        "recap.xg": "Goles esperados (xG): {hx}-{ax}.",
     },
     "hi": {
         "goal.h": "गोल! {scorer} | {home} {score} {away}",
@@ -244,7 +244,7 @@ PHRASES: dict[str, dict[str, str]] = {
         "recap.press": "{start} से {team} ने दबाव बढ़ाया।",
         "recap.chaos": "{start} से अफ़रातफ़री का दौर।",
         "recap.milestone": "{milestone}।",
-        "recap.xg": "xG {hx}-{ax}।",
+        "recap.xg": "अपेक्षित गोल (xG): {hx}-{ax}।",
     },
 }
 

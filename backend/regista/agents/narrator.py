@@ -30,7 +30,9 @@ Hard rules, checked by a Verifier that rejects violations:
 - A sentence with no fact_ids (fan colour) must contain no numbers.
 - Say who every number is about, in the terms of its fact label. "Northvale FC passes under pressure: 64%" means
   64% of Northvale's passes were made under pressure; it is not a completion rate and not about one player.
-- The moment's "what_happened" is the detector's verified account. Your story must agree with it.
+- The moment's "what_happened" is the detector's verified account. Your story must agree with it, and any number
+  you take from it must be cited through the fact that holds it. Prefer facts with a priority (the Analyst's picks).
+- Write real sentences. Never output placeholders such as "..." or empty strings.
 - Only name players and teams that appear in the facts or entities given.
 - headline at most 80 characters; all sentences together at most 320 characters.
 Reply with JSON only:
@@ -39,7 +41,10 @@ Reply with JSON only:
 
 def narration_prompt(brief: Brief, profile: FanProfile, meta: MatchMeta, feedback: str | None = None) -> str:
     ins = brief.insight
-    chosen = set(brief.fact_ids)
+    rank = {fid: i + 1 for i, fid in enumerate(brief.fact_ids)}
+    # Analyst's picks first (with their priority), then every other detector fact, so any number the
+    # rationale mentions can be cited.
+    ordered = sorted(ins.facts, key=lambda f: rank.get(f.fact_id, len(rank) + 1))
     names = {p.player_id: p.short_name for t in (meta.home, meta.away) for p in t.players}
     teams = {t.team_id: t.name for t in (meta.home, meta.away)}
     body = {
@@ -52,9 +57,15 @@ def narration_prompt(brief: Brief, profile: FanProfile, meta: MatchMeta, feedbac
         },
         "entities": {"teams": [teams[t] for t in ins.entities.team_ids], "players": [names.get(p, p) for p in ins.entities.player_ids]},
         "facts": [
-            {"fact_id": f.fact_id, "label": f.label, "value": f.value, "unit": f.unit, "previous_value": f.previous_value}
-            for f in ins.facts
-            if f.fact_id in chosen
+            {
+                "fact_id": f.fact_id,
+                "label": f.label,
+                "value": f.value,
+                "unit": f.unit,
+                "previous_value": f.previous_value,
+                "priority": rank.get(f.fact_id),
+            }
+            for f in ordered
         ],
     }
     text = json.dumps(body, ensure_ascii=False)

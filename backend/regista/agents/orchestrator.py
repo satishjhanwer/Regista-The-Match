@@ -79,6 +79,9 @@ class WarmPath:
         self.templates = TemplateNarrator(meta)
         self.verifier = Verifier(meta)
         # read at construction, after any .env has been loaded
+        # Languages the LLM Narrator is trusted with (validated by hand); others render from verified templates.
+        langs = os.getenv("REGISTA_LLM_LANGUAGES", "")
+        self.llm_languages = {x.strip() for x in langs.split(",") if x.strip()} or None
         self.timeout_s = timeout_s if timeout_s is not None else float(os.getenv("REGISTA_LLM_TIMEOUT_S", LLM_TIMEOUT_S))
         self.cache: dict[tuple[str, str], RenderResult] = cache if cache is not None else {}
         self._briefs: dict[str, asyncio.Future] = {}
@@ -151,7 +154,8 @@ class WarmPath:
         brief, brief_steps = await self.brief(ctx)
         trace = list(brief_steps)
         insight = brief.insight
-        if self.narrator is not None:
+        use_llm = self.narrator is not None and (self.llm_languages is None or profile.language in self.llm_languages)
+        if use_llm:
             feedback = None
             for attempt in (1, 2):
                 t0 = time.perf_counter()
@@ -187,18 +191,19 @@ class WarmPath:
         # Template narration over the detector's facts only (it never cites Analyst-promoted facts).
         t0 = time.perf_counter()
         r = self.templates.render(ctx.insight, profile)
-        trace.append(TraceStep("template", "render", "fallback" if self.narrator is not None else "ok", _ms(t0), {"headline": r.headline}))
+        detail = {"headline": r.headline}
+        if self.narrator is not None and not use_llm:
+            detail["reason"] = f"LLM narration not enabled for '{profile.language}' (REGISTA_LLM_LANGUAGES)"
+        trace.append(TraceStep("template", "render", "fallback" if use_llm else "ok", _ms(t0), detail))
         report = self._verify(r, ctx.insight, trace, 0)
-        notes = ["template fallback after LLM drafts failed verification or errored"] if self.narrator is not None else []
+        notes = ["template fallback after LLM drafts failed verification or errored"] if use_llm else []
         v = Verification(
             status="verified" if report.ok else "rejected",
             checked_claims=report.verification.checked_claims,
             rejected_claims=report.verification.rejected_claims,
             notes=notes + report.verification.notes,
         )
-        return RenderResult(
-            ctx.insight, r.model_copy(update={"verification": v}), trace, "template_fallback" if self.narrator is not None else "template"
-        )
+        return RenderResult(ctx.insight, r.model_copy(update={"verification": v}), trace, "template_fallback" if use_llm else "template")
 
     # ------------------------------------------------------------------ #
     def save_cache(self, path: Path) -> None:
