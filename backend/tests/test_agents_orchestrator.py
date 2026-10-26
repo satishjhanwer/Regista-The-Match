@@ -253,6 +253,8 @@ def test_narrator_sees_short_fact_ids_and_they_map_back(seed7):
     brief = rule_brief(contexts[ins.insight_id])
     prompt = json.loads(narration_prompt(brief, PRESETS["analyst-en"], match.meta).split("\n")[0])
     assert [f["fact_id"] for f in prompt["facts"]][:2] == ["F1", "F2"]
-    reply = json.dumps({"headline": "Saltmere squeeze Northvale", "claims": [{"text": "x y", "fact_ids": ["F1", "nope"]}], "stat_callout_fact_id": "F1"})
+    claims = [{"text": "x y", "fact_ids": ["F1", "nope"]}]
+    draft = {"headline": "Saltmere squeeze Northvale", "claims": claims, "stat_callout_fact_id": "F1"}
+    reply = json.dumps(draft)
     r = LLMNarrator(None, match.meta).parse(reply, brief, PRESETS["analyst-en"])
     assert r.claims[0].fact_ids == [ins.facts[0].fact_id, "nope"] and r.stat_callout.fact_id == ins.facts[0].fact_id

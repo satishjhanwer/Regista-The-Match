@@ -43,7 +43,8 @@ Package `backend/regista/agents/` and `backend/regista/api/`.
 - [x] Per-profile fan-out: one Insight -> N RenderedInsights (cache by insight_id + profile)
 - [x] Record a cached agent-output run for deterministic demo recording (`python -m regista.agents record`)
 - [x] First live-model runs (Ollama, qwen2.5:3b on CPU): real Verifier rejections and revisions, rules hardened (D28)
-- [ ] Record the demo cache with Foundry once Azure is available (a qwen2.5:3b recording exists meanwhile)
+- [x] Demo cache recorded with qwen2.5:3b: `data/RGS-2026-0001.renders.json` (serve with REGISTA_AGENT_CACHE)
+- [ ] Re-record with Foundry once Azure is available (`record --resume` keeps what still verifies)
 
 ## Sun 25 Oct: frontend (done, built Fri ahead of the model run)
 
