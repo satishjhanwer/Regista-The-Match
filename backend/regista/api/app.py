@@ -49,7 +49,9 @@ def create_app(
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         m = match or load_match(Path(os.getenv("REGISTA_MATCH", DEFAULT_MATCH)))
-        cp = cache_path or (Path(p) if (p := os.getenv("REGISTA_AGENT_CACHE")) else None)
+        # An injected match (tests, embedding) is configured only by arguments, never by the environment.
+        env_cache = os.getenv("REGISTA_AGENT_CACHE") if match is None else None
+        cp = cache_path or (Path(env_cache) if env_cache else None)
         cache = WarmPath.load_cache(cp) if cp and cp.exists() else None
         llm = client if match is not None else build_chat_client()
         warm = WarmPath(m.meta, llm, cache=cache)
