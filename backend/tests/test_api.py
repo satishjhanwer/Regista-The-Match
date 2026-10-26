@@ -135,3 +135,23 @@ def test_serves_built_frontend_next_to_the_api(sims, tmp_path, monkeypatch):
     with TestClient(create_app(match, client=None, autoplay=False)) as c:
         assert "<title>Regista</title>" in c.get("/").text
         assert c.get("/api/health").json()["ok"]
+
+
+def test_resume_reaudits_a_recorded_run(sims, tmp_path, monkeypatch):
+    import asyncio
+    import json
+
+    from regista.agents.__main__ import record
+
+    monkeypatch.setenv("REGISTA_LLM_PROVIDER", "none")
+    match, _ = sims[7]
+    out = tmp_path / "renders.json"
+    asyncio.run(record(match, out, ["analyst-en"], 2, {"goal"}))
+    data = json.loads(out.read_text(encoding="utf-8"))
+    data["renders"][0]["rendered"]["claims"][0]["text"] = "Vukovic scored his second goal."  # now wrong: he had 1
+    data["renders"][0]["rendered"]["body"] = " ".join(c["text"] for c in data["renders"][0]["rendered"]["claims"])
+    out.write_text(json.dumps(data), encoding="utf-8")
+    asyncio.run(record(match, out, ["analyst-en"], 2, {"goal"}, resume=out))
+    again = json.loads(out.read_text(encoding="utf-8"))
+    assert all(s["agent"] != "cache" for r in again["renders"] for s in r["trace"])
+    assert "second goal" not in again["renders"][0]["rendered"]["body"]

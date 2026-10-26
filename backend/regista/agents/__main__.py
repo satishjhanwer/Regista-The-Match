@@ -22,13 +22,23 @@ from ..contracts.events import MatchFile
 from ..llm import build_chat_client, resolve_provider
 from .orchestrator import WarmPath
 from .profiles import PRESETS, display_for
+from .verifier import Verifier
 
 
-async def record(match: MatchFile, out: Path, profiles: list[str], concurrency: int, kinds: set[str] | None = None) -> None:
+async def record(
+    match: MatchFile, out: Path, profiles: list[str], concurrency: int, kinds: set[str] | None = None, resume: Path | None = None
+) -> None:
     from ..api.replay import Replay
 
     provider = resolve_provider()
-    warm = WarmPath(match.meta, build_chat_client(provider))
+    cache = None
+    if resume is not None and resume.exists():
+        # Re-audit a recorded run with today's Verifier: keep renders that still pass, re-render the rest.
+        verifier = Verifier(match.meta)
+        loaded = WarmPath.load_cache(resume)
+        cache = {k: r for k, r in loaded.items() if verifier.verify(r.rendered, r.insight).ok}
+        print(f"resume: kept {len(cache)} of {len(loaded)} recorded renders that pass the current Verifier", flush=True)
+    warm = WarmPath(match.meta, build_chat_client(provider), cache=cache)
     replay = Replay(match)
     replay.advance_to(replay.end_s)
     moments = [c for c in replay.history if kinds is None or c.insight.kind in kinds]
@@ -68,6 +78,7 @@ def main() -> None:
     rec.add_argument("--profiles", default=",".join(PRESETS))
     rec.add_argument("--concurrency", type=int, default=4, help="parallel renders; use 1 for a CPU-only local model")
     rec.add_argument("--kinds", help="only these insight kinds, e.g. goal,press_change,milestone,recap")
+    rec.add_argument("--resume", type=Path, help="recorded run to re-audit; only renders failing today's Verifier are redone")
     sh = sub.add_parser("show")
     sh.add_argument("path", type=Path)
     sh.add_argument("--profile")
@@ -81,7 +92,7 @@ def main() -> None:
             pass
         match = MatchFile.model_validate(json.loads(args.match.read_text(encoding="utf-8")))
         kinds = set(args.kinds.split(",")) if args.kinds else None
-        asyncio.run(record(match, args.out, args.profiles.split(","), args.concurrency, kinds))
+        asyncio.run(record(match, args.out, args.profiles.split(","), args.concurrency, kinds, args.resume))
     else:
         show(args.path, args.profile)
 

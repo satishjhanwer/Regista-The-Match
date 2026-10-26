@@ -31,7 +31,10 @@ HEADLINE_MAX, BODY_MAX = 80, 320
 _STOP = {
     "en": {"the", "of", "and", "is", "are", "was", "with", "for", "from", "their", "his", "her", "they", "now", "in", "to", "has"},
     "es": {"el", "la", "los", "las", "de", "del", "y", "que", "en", "con", "por", "su", "sus", "se", "un", "una", "es", "al"},
+    # not a rendering language: Portuguese is what a small model drifts into when asked for Spanish
+    "pt": {"seu", "sua", "seus", "suas", "da", "das", "dos", "em", "não", "com", "um", "uma", "ao", "pelo", "pela", "é"},
 }
+_RENDER_LANGS = ("en", "es")
 _DEVANAGARI_LETTER = re.compile(r"[ऀ-ॿ]")
 _DEVANAGARI = str.maketrans("०१२३४५६७८९", "0123456789")
 _NUMBER = re.compile(r"(?<![\w.])\d+(?:\.\d+)?")
@@ -230,15 +233,16 @@ class Verifier:
             latin_only = [i + 1 for i, c in enumerate(rendered.claims) if not _DEVANAGARI_LETTER.search(c.text)]
             if latin_only:
                 notes.append(f"claims {latin_only} are not in Hindi (Devanagari)")
-        elif rendered.language in _STOP:
+        elif rendered.language in _RENDER_LANGS:
             foreign = [i + 1 for i, c in enumerate(rendered.claims) if _NON_LATIN_LETTER.search(c.text)]
             if foreign or _NON_LATIN_LETTER.search(rendered.headline):
                 notes.append(f"text outside the Latin script in a {rendered.language} rendering (claims {foreign})")
-            other = "es" if rendered.language == "en" else "en"
+            # A claim with no function word of the requested language but some of another one is in the wrong language.
+            others = [lang for lang in _STOP if lang != rendered.language]
             wrong = [
                 i + 1
                 for i, c in enumerate(rendered.claims)
-                if _language_votes(c.text, other) >= 2 and _language_votes(c.text, rendered.language) == 0
+                if _language_votes(c.text, rendered.language) == 0 and sum(_language_votes(c.text, o) for o in others) >= 1
             ]
             if wrong:
                 notes.append(f"claims {wrong} are not in the requested language ({rendered.language})")

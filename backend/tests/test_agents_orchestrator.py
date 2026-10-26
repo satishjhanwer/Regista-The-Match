@@ -242,3 +242,17 @@ def test_overlong_headline_goes_back_as_feedback(seed7):
     res = run(WarmPath(match.meta, client_for(long_then_short)).render(contexts[ins.insight_id], PRESETS["analyst-en"]))
     assert res.source == "llm_revised"
     assert "limit is 80" in calls[1]
+
+
+def test_narrator_sees_short_fact_ids_and_they_map_back(seed7):
+    from regista.agents.analyst import rule_brief
+    from regista.agents.narrator import LLMNarrator, narration_prompt
+
+    match, insights, contexts = seed7
+    ins = first(insights, "press_change")
+    brief = rule_brief(contexts[ins.insight_id])
+    prompt = json.loads(narration_prompt(brief, PRESETS["analyst-en"], match.meta).split("\n")[0])
+    assert [f["fact_id"] for f in prompt["facts"]][:2] == ["F1", "F2"]
+    reply = json.dumps({"headline": "Saltmere squeeze Northvale", "claims": [{"text": "x y", "fact_ids": ["F1", "nope"]}], "stat_callout_fact_id": "F1"})
+    r = LLMNarrator(None, match.meta).parse(reply, brief, PRESETS["analyst-en"])
+    assert r.claims[0].fact_ids == [ins.facts[0].fact_id, "nope"] and r.stat_callout.fact_id == ins.facts[0].fact_id

@@ -212,7 +212,11 @@ class WarmPath:
 
     # ------------------------------------------------------------------ #
     def save_cache(self, path: Path) -> None:
-        rows = [{"insight_id": k[0], "profile_id": k[1], **v.to_json()} for k, v in sorted(self.cache.items())]
+        rows = []
+        for (iid, pid), res in sorted(self.cache.items()):
+            row = {"insight_id": iid, "profile_id": pid, **res.to_json()}
+            row["trace"] = [s for s in row["trace"] if s["agent"] != "cache"]  # the marker is added on load
+            rows.append(row)
         path.write_text(json.dumps({"match_id": self.meta.match_id, "renders": rows}, ensure_ascii=False, indent=1), encoding="utf-8")
 
     @staticmethod

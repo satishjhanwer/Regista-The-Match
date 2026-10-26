@@ -1,0 +1,7117 @@
+{
+ "match_id": "RGS-2026-0001",
+ "renders": [
+  {
+   "insight_id": "RGS-2026-0001-INS-0001",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0001",
+    "match_id": "RGS-2026-0001",
+    "kind": "milestone",
+    "priority": 2,
+    "clock": {
+     "period": 1,
+     "t": 0.0,
+     "match_clock_s": 0.0,
+     "display": "0:00"
+    },
+    "created_at": "2026-10-24T14:00:00Z",
+    "ttl_ms": 10000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": [
+      "SLM-06"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0001-F1",
+      "key": "SLM-06.career_appearances",
+      "label": "Lindqvist career appearances",
+      "value": 100,
+      "unit": null,
+      "previous_value": 99,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00000",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "metric",
+        "ref": "SLM-06.career_appearances_before_match",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Milestone for Lindqvist: appearance number 100."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0001",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Lindqvist reaches career milestone 100",
+    "body": "Lindqvist reaches career appearance number 100 for Saltmere Athletic.",
+    "stat_callout": {
+     "label": "Lindqvist career appearances",
+     "value": "100",
+     "fact_id": "RGS-2026-0001-INS-0001-F1"
+    },
+    "claims": [
+     {
+      "text": "Lindqvist reaches career appearance number 100 for Saltmere Athletic.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0001-F1"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 29809.3,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0001-F1"
+      ],
+      "angle": "This moment could be significant for the goalkeeper's career, impacting his mental preparation and potential impact on the game.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 26830.8,
+     "detail": {
+      "headline": "Lindqvist reaches career milestone 100",
+      "claims": [
+       {
+        "text": "Lindqvist reaches career appearance number 100 for Saltmere Athletic.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0001-F1"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 7.3,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0001",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0001",
+    "match_id": "RGS-2026-0001",
+    "kind": "milestone",
+    "priority": 2,
+    "clock": {
+     "period": 1,
+     "t": 0.0,
+     "match_clock_s": 0.0,
+     "display": "0:00"
+    },
+    "created_at": "2026-10-24T14:00:00Z",
+    "ttl_ms": 10000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": [
+      "SLM-06"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0001-F1",
+      "key": "SLM-06.career_appearances",
+      "label": "Lindqvist career appearances",
+      "value": 100,
+      "unit": null,
+      "previous_value": 99,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00000",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "metric",
+        "ref": "SLM-06.career_appearances_before_match",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Milestone for Lindqvist: appearance number 100."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0001",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "Lindqvist llega a 100 apariciones",
+    "body": "Lindqvist llega a 100 apariciones para Saltmere Athletic",
+    "stat_callout": {
+     "label": "Partidos en su carrera",
+     "value": "100",
+     "fact_id": "RGS-2026-0001-INS-0001-F1"
+    },
+    "claims": [
+     {
+      "text": "Lindqvist llega a 100 apariciones para Saltmere Athletic",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0001-F1"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 29809.3,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0001-F1"
+      ],
+      "angle": "This moment could be significant for the goalkeeper's career, impacting his mental preparation and potential impact on the game.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 14817.0,
+     "detail": {
+      "headline": "Lindqvist llega a 100 apariciones",
+      "claims": [
+       {
+        "text": "Lindqvist llega a 100 apariciones para Saltmere Athletic",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0001-F1"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.2,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0007",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0007",
+    "match_id": "RGS-2026-0001",
+    "kind": "player_tag",
+    "priority": 2,
+    "clock": {
+     "period": 1,
+     "t": 973.84,
+     "match_clock_s": 973.84,
+     "display": "16:13"
+    },
+    "created_at": "2026-10-24T14:16:13.840000Z",
+    "ttl_ms": 8000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0007-F1",
+      "key": "NVL-09.shot_speed_kmh",
+      "label": "Vukovic shot speed",
+      "value": 118.7,
+      "unit": "km/h",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00464",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0007-F2",
+      "key": "match.max_shot_speed_kmh",
+      "label": "Fastest shot speed of the match",
+      "value": 118.7,
+      "unit": "km/h",
+      "previous_value": 97.7,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00464",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00168",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic: shot speed 118.7 km/h, a new match record."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0007",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Vukovic: 118.7 km/h strike",
+    "body": "Vukovic strikes it at 118.7 km/h. Fastest shot of the match so far, beating 97.7 km/h.",
+    "stat_callout": {
+     "label": "Vukovic shot speed",
+     "value": "118.7 km/h",
+     "fact_id": "RGS-2026-0001-INS-0007-F1"
+    },
+    "claims": [
+     {
+      "text": "Vukovic strikes it at 118.7 km/h.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0007-F1"
+      ]
+     },
+     {
+      "text": "Fastest shot of the match so far, beating 97.7 km/h.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0007-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": [
+      "template fallback after LLM drafts failed verification or errored"
+     ]
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 41596.2,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0007-C1",
+       "RGS-2026-0001-INS-0007-C2",
+       "RGS-2026-0001-INS-0007-C3",
+       "RGS-2026-0001-INS-0007-C4",
+       "RGS-2026-0001-INS-0007-C7",
+       "RGS-2026-0001-INS-0007-C8"
+      ],
+      "angle": "This moment matters as Northvale FC maintains a strong momentum and a solid control score, giving them a significant advantage in the match.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       },
+       {
+        "tool": "get_state",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 28425.7,
+     "detail": {
+      "headline": "Vukovic's Shot Sets Northvale FC's New Record",
+      "claims": [
+       {
+        "text": "Vukovic: shot speed 118.7 km/h, a new match record.",
+        "fact_ids": [
+         "RGS-2026-0001-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "rejected",
+     "ms": 1.4,
+     "detail": {
+      "notes": [
+       "claim 1: cites unknown fact id RGS-2026-0001-F2"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 2",
+     "status": "ok",
+     "ms": 12462.9,
+     "detail": {
+      "headline": "New Match Record Shot Speed",
+      "claims": [
+       {
+        "text": "Vukovic's shot speed of 118.7 km/h is a new match record.",
+        "fact_ids": [
+         "RGS-2026-0001-C7",
+         "RGS-2026-0001-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 2",
+     "status": "rejected",
+     "ms": 0.6,
+     "detail": {
+      "notes": [
+       "claim 1: cites unknown fact id RGS-2026-0001-C7",
+       "claim 1: cites unknown fact id RGS-2026-0001-F2"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "fallback",
+     "ms": 0.4,
+     "detail": {
+      "headline": "Vukovic: 118.7 km/h strike"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.5,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template_fallback"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0007",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0007",
+    "match_id": "RGS-2026-0001",
+    "kind": "player_tag",
+    "priority": 2,
+    "clock": {
+     "period": 1,
+     "t": 973.84,
+     "match_clock_s": 973.84,
+     "display": "16:13"
+    },
+    "created_at": "2026-10-24T14:16:13.840000Z",
+    "ttl_ms": 8000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0007-F1",
+      "key": "NVL-09.shot_speed_kmh",
+      "label": "Vukovic shot speed",
+      "value": 118.7,
+      "unit": "km/h",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00464",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0007-F2",
+      "key": "match.max_shot_speed_kmh",
+      "label": "Fastest shot speed of the match",
+      "value": 118.7,
+      "unit": "km/h",
+      "previous_value": 97.7,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00464",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00168",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic: shot speed 118.7 km/h, a new match record."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0007",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "Vukovic: 118.7 km/h का शॉट",
+    "body": "Vukovic का शॉट 118.7 km/h पर। अब तक मैच का सबसे तेज़ शॉट, 97.7 km/h से आगे।",
+    "stat_callout": {
+     "label": "शॉट की रफ़्तार",
+     "value": "118.7 km/h",
+     "fact_id": "RGS-2026-0001-INS-0007-F1"
+    },
+    "claims": [
+     {
+      "text": "Vukovic का शॉट 118.7 km/h पर।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0007-F1"
+      ]
+     },
+     {
+      "text": "अब तक मैच का सबसे तेज़ शॉट, 97.7 km/h से आगे।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0007-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 41596.2,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0007-C1",
+       "RGS-2026-0001-INS-0007-C2",
+       "RGS-2026-0001-INS-0007-C3",
+       "RGS-2026-0001-INS-0007-C4",
+       "RGS-2026-0001-INS-0007-C7",
+       "RGS-2026-0001-INS-0007-C8"
+      ],
+      "angle": "This moment matters as Northvale FC maintains a strong momentum and a solid control score, giving them a significant advantage in the match.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       },
+       {
+        "tool": "get_state",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.2,
+     "detail": {
+      "headline": "Vukovic: 118.7 km/h का शॉट",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 10.4,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0013",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0013",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 1,
+     "t": 2312.21,
+     "match_clock_s": 2312.21,
+     "display": "38:32"
+    },
+    "created_at": "2026-10-24T14:38:32.210000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "NVL-10"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Vukovic",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-0",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.17,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 10.6,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "right foot",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F6",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 1,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Nordgren",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01045",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F8",
+      "key": "assist.type",
+      "label": "Assist type",
+      "value": "through ball",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01045",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic scores for Northvale FC (1-0). Created by a through ball from Nordgren."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0013",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Vukovic scores 1-0 for NVL at 38:32",
+    "body": "Vukovic scores his first goal of the match: 1-0 for NVL.",
+    "stat_callout": {
+     "label": "Scorer",
+     "value": "Vukovic",
+     "fact_id": "RGS-2026-0001-INS-0013-F1"
+    },
+    "claims": [
+     {
+      "text": "Vukovic scores his first goal of the match: 1-0 for NVL.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0013-F1",
+       "RGS-2026-0001-INS-0013-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 28352.8,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0013-F1",
+       "RGS-2026-0001-INS-0013-F2"
+      ],
+      "angle": "This moment was crucial, as Vukovic scored his second goal of the match, bringing the score to 1-0 in favor of NVL.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 34240.1,
+     "detail": {
+      "headline": "Vukovic scores 1-0 for NVL at 38:32",
+      "claims": [
+       {
+        "text": "Vukovic scores his first goal of the match: 1-0 for NVL.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0013-F1",
+         "RGS-2026-0001-INS-0013-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.1,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0013",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0013",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 1,
+     "t": 2312.21,
+     "match_clock_s": 2312.21,
+     "display": "38:32"
+    },
+    "created_at": "2026-10-24T14:38:32.210000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "NVL-10"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Vukovic",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-0",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.17,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 10.6,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "right foot",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F6",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 1,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Nordgren",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01045",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F8",
+      "key": "assist.type",
+      "label": "Assist type",
+      "value": "through ball",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01045",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic scores for Northvale FC (1-0). Created by a through ball from Nordgren."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0013",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "¡GOL! Vukovic | NVL 1-0 SLM",
+    "body": "¡Gol de Vukovic! NVL 1-0 SLM. Golpe duro para Saltmere Athletic.",
+    "stat_callout": {
+     "label": "Distancia del disparo",
+     "value": "10,6 m",
+     "fact_id": "RGS-2026-0001-INS-0013-F4"
+    },
+    "claims": [
+     {
+      "text": "¡Gol de Vukovic! NVL 1-0 SLM.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0013-F1",
+       "RGS-2026-0001-INS-0013-F2"
+      ]
+     },
+     {
+      "text": "Golpe duro para Saltmere Athletic.",
+      "fact_ids": []
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": [
+      "template fallback after LLM drafts failed verification or errored"
+     ]
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 28352.8,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0013-F1",
+       "RGS-2026-0001-INS-0013-F2"
+      ],
+      "angle": "This moment was crucial, as Vukovic scored his second goal of the match, bringing the score to 1-0 in favor of NVL.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 31056.5,
+     "detail": {
+      "headline": "Vukovic score da 38' para NVL: 1-0",
+      "claims": [
+       {
+        "text": "Vukovic anota el segundo gol de la partida para NVL en el 38:32.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0013-F1",
+         "RGS-2026-0001-INS-0013-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "rejected",
+     "ms": 1.1,
+     "detail": {
+      "notes": [
+       "claim 1: number 2 does not match any cited fact"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 2",
+     "status": "ok",
+     "ms": 12531.1,
+     "detail": {
+      "headline": "Vukovic scores crucial goal for Northvale FC in Saltmere Athletic match",
+      "claims": [
+       {
+        "text": "Vukovic scores Northvale FC's second goal of the match: 1-0",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0013-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 2",
+     "status": "rejected",
+     "ms": 1.2,
+     "detail": {
+      "notes": [
+       "claim 1: number 2 does not match any cited fact",
+       "claims [1] are not in the requested language (es)"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "fallback",
+     "ms": 0.2,
+     "detail": {
+      "headline": "¡GOL! Vukovic | NVL 1-0 SLM"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.8,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template_fallback"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0013",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0013",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 1,
+     "t": 2312.21,
+     "match_clock_s": 2312.21,
+     "display": "38:32"
+    },
+    "created_at": "2026-10-24T14:38:32.210000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "NVL-10"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Vukovic",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-0",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.17,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 10.6,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "right foot",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F6",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 1,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Nordgren",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01045",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0013-F8",
+      "key": "assist.type",
+      "label": "Assist type",
+      "value": "through ball",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01045",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic scores for Northvale FC (1-0). Created by a through ball from Nordgren."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0013",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "गोल! Vukovic | NVL 1-0 SLM",
+    "body": "Vukovic ने कमाल किया: आज का गोल नंबर 1। Vukovic का गोल! स्कोर NVL 1-0 SLM।",
+    "stat_callout": {
+     "label": "शॉट की दूरी",
+     "value": "10.6 m",
+     "fact_id": "RGS-2026-0001-INS-0013-F4"
+    },
+    "claims": [
+     {
+      "text": "Vukovic ने कमाल किया: आज का गोल नंबर 1।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0013-F1",
+       "RGS-2026-0001-INS-0013-F6"
+      ]
+     },
+     {
+      "text": "Vukovic का गोल! स्कोर NVL 1-0 SLM।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0013-F1",
+       "RGS-2026-0001-INS-0013-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 28352.8,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0013-F1",
+       "RGS-2026-0001-INS-0013-F2"
+      ],
+      "angle": "This moment was crucial, as Vukovic scored his second goal of the match, bringing the score to 1-0 in favor of NVL.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.3,
+     "detail": {
+      "headline": "गोल! Vukovic | NVL 1-0 SLM",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.6,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0015",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0015",
+    "match_id": "RGS-2026-0001",
+    "kind": "player_tag",
+    "priority": 2,
+    "clock": {
+     "period": 1,
+     "t": 2312.21,
+     "match_clock_s": 2312.21,
+     "display": "38:32"
+    },
+    "created_at": "2026-10-24T14:38:32.210000Z",
+    "ttl_ms": 8000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0015-F1",
+      "key": "NVL-09.shot_speed_kmh",
+      "label": "Vukovic shot speed",
+      "value": 123.3,
+      "unit": "km/h",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0015-F2",
+      "key": "match.max_shot_speed_kmh",
+      "label": "Fastest shot speed of the match",
+      "value": 123.3,
+      "unit": "km/h",
+      "previous_value": 118.7,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00464",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0015-C2",
+      "key": "NVL.goals",
+      "label": "Northvale FC goals",
+      "value": 1,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.goals",
+        "window_start_s": 0.0,
+        "window_end_s": 2312.21
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0015-C3",
+      "key": "NVL.xg_total",
+      "label": "Northvale FC xG",
+      "value": 3.87,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 2312.21
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0015-C4",
+      "key": "NVL.momentum_share",
+      "label": "Northvale FC share of momentum",
+      "value": 78,
+      "unit": "%",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.momentum",
+        "window_start_s": 1832.21,
+        "window_end_s": 2312.21
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0015-C8",
+      "key": "SLM.momentum_share",
+      "label": "Saltmere Athletic share of momentum",
+      "value": 22,
+      "unit": "%",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.momentum",
+        "window_start_s": 1832.21,
+        "window_end_s": 2312.21
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic: shot speed 123.3 km/h, a new match record."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0015",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Vukovic Sets New Match Record with 123.3 km/h Shot Speed",
+    "body": "Vukovic: shot speed 123.3 km/h, a new match record.",
+    "stat_callout": {
+     "label": "Fastest shot speed of the match",
+     "value": "123.3 km/h",
+     "fact_id": "RGS-2026-0001-INS-0015-F2"
+    },
+    "claims": [
+     {
+      "text": "Vukovic: shot speed 123.3 km/h, a new match record.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0015-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 46538.4,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0015-C2",
+       "RGS-2026-0001-INS-0015-C3",
+       "RGS-2026-0001-INS-0015-C4",
+       "RGS-2026-0001-INS-0015-C8"
+      ],
+      "angle": "Northvale FC's attacking momentum and conversion rate is at its peak, setting them up for another goal after scoring earlier.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       },
+       {
+        "tool": "get_window_stats",
+        "args": {
+         "team_id": "SLM",
+         "metric": "shots",
+         "window": "5m"
+        }
+       },
+       {
+        "tool": "get_facts",
+        "args": {}
+       },
+       {
+        "tool": "get_state",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 25806.9,
+     "detail": {
+      "headline": "Vukovic Sets New Match Record with 123.3 km/h Shot Speed",
+      "claims": [
+       {
+        "text": "Vukovic: shot speed 123.3 km/h, a new match record.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0015-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.4,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0015",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0015",
+    "match_id": "RGS-2026-0001",
+    "kind": "player_tag",
+    "priority": 2,
+    "clock": {
+     "period": 1,
+     "t": 2312.21,
+     "match_clock_s": 2312.21,
+     "display": "38:32"
+    },
+    "created_at": "2026-10-24T14:38:32.210000Z",
+    "ttl_ms": 8000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0015-F1",
+      "key": "NVL-09.shot_speed_kmh",
+      "label": "Vukovic shot speed",
+      "value": 123.3,
+      "unit": "km/h",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0015-F2",
+      "key": "match.max_shot_speed_kmh",
+      "label": "Fastest shot speed of the match",
+      "value": 123.3,
+      "unit": "km/h",
+      "previous_value": 118.7,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00464",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic: shot speed 123.3 km/h, a new match record."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0015",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "Vukovic: 123.3 km/h का शॉट",
+    "body": "Vukovic का शॉट 123.3 km/h पर। अब तक मैच का सबसे तेज़ शॉट, 118.7 km/h से आगे।",
+    "stat_callout": {
+     "label": "शॉट की रफ़्तार",
+     "value": "123.3 km/h",
+     "fact_id": "RGS-2026-0001-INS-0015-F1"
+    },
+    "claims": [
+     {
+      "text": "Vukovic का शॉट 123.3 km/h पर।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0015-F1"
+      ]
+     },
+     {
+      "text": "अब तक मैच का सबसे तेज़ शॉट, 118.7 km/h से आगे।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0015-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 46538.4,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0015-C2",
+       "RGS-2026-0001-INS-0015-C3",
+       "RGS-2026-0001-INS-0015-C4",
+       "RGS-2026-0001-INS-0015-C8"
+      ],
+      "angle": "Northvale FC's attacking momentum and conversion rate is at its peak, setting them up for another goal after scoring earlier.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       },
+       {
+        "tool": "get_window_stats",
+        "args": {
+         "team_id": "SLM",
+         "metric": "shots",
+         "window": "5m"
+        }
+       },
+       {
+        "tool": "get_facts",
+        "args": {}
+       },
+       {
+        "tool": "get_state",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.2,
+     "detail": {
+      "headline": "Vukovic: 123.3 km/h का शॉट",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.7,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0021",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0021",
+    "match_id": "RGS-2026-0001",
+    "kind": "press_change",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 1004.43,
+     "match_clock_s": 3704.43,
+     "display": "61:44"
+    },
+    "created_at": "2026-10-24T15:03:51.780000Z",
+    "ttl_ms": 10000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": []
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F1",
+      "key": "SLM.pressed_pass_share_5m",
+      "label": "Northvale FC passes under pressure",
+      "value": 64,
+      "unit": "%",
+      "previous_value": 24,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressed_pass_share_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "metric",
+        "ref": "SLM.press_baseline",
+        "window_start_s": 2827.35,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F2",
+      "key": "SLM.pressures_per_opp_pass_5m",
+      "label": "Saltmere Athletic pressures per Northvale FC pass",
+      "value": 0.57,
+      "unit": null,
+      "previous_value": 0.28,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressures_per_opp_pass_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "metric",
+        "ref": "SLM.press_baseline",
+        "window_start_s": 2827.35,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01584",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01586",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01588",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01638",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F3",
+      "key": "NVL.pass_completion_5m",
+      "label": "Northvale FC pass completion (5 min)",
+      "value": 57,
+      "unit": "%",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.pass_completion_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F4",
+      "key": "SLM.press_change_start",
+      "label": "Press change began",
+      "value": "59:15",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.press_cusum",
+        "window_start_s": 3682.76,
+        "window_end_s": 3831.78
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Saltmere Athletic have stepped up their press: 64% of Northvale FC passes under pressure vs 24% earlier in the half."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0021",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Northvale FC Under Pressure vs Saltmere Athletic",
+    "body": "Northvale FC passes under Saltmere Athletic's increased pressure: 64%",
+    "stat_callout": {
+     "label": "Northvale FC passes under pressure",
+     "value": "64%",
+     "fact_id": "RGS-2026-0001-INS-0021-F1"
+    },
+    "claims": [
+     {
+      "text": "Northvale FC passes under Saltmere Athletic's increased pressure: 64%",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0021-F1"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 20016.4,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0021-F1",
+       "RGS-2026-0001-INS-0021-F2"
+      ],
+      "angle": "Northvale FC is facing a significant pressure moment as they attempt to pass under Saltmere Athletic's increased pressure, impacting their recent pass completion rate.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 21394.5,
+     "detail": {
+      "headline": "Northvale FC Under Pressure vs Saltmere Athletic",
+      "claims": [
+       {
+        "text": "Northvale FC passes under Saltmere Athletic's increased pressure: 64%",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0021-F1"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.3,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0021",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0021",
+    "match_id": "RGS-2026-0001",
+    "kind": "press_change",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 1004.43,
+     "match_clock_s": 3704.43,
+     "display": "61:44"
+    },
+    "created_at": "2026-10-24T15:03:51.780000Z",
+    "ttl_ms": 10000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": []
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F1",
+      "key": "SLM.pressed_pass_share_5m",
+      "label": "Northvale FC passes under pressure",
+      "value": 64,
+      "unit": "%",
+      "previous_value": 24,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressed_pass_share_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "metric",
+        "ref": "SLM.press_baseline",
+        "window_start_s": 2827.35,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F2",
+      "key": "SLM.pressures_per_opp_pass_5m",
+      "label": "Saltmere Athletic pressures per Northvale FC pass",
+      "value": 0.57,
+      "unit": null,
+      "previous_value": 0.28,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressures_per_opp_pass_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "metric",
+        "ref": "SLM.press_baseline",
+        "window_start_s": 2827.35,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01584",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01586",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01588",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01638",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F3",
+      "key": "NVL.pass_completion_5m",
+      "label": "Northvale FC pass completion (5 min)",
+      "value": 57,
+      "unit": "%",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.pass_completion_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F4",
+      "key": "SLM.press_change_start",
+      "label": "Press change began",
+      "value": "59:15",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.press_cusum",
+        "window_start_s": 3682.76,
+        "window_end_s": 3831.78
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Saltmere Athletic have stepped up their press: 64% of Northvale FC passes under pressure vs 24% earlier in the half."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0021",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "Northvale FC en presión bajo ataque de Saltmere Athletic",
+    "body": "Northvale FC está bajo presión de Saltmere Athletic: 64% de sus pases están bajo presión",
+    "stat_callout": {
+     "label": "Pases bajo presión",
+     "value": "64%",
+     "fact_id": "RGS-2026-0001-INS-0021-F1"
+    },
+    "claims": [
+     {
+      "text": "Northvale FC está bajo presión de Saltmere Athletic: 64% de sus pases están bajo presión",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0021-F1"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 20016.4,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0021-F1",
+       "RGS-2026-0001-INS-0021-F2"
+      ],
+      "angle": "Northvale FC is facing a significant pressure moment as they attempt to pass under Saltmere Athletic's increased pressure, impacting their recent pass completion rate.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 20718.9,
+     "detail": {
+      "headline": "Northvale FC en presión bajo ataque de Saltmere Athletic",
+      "claims": [
+       {
+        "text": "Northvale FC está bajo presión de Saltmere Athletic: 64% de sus pases están bajo presión",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0021-F1"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.5,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0021",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0021",
+    "match_id": "RGS-2026-0001",
+    "kind": "press_change",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 1004.43,
+     "match_clock_s": 3704.43,
+     "display": "61:44"
+    },
+    "created_at": "2026-10-24T15:03:51.780000Z",
+    "ttl_ms": 10000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": []
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F1",
+      "key": "SLM.pressed_pass_share_5m",
+      "label": "Northvale FC passes under pressure",
+      "value": 64,
+      "unit": "%",
+      "previous_value": 24,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressed_pass_share_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "metric",
+        "ref": "SLM.press_baseline",
+        "window_start_s": 2827.35,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F2",
+      "key": "SLM.pressures_per_opp_pass_5m",
+      "label": "Saltmere Athletic pressures per Northvale FC pass",
+      "value": 0.57,
+      "unit": null,
+      "previous_value": 0.28,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressures_per_opp_pass_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "metric",
+        "ref": "SLM.press_baseline",
+        "window_start_s": 2827.35,
+        "window_end_s": 3831.78
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01584",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01586",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01588",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01638",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F3",
+      "key": "NVL.pass_completion_5m",
+      "label": "Northvale FC pass completion (5 min)",
+      "value": 57,
+      "unit": "%",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.pass_completion_5m",
+        "window_start_s": 3531.78,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0021-F4",
+      "key": "SLM.press_change_start",
+      "label": "Press change began",
+      "value": "59:15",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.press_cusum",
+        "window_start_s": 3682.76,
+        "window_end_s": 3831.78
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Saltmere Athletic have stepped up their press: 64% of Northvale FC passes under pressure vs 24% earlier in the half."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0021",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "Saltmere Athletic ने दबाव बढ़ाया",
+    "body": "Saltmere Athletic ऊपर से दबाव बना रहा है और Northvale FC परेशान है। Northvale FC को इस दबाव से निकलना होगा।",
+    "stat_callout": {
+     "label": "दबाव में पास",
+     "value": "64%",
+     "fact_id": "RGS-2026-0001-INS-0021-F1"
+    },
+    "claims": [
+     {
+      "text": "Saltmere Athletic ऊपर से दबाव बना रहा है और Northvale FC परेशान है।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0021-F1"
+      ]
+     },
+     {
+      "text": "Northvale FC को इस दबाव से निकलना होगा।",
+      "fact_ids": []
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 20016.4,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0021-F1",
+       "RGS-2026-0001-INS-0021-F2"
+      ],
+      "angle": "Northvale FC is facing a significant pressure moment as they attempt to pass under Saltmere Athletic's increased pressure, impacting their recent pass completion rate.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.3,
+     "detail": {
+      "headline": "Saltmere Athletic ने दबाव बढ़ाया",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.3,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0024",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0024",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 2,
+     "t": 1183.09,
+     "match_clock_s": 3883.09,
+     "display": "64:43"
+    },
+    "created_at": "2026-10-24T15:06:50.440000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": [
+      "SLM-09",
+      "SLM-06",
+      "SLM-06"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Shapira",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.17,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 12.6,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "left foot",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F6",
+      "key": "SLM-09.match_goals",
+      "label": "Shapira goals this match",
+      "value": 1,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Lindqvist",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01711",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F8",
+      "key": "goal.won_ball_by",
+      "label": "Won the ball",
+      "value": "Lindqvist",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F9",
+      "key": "goal.seconds_from_turnover",
+      "label": "Turnover to goal",
+      "value": 3,
+      "unit": "s",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F10",
+      "key": "goal.turnover_distance_to_goal_m",
+      "label": "Ball won from goal",
+      "value": 27,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F11",
+      "key": "SLM.pressed_pass_share_5m",
+      "label": "Northvale FC passes under pressure",
+      "value": 75,
+      "unit": "%",
+      "previous_value": 24,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressed_pass_share_5m",
+        "window_start_s": 3710.44,
+        "window_end_s": 4010.44
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Shapira scores for Saltmere Athletic (1-1). Lindqvist won it back 3 s earlier. The goal comes out of their high press."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0024",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "GOAL! Shapira | NVL 1-1 SLM",
+    "body": "Shapira scores from 12.6 m (left foot), a chance worth 0.17 xG. Lindqvist won the ball 27 m from goal, just 3 s before the finish. Northvale FC were playing 75% of their passes under pressure, up from 24%. Lindqvist provided the assist.",
+    "stat_callout": {
+     "label": "Chance quality",
+     "value": "0.17 xG",
+     "fact_id": "RGS-2026-0001-INS-0024-F3"
+    },
+    "claims": [
+     {
+      "text": "Shapira scores from 12.6 m (left foot), a chance worth 0.17 xG.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F1",
+       "RGS-2026-0001-INS-0024-F5",
+       "RGS-2026-0001-INS-0024-F4",
+       "RGS-2026-0001-INS-0024-F3"
+      ]
+     },
+     {
+      "text": "Lindqvist won the ball 27 m from goal, just 3 s before the finish.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F8",
+       "RGS-2026-0001-INS-0024-F10",
+       "RGS-2026-0001-INS-0024-F9"
+      ]
+     },
+     {
+      "text": "Northvale FC were playing 75% of their passes under pressure, up from 24%.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F11"
+      ]
+     },
+     {
+      "text": "Lindqvist provided the assist.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F7"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 4,
+     "rejected_claims": 0,
+     "notes": [
+      "template fallback after LLM drafts failed verification or errored"
+     ]
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 30097.9,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F1",
+       "RGS-2026-0001-INS-0024-F2"
+      ],
+      "angle": "The game is tied at 1-1, setting up a crucial moment for Northvale FC.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 33061.6,
+     "detail": {
+      "headline": "Shapira scores for Saltmere Athletic (1-1), game tied at 1-1",
+      "claims": [
+       {
+        "text": "Northvale FC passes under pressure: 75%",
+        "fact_ids": [
+         "RGS-2026-0001-F11"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "rejected",
+     "ms": 0.8,
+     "detail": {
+      "notes": [
+       "claim 1: cites unknown fact id RGS-2026-0001-F11"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 2",
+     "status": "ok",
+     "ms": 14339.1,
+     "detail": {
+      "headline": "Saltmere Athletic scores, Northvale FC under pressure: 75%",
+      "claims": [
+       {
+        "text": "Shapira scores for Saltmere Athletic (1-1): RGS-2026-0001-INS-0024-F1",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0024-F1"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 2",
+     "status": "rejected",
+     "ms": 1.1,
+     "detail": {
+      "notes": [
+       "claim 1: number 1 does not match any cited fact",
+       "claim 1: number 1 does not match any cited fact",
+       "claim 1: number 2026 does not match any cited fact",
+       "claim 1: number 1 does not match any cited fact",
+       "claim 1: number 24 does not match any cited fact"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "fallback",
+     "ms": 0.3,
+     "detail": {
+      "headline": "GOAL! Shapira | NVL 1-1 SLM"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 3.3,
+     "detail": {
+      "notes": [],
+      "claims": 4
+     }
+    }
+   ],
+   "source": "template_fallback"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0024",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0024",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 2,
+     "t": 1183.09,
+     "match_clock_s": 3883.09,
+     "display": "64:43"
+    },
+    "created_at": "2026-10-24T15:06:50.440000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": [
+      "SLM-09",
+      "SLM-06",
+      "SLM-06"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Shapira",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.17,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 12.6,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "left foot",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F6",
+      "key": "SLM-09.match_goals",
+      "label": "Shapira goals this match",
+      "value": 1,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Lindqvist",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01711",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F8",
+      "key": "goal.won_ball_by",
+      "label": "Won the ball",
+      "value": "Lindqvist",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F9",
+      "key": "goal.seconds_from_turnover",
+      "label": "Turnover to goal",
+      "value": 3,
+      "unit": "s",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F10",
+      "key": "goal.turnover_distance_to_goal_m",
+      "label": "Ball won from goal",
+      "value": 27,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F11",
+      "key": "SLM.pressed_pass_share_5m",
+      "label": "Northvale FC passes under pressure",
+      "value": 75,
+      "unit": "%",
+      "previous_value": 24,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressed_pass_share_5m",
+        "window_start_s": 3710.44,
+        "window_end_s": 4010.44
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Shapira scores for Saltmere Athletic (1-1). Lindqvist won it back 3 s earlier. The goal comes out of their high press."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0024",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "¡Shapira anota para Saltmere Athletic! Gol clave que iguala el marcador en 1-1",
+    "body": "¡Shapira anota para Saltmere Athletic! Gol clave que iguala el marcador en 1-1",
+    "stat_callout": {
+     "label": "Pases bajo presión",
+     "value": "75%",
+     "fact_id": "RGS-2026-0001-INS-0024-F11"
+    },
+    "claims": [
+     {
+      "text": "¡Shapira anota para Saltmere Athletic! Gol clave que iguala el marcador en 1-1",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F1",
+       "RGS-2026-0001-INS-0024-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 37079.2,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F1",
+       "RGS-2026-0001-INS-0024-F2"
+      ],
+      "angle": "This moment matters as it shows Shapira scoring his first goal of the match, leveling the score at 1-1, which could be crucial for the momentum shift.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 40993.2,
+     "detail": {
+      "headline": "¡Shapira anota para Saltmere Athletic! Gol clave que iguala el marcador en 1-1",
+      "claims": [
+       {
+        "text": "¡Shapira anota para Saltmere Athletic! Gol clave que iguala el marcador en 1-1",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0024-F1",
+         "RGS-2026-0001-INS-0024-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 2.6,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0024",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0024",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 2,
+     "t": 1183.09,
+     "match_clock_s": 3883.09,
+     "display": "64:43"
+    },
+    "created_at": "2026-10-24T15:06:50.440000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": [
+      "SLM-09",
+      "SLM-06",
+      "SLM-06"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Shapira",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.17,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 12.6,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "left foot",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F6",
+      "key": "SLM-09.match_goals",
+      "label": "Shapira goals this match",
+      "value": 1,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Lindqvist",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01711",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F8",
+      "key": "goal.won_ball_by",
+      "label": "Won the ball",
+      "value": "Lindqvist",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F9",
+      "key": "goal.seconds_from_turnover",
+      "label": "Turnover to goal",
+      "value": 3,
+      "unit": "s",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F10",
+      "key": "goal.turnover_distance_to_goal_m",
+      "label": "Ball won from goal",
+      "value": 27,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01710",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0024-F11",
+      "key": "SLM.pressed_pass_share_5m",
+      "label": "Northvale FC passes under pressure",
+      "value": 75,
+      "unit": "%",
+      "previous_value": 24,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.pressed_pass_share_5m",
+        "window_start_s": 3710.44,
+        "window_end_s": 4010.44
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Shapira scores for Saltmere Athletic (1-1). Lindqvist won it back 3 s earlier. The goal comes out of their high press."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0024",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "गोल! Shapira | NVL 1-1 SLM",
+    "body": "Shapira का गोल! स्कोर NVL 1-1 SLM। Northvale FC के लिए झटका।",
+    "stat_callout": {
+     "label": "शॉट की दूरी",
+     "value": "12.6 m",
+     "fact_id": "RGS-2026-0001-INS-0024-F4"
+    },
+    "claims": [
+     {
+      "text": "Shapira का गोल! स्कोर NVL 1-1 SLM।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F1",
+       "RGS-2026-0001-INS-0024-F2"
+      ]
+     },
+     {
+      "text": "Northvale FC के लिए झटका।",
+      "fact_ids": []
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 30097.9,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0024-F1",
+       "RGS-2026-0001-INS-0024-F2"
+      ],
+      "angle": "The game is tied at 1-1, setting up a crucial moment for Northvale FC.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.3,
+     "detail": {
+      "headline": "गोल! Shapira | NVL 1-1 SLM",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.2,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0029",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0029",
+    "match_id": "RGS-2026-0001",
+    "kind": "player_tag",
+    "priority": 2,
+    "clock": {
+     "period": 2,
+     "t": 1902.99,
+     "match_clock_s": 4602.99,
+     "display": "76:42"
+    },
+    "created_at": "2026-10-24T15:18:50.340000Z",
+    "ttl_ms": 8000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-08"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0029-F1",
+      "key": "NVL-08.pass_speed_kmh",
+      "label": "Ferrante pass speed",
+      "value": 81.9,
+      "unit": "km/h",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02001",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0029-F2",
+      "key": "match.max_pass_speed_kmh",
+      "label": "Fastest pass speed of the match",
+      "value": 81.9,
+      "unit": "km/h",
+      "previous_value": 68.4,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02001",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01241",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Ferrante: pass speed 81.9 km/h, a new match record."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0029",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Ferrante: 81.9 km/h pass",
+    "body": "Ferrante fires a pass at 81.9 km/h. Fastest pass of the match so far, beating 68.4 km/h.",
+    "stat_callout": {
+     "label": "Ferrante pass speed",
+     "value": "81.9 km/h",
+     "fact_id": "RGS-2026-0001-INS-0029-F1"
+    },
+    "claims": [
+     {
+      "text": "Ferrante fires a pass at 81.9 km/h.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0029-F1"
+      ]
+     },
+     {
+      "text": "Fastest pass of the match so far, beating 68.4 km/h.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0029-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": [
+      "template fallback after LLM drafts failed verification or errored"
+     ]
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 47149.7,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0029-C1",
+       "RGS-2026-0001-INS-0029-C2",
+       "RGS-2026-0001-INS-0029-C3",
+       "RGS-2026-0001-INS-0029-C4",
+       "RGS-2026-0001-INS-0029-C5",
+       "RGS-2026-0001-INS-0029-C6",
+       "RGS-2026-0001-INS-0029-C7",
+       "RGS-2026-0001-INS-0029-C8",
+       "RGS-2026-0001-INS-0029-C9"
+      ],
+      "angle": "The current momentum in favor of Northvale FC, with a goal and high xG, could turn the match in their favor.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       },
+       {
+        "tool": "get_state",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 33897.1,
+     "detail": {
+      "headline": "Ferrante sets match record with 81.9 km/h pass",
+      "claims": [
+       {
+        "text": "Ferrante: pass speed 81.9 km/h, a new match record.",
+        "fact_ids": [
+         "RGS-2026-0001-F1"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "rejected",
+     "ms": 0.8,
+     "detail": {
+      "notes": [
+       "claim 1: cites unknown fact id RGS-2026-0001-F1"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 2",
+     "status": "ok",
+     "ms": 11997.5,
+     "detail": {
+      "headline": "Ferrante's fastest pass sets Northvale FC momentum",
+      "claims": [
+       {
+        "text": "Ferrante's pass speed 81.9 km/h is a new match record, boosting Northvale FC's momentum.",
+        "fact_ids": [
+         "RGS-2026-0001-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 2",
+     "status": "rejected",
+     "ms": 0.8,
+     "detail": {
+      "notes": [
+       "claim 1: cites unknown fact id RGS-2026-0001-F2"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "fallback",
+     "ms": 0.2,
+     "detail": {
+      "headline": "Ferrante: 81.9 km/h pass"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.6,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template_fallback"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0030",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0030",
+    "match_id": "RGS-2026-0001",
+    "kind": "player_tag",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 1911.66,
+     "match_clock_s": 4611.66,
+     "display": "76:51"
+    },
+    "created_at": "2026-10-24T15:18:59.010000Z",
+    "ttl_ms": 8000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": [
+      "SLM-11"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F1",
+      "key": "SLM-11.sprint_top_speed_kmh",
+      "label": "Balogun top speed",
+      "value": 34.8,
+      "unit": "km/h",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F2",
+      "key": "SLM-11.sprint_distance_m",
+      "label": "Sprint distance",
+      "value": 48.0,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F3",
+      "key": "match.max_sprint_kmh",
+      "label": "Fastest sprint of the match",
+      "value": 34.8,
+      "unit": "km/h",
+      "previous_value": 26.1,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Balogun hits 34.8 km/h, a new match record."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0030",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Balogun Sprints Fastest in Match at 34.8 km/h",
+    "body": "Balogun's top speed in the match was 34.8 km/h, setting a new fastest sprint record.",
+    "stat_callout": {
+     "label": "Balogun top speed",
+     "value": "34.8 km/h",
+     "fact_id": "RGS-2026-0001-INS-0030-F1"
+    },
+    "claims": [
+     {
+      "text": "Balogun's top speed in the match was 34.8 km/h, setting a new fastest sprint record.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0030-F1"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 19719.4,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0030-F1",
+       "RGS-2026-0001-INS-0030-F2",
+       "RGS-2026-0001-INS-0030-F3"
+      ],
+      "angle": "Balogun's top speed in the match was 34.8 km/h, setting a new fastest sprint record.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 20967.6,
+     "detail": {
+      "headline": "Balogun Sprints Fastest in Match at 34.8 km/h",
+      "claims": [
+       {
+        "text": "Balogun's top speed in the match was 34.8 km/h, setting a new fastest sprint record.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0030-F1"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.5,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0030",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0030",
+    "match_id": "RGS-2026-0001",
+    "kind": "player_tag",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 1911.66,
+     "match_clock_s": 4611.66,
+     "display": "76:51"
+    },
+    "created_at": "2026-10-24T15:18:59.010000Z",
+    "ttl_ms": 8000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": [
+      "SLM-11"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F1",
+      "key": "SLM-11.sprint_top_speed_kmh",
+      "label": "Balogun top speed",
+      "value": 34.8,
+      "unit": "km/h",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F2",
+      "key": "SLM-11.sprint_distance_m",
+      "label": "Sprint distance",
+      "value": 48.0,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F3",
+      "key": "match.max_sprint_kmh",
+      "label": "Fastest sprint of the match",
+      "value": 34.8,
+      "unit": "km/h",
+      "previous_value": 26.1,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Balogun hits 34.8 km/h, a new match record."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0030",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "Balogun marca nuevo récord de velocidad en la cancha",
+    "body": "El jugador Balogun marcó un nuevo récord de velocidad en 34.8 km/h.",
+    "stat_callout": {
+     "label": "Fastest sprint of the match",
+     "value": "34,8 km/h",
+     "fact_id": "RGS-2026-0001-INS-0030-F3"
+    },
+    "claims": [
+     {
+      "text": "El jugador Balogun marcó un nuevo récord de velocidad en 34.8 km/h.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0030-F1"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 19719.4,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0030-F1",
+       "RGS-2026-0001-INS-0030-F2",
+       "RGS-2026-0001-INS-0030-F3"
+      ],
+      "angle": "Balogun's top speed in the match was 34.8 km/h, setting a new fastest sprint record.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 17946.8,
+     "detail": {
+      "headline": "Balogun marca nuevo récord de velocidad en la cancha",
+      "claims": [
+       {
+        "text": "El jugador Balogun marcó un nuevo récord de velocidad en 34.8 km/h.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0030-F1"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.3,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0030",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0030",
+    "match_id": "RGS-2026-0001",
+    "kind": "player_tag",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 1911.66,
+     "match_clock_s": 4611.66,
+     "display": "76:51"
+    },
+    "created_at": "2026-10-24T15:18:59.010000Z",
+    "ttl_ms": 8000,
+    "entities": {
+     "team_ids": [
+      "SLM"
+     ],
+     "player_ids": [
+      "SLM-11"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F1",
+      "key": "SLM-11.sprint_top_speed_kmh",
+      "label": "Balogun top speed",
+      "value": 34.8,
+      "unit": "km/h",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F2",
+      "key": "SLM-11.sprint_distance_m",
+      "label": "Sprint distance",
+      "value": 48.0,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0030-F3",
+      "key": "match.max_sprint_kmh",
+      "label": "Fastest sprint of the match",
+      "value": 34.8,
+      "unit": "km/h",
+      "previous_value": 26.1,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02006",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-00289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Balogun hits 34.8 km/h, a new match record."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0030",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "Balogun: 34.8 km/h",
+    "body": "Balogun ने 48 मीटर में 34.8 km/h की रफ़्तार पकड़ी। मैच की सबसे तेज़ दौड़, 26.1 km/h का रिकॉर्ड टूटा।",
+    "stat_callout": {
+     "label": "टॉप स्पीड",
+     "value": "34.8 km/h",
+     "fact_id": "RGS-2026-0001-INS-0030-F1"
+    },
+    "claims": [
+     {
+      "text": "Balogun ने 48 मीटर में 34.8 km/h की रफ़्तार पकड़ी।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0030-F1",
+       "RGS-2026-0001-INS-0030-F2"
+      ]
+     },
+     {
+      "text": "मैच की सबसे तेज़ दौड़, 26.1 km/h का रिकॉर्ड टूटा।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0030-F3"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 19719.4,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0030-F1",
+       "RGS-2026-0001-INS-0030-F2",
+       "RGS-2026-0001-INS-0030-F3"
+      ],
+      "angle": "Balogun's top speed in the match was 34.8 km/h, setting a new fastest sprint record.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.3,
+     "detail": {
+      "headline": "Balogun: 34.8 km/h",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 2.0,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0036",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0036",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 2,
+     "t": 2599.1,
+     "match_clock_s": 5299.1,
+     "display": "88:19"
+    },
+    "created_at": "2026-10-24T15:30:26.450000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "NVL-07"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Vukovic",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "2-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.1,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 9.1,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "header",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F6",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 2,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Haddad",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F8",
+      "key": "assist.type",
+      "label": "Assist type",
+      "value": "cross",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic scores for Northvale FC (2-1). Created by a cross from Haddad."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0036",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Vukovic scores crucial 2nd goal for Northvale FC",
+    "body": "Vukovic scores for Northvale FC (2-1): This moment is crucial as Vukovic scored his second goal of the match, putting NVL ahead 2-1.",
+    "stat_callout": {
+     "label": "Finish",
+     "value": "header",
+     "fact_id": "RGS-2026-0001-INS-0036-F5"
+    },
+    "claims": [
+     {
+      "text": "Vukovic scores for Northvale FC (2-1): This moment is crucial as Vukovic scored his second goal of the match, putting NVL ahead 2-1.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0036-F1",
+       "RGS-2026-0001-INS-0036-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 24982.6,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0036-F1",
+       "RGS-2026-0001-INS-0036-F2"
+      ],
+      "angle": "This moment is crucial as Vukovic scored his second goal of the match, putting NVL ahead 2-1.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 32661.0,
+     "detail": {
+      "headline": "Vukovic scores crucial 2nd goal for Northvale FC",
+      "claims": [
+       {
+        "text": "Vukovic scores for Northvale FC (2-1): This moment is crucial as Vukovic scored his second goal of the match, putting NVL ahead 2-1.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0036-F1",
+         "RGS-2026-0001-INS-0036-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.4,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0036",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0036",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 2,
+     "t": 2599.1,
+     "match_clock_s": 5299.1,
+     "display": "88:19"
+    },
+    "created_at": "2026-10-24T15:30:26.450000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "NVL-07"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Vukovic",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "2-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.1,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 9.1,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "header",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F6",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 2,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Haddad",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F8",
+      "key": "assist.type",
+      "label": "Assist type",
+      "value": "cross",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic scores for Northvale FC (2-1). Created by a cross from Haddad."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0036",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "Golazo de Vukovic para Northvale FC",
+    "body": "Vukovic marca para Northvale FC con un golazo con un centro de Haddad (2-1).",
+    "stat_callout": {
+     "label": "Calidad de la ocasión",
+     "value": "0,1 xG",
+     "fact_id": "RGS-2026-0001-INS-0036-F3"
+    },
+    "claims": [
+     {
+      "text": "Vukovic marca para Northvale FC con un golazo con un centro de Haddad (2-1).",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0036-F1",
+       "RGS-2026-0001-INS-0036-F2",
+       "RGS-2026-0001-INS-0036-F7",
+       "RGS-2026-0001-INS-0036-F8"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 29527.6,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0036-F1",
+       "RGS-2026-0001-INS-0036-F2"
+      ],
+      "angle": "This goal by Vukovic in the 2-1 scoreline solidifies his hat-trick potential and boosts his team's momentum.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 36728.2,
+     "detail": {
+      "headline": "Golazo de Vukovic para Northvale FC",
+      "claims": [
+       {
+        "text": "Vukovic marca para Northvale FC con un golazo con un centro de Haddad (2-1).",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0036-F1",
+         "RGS-2026-0001-INS-0036-F2",
+         "RGS-2026-0001-INS-0036-F7",
+         "RGS-2026-0001-INS-0036-F8"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.5,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0036",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0036",
+    "match_id": "RGS-2026-0001",
+    "kind": "goal",
+    "priority": 5,
+    "clock": {
+     "period": 2,
+     "t": 2599.1,
+     "match_clock_s": 5299.1,
+     "display": "88:19"
+    },
+    "created_at": "2026-10-24T15:30:26.450000Z",
+    "ttl_ms": 12000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "NVL-07"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F1",
+      "key": "goal.scorer",
+      "label": "Scorer",
+      "value": "Vukovic",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F2",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "2-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F3",
+      "key": "shot.xg",
+      "label": "Chance quality",
+      "value": 0.1,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F4",
+      "key": "shot.distance_m",
+      "label": "Shot distance",
+      "value": 9.1,
+      "unit": "m",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F5",
+      "key": "shot.body_part",
+      "label": "Finish",
+      "value": "header",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F6",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 2,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F7",
+      "key": "goal.assist",
+      "label": "Assist",
+      "value": "Haddad",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0036-F8",
+      "key": "assist.type",
+      "label": "Assist type",
+      "value": "cross",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02289",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Vukovic scores for Northvale FC (2-1). Created by a cross from Haddad."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0036",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "गोल! Vukovic | NVL 2-1 SLM",
+    "body": "Vukovic ने कमाल किया: आज का गोल नंबर 2। Vukovic का गोल! स्कोर NVL 2-1 SLM।",
+    "stat_callout": {
+     "label": "शॉट की दूरी",
+     "value": "9.1 m",
+     "fact_id": "RGS-2026-0001-INS-0036-F4"
+    },
+    "claims": [
+     {
+      "text": "Vukovic ने कमाल किया: आज का गोल नंबर 2।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0036-F1",
+       "RGS-2026-0001-INS-0036-F6"
+      ]
+     },
+     {
+      "text": "Vukovic का गोल! स्कोर NVL 2-1 SLM।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0036-F1",
+       "RGS-2026-0001-INS-0036-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 24982.6,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0036-F1",
+       "RGS-2026-0001-INS-0036-F2"
+      ],
+      "angle": "This moment is crucial as Vukovic scored his second goal of the match, putting NVL ahead 2-1.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.2,
+     "detail": {
+      "headline": "गोल! Vukovic | NVL 2-1 SLM",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.5,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0038",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0038",
+    "match_id": "RGS-2026-0001",
+    "kind": "milestone",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 2599.1,
+     "match_clock_s": 5299.1,
+     "display": "88:19"
+    },
+    "created_at": "2026-10-24T15:30:26.450000Z",
+    "ttl_ms": 10000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0038-F1",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 2,
+      "unit": null,
+      "previous_value": 1,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0038-F2",
+      "key": "NVL-09.career_goals",
+      "label": "Vukovic career goals",
+      "value": 50,
+      "unit": null,
+      "previous_value": 49,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "metric",
+        "ref": "NVL-09.career_goals_before_match",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Milestone for Vukovic: a brace and career goal number 50."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0038",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Vukovic scores brace, hits 50 career goals",
+    "body": "Vukovic has scored his second goal of this match, bringing his career tally to 50.",
+    "stat_callout": {
+     "label": "Vukovic career goals",
+     "value": "50",
+     "fact_id": "RGS-2026-0001-INS-0038-F2"
+    },
+    "claims": [
+     {
+      "text": "Vukovic has scored his second goal of this match, bringing his career tally to 50.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0038-F1",
+       "RGS-2026-0001-INS-0038-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 15440.7,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0038-F1",
+       "RGS-2026-0001-INS-0038-F2"
+      ],
+      "angle": "This moment is significant as Vukovic has just scored his second goal of this match, bringing his career tally to 50.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 20024.2,
+     "detail": {
+      "headline": "Vukovic scores brace, hits 50 career goals",
+      "claims": [
+       {
+        "text": "Vukovic has scored his second goal of this match, bringing his career tally to 50.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0038-F1",
+         "RGS-2026-0001-INS-0038-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.4,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0038",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0038",
+    "match_id": "RGS-2026-0001",
+    "kind": "milestone",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 2599.1,
+     "match_clock_s": 5299.1,
+     "display": "88:19"
+    },
+    "created_at": "2026-10-24T15:30:26.450000Z",
+    "ttl_ms": 10000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0038-F1",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 2,
+      "unit": null,
+      "previous_value": 1,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0038-F2",
+      "key": "NVL-09.career_goals",
+      "label": "Vukovic career goals",
+      "value": 50,
+      "unit": null,
+      "previous_value": 49,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "metric",
+        "ref": "NVL-09.career_goals_before_match",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Milestone for Vukovic: a brace and career goal number 50."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0038",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "Hito: Vukovic",
+    "body": "Vukovic lleva 2 goles hoy: doblete. Es el gol número 50 de la carrera de Vukovic.",
+    "stat_callout": {
+     "label": "Goles hoy",
+     "value": "2",
+     "fact_id": "RGS-2026-0001-INS-0038-F1"
+    },
+    "claims": [
+     {
+      "text": "Vukovic lleva 2 goles hoy: doblete.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0038-F1"
+      ]
+     },
+     {
+      "text": "Es el gol número 50 de la carrera de Vukovic.",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0038-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": [
+      "template fallback after LLM drafts failed verification or errored"
+     ]
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 15440.7,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0038-F1",
+       "RGS-2026-0001-INS-0038-F2"
+      ],
+      "angle": "This moment is significant as Vukovic has just scored his second goal of this match, bringing his career tally to 50.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 20551.9,
+     "detail": {
+      "headline": "Vukovic anota doblete y pasa el récord de 50 goles",
+      "claims": [
+       {
+        "text": "Vukovic anota doblete y pasa el récord de 50 goles en Saltmere Athletic",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0038-F1",
+         "RGS-2026-0001-INS-0038-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "rejected",
+     "ms": 1.0,
+     "detail": {
+      "notes": [
+       "claim 1: mentions Saltmere Athletic, which is not part of this insight"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 2",
+     "status": "ok",
+     "ms": 11833.9,
+     "detail": {
+      "headline": "Vukovic an important milestone in Saltmere Athletic match",
+      "claims": [
+       {
+        "text": "Vukovic scored his second goal of the match and passed career goal number 50.",
+        "fact_ids": [
+         "RGS-2026-0001-INS-0038-F1",
+         "RGS-2026-0001-INS-0038-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 2",
+     "status": "rejected",
+     "ms": 1.5,
+     "detail": {
+      "notes": [
+       "headline: mentions Saltmere Athletic, which is not part of this insight",
+       "claims [1] are not in the requested language (es)"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "fallback",
+     "ms": 0.2,
+     "detail": {
+      "headline": "Hito: Vukovic"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.4,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template_fallback"
+  },
+  {
+   "insight_id": "RGS-2026-0001-INS-0038",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-INS-0038",
+    "match_id": "RGS-2026-0001",
+    "kind": "milestone",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 2599.1,
+     "match_clock_s": 5299.1,
+     "display": "88:19"
+    },
+    "created_at": "2026-10-24T15:30:26.450000Z",
+    "ttl_ms": 10000,
+    "entities": {
+     "team_ids": [
+      "NVL"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-INS-0038-F1",
+      "key": "NVL-09.match_goals",
+      "label": "Vukovic goals this match",
+      "value": 2,
+      "unit": null,
+      "previous_value": 1,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-INS-0038-F2",
+      "key": "NVL-09.career_goals",
+      "label": "Vukovic career goals",
+      "value": 50,
+      "unit": null,
+      "previous_value": 49,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "metric",
+        "ref": "NVL-09.career_goals_before_match",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Milestone for Vukovic: a brace and career goal number 50."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-INS-0038",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "उपलब्धि: Vukovic",
+    "body": "आज Vukovic के 2 गोल: ब्रेस। यह Vukovic के करियर का गोल नंबर 50 है।",
+    "stat_callout": {
+     "label": "आज के गोल",
+     "value": "2",
+     "fact_id": "RGS-2026-0001-INS-0038-F1"
+    },
+    "claims": [
+     {
+      "text": "आज Vukovic के 2 गोल: ब्रेस।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0038-F1"
+      ]
+     },
+     {
+      "text": "यह Vukovic के करियर का गोल नंबर 50 है।",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0038-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 2,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 15440.7,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-INS-0038-F1",
+       "RGS-2026-0001-INS-0038-F2"
+      ],
+      "angle": "This moment is significant as Vukovic has just scored his second goal of this match, bringing his career tally to 50.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.2,
+     "detail": {
+      "headline": "उपलब्धि: Vukovic",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.5,
+     "detail": {
+      "notes": [],
+      "claims": 2
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-RECAP-1",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-RECAP-1",
+    "match_id": "RGS-2026-0001",
+    "kind": "recap",
+    "priority": 4,
+    "clock": {
+     "period": 1,
+     "t": 2827.35,
+     "match_clock_s": 2827.35,
+     "display": "45+02:07"
+    },
+    "created_at": "2026-10-24T14:47:07.350000Z",
+    "ttl_ms": 20000,
+    "entities": {
+     "team_ids": [
+      "NVL",
+      "SLM"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F1",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-0",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01255",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F2",
+      "key": "recap.goal1",
+      "label": "Goal 1",
+      "value": "38:32 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F3",
+      "key": "recap.chaos_start",
+      "label": "Chaotic spell began",
+      "value": "27:52",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "match.chaos_5m",
+        "window_start_s": 1372.94,
+        "window_end_s": 1672.94
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F4",
+      "key": "NVL.xg_total",
+      "label": "Northvale FC xG",
+      "value": 4.01,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F5",
+      "key": "NVL.shots",
+      "label": "Northvale FC shots",
+      "value": 18,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F6",
+      "key": "SLM.xg_total",
+      "label": "Saltmere Athletic xG",
+      "value": 0.38,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F7",
+      "key": "SLM.shots",
+      "label": "Saltmere Athletic shots",
+      "value": 2,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Half-time recap: 38:32 Vukovic (NVL)."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-RECAP-1",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "38:32 Vukovic goal shifts half-time",
+    "body": "Northvale FC scored a critical goal at 38:32 from Vukovic, boosting their xG to 4.01",
+    "stat_callout": {
+     "label": "Score (NVL-SLM)",
+     "value": "1-0",
+     "fact_id": "RGS-2026-0001-RECAP-1-F1"
+    },
+    "claims": [
+     {
+      "text": "Northvale FC scored a critical goal at 38:32 from Vukovic, boosting their xG to 4.01",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-1-F2",
+       "RGS-2026-0001-RECAP-1-F1",
+       "RGS-2026-0001-RECAP-1-F4"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 33476.2,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-1-F1",
+       "RGS-2026-0001-RECAP-1-F2",
+       "RGS-2026-0001-RECAP-1-F4",
+       "RGS-2026-0001-RECAP-1-F5",
+       "RGS-2026-0001-RECAP-1-F6",
+       "RGS-2026-0001-RECAP-1-F7"
+      ],
+      "angle": "This moment matters because it marks a pivotal goal that shifted the game's momentum, boosting Northvale FC's offensive output and threatening Saltmere Athletic's defense.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 32111.7,
+     "detail": {
+      "headline": "38:32 Vukovic goal shifts half-time",
+      "claims": [
+       {
+        "text": "Northvale FC scored a critical goal at 38:32 from Vukovic, boosting their xG to 4.01",
+        "fact_ids": [
+         "RGS-2026-0001-RECAP-1-F2",
+         "RGS-2026-0001-RECAP-1-F1",
+         "RGS-2026-0001-RECAP-1-F4"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.5,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-RECAP-1",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-RECAP-1",
+    "match_id": "RGS-2026-0001",
+    "kind": "recap",
+    "priority": 4,
+    "clock": {
+     "period": 1,
+     "t": 2827.35,
+     "match_clock_s": 2827.35,
+     "display": "45+02:07"
+    },
+    "created_at": "2026-10-24T14:47:07.350000Z",
+    "ttl_ms": 20000,
+    "entities": {
+     "team_ids": [
+      "NVL",
+      "SLM"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F1",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-0",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01255",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F2",
+      "key": "recap.goal1",
+      "label": "Goal 1",
+      "value": "38:32 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F3",
+      "key": "recap.chaos_start",
+      "label": "Chaotic spell began",
+      "value": "27:52",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "match.chaos_5m",
+        "window_start_s": 1372.94,
+        "window_end_s": 1672.94
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F4",
+      "key": "NVL.xg_total",
+      "label": "Northvale FC xG",
+      "value": 4.01,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F5",
+      "key": "NVL.shots",
+      "label": "Northvale FC shots",
+      "value": 18,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F6",
+      "key": "SLM.xg_total",
+      "label": "Saltmere Athletic xG",
+      "value": 0.38,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F7",
+      "key": "SLM.shots",
+      "label": "Saltmere Athletic shots",
+      "value": 2,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Half-time recap: 38:32 Vukovic (NVL)."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-RECAP-1",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "Tiro crucial establece un nuevo equilibrio en el partido",
+    "body": "En el minuto 38:32, Vukovic (equipo de Northvale FC) anota el único gol de la primera mitad.",
+    "stat_callout": {
+     "label": "Marcador",
+     "value": "1-0",
+     "fact_id": "RGS-2026-0001-RECAP-1-F1"
+    },
+    "claims": [
+     {
+      "text": "En el minuto 38:32, Vukovic (equipo de Northvale FC) anota el único gol de la primera mitad.",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-1-F2"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 33476.2,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-1-F1",
+       "RGS-2026-0001-RECAP-1-F2",
+       "RGS-2026-0001-RECAP-1-F4",
+       "RGS-2026-0001-RECAP-1-F5",
+       "RGS-2026-0001-RECAP-1-F6",
+       "RGS-2026-0001-RECAP-1-F7"
+      ],
+      "angle": "This moment matters because it marks a pivotal goal that shifted the game's momentum, boosting Northvale FC's offensive output and threatening Saltmere Athletic's defense.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 25902.9,
+     "detail": {
+      "headline": "Tiro crucial establece un nuevo equilibrio en el partido",
+      "claims": [
+       {
+        "text": "En el minuto 38:32, Vukovic (equipo de Northvale FC) anota el único gol de la primera mitad.",
+        "fact_ids": [
+         "RGS-2026-0001-RECAP-1-F2"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.3,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-RECAP-1",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-RECAP-1",
+    "match_id": "RGS-2026-0001",
+    "kind": "recap",
+    "priority": 4,
+    "clock": {
+     "period": 1,
+     "t": 2827.35,
+     "match_clock_s": 2827.35,
+     "display": "45+02:07"
+    },
+    "created_at": "2026-10-24T14:47:07.350000Z",
+    "ttl_ms": 20000,
+    "entities": {
+     "team_ids": [
+      "NVL",
+      "SLM"
+     ],
+     "player_ids": [
+      "NVL-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F1",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "1-0",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01255",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F2",
+      "key": "recap.goal1",
+      "label": "Goal 1",
+      "value": "38:32 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F3",
+      "key": "recap.chaos_start",
+      "label": "Chaotic spell began",
+      "value": "27:52",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "match.chaos_5m",
+        "window_start_s": 1372.94,
+        "window_end_s": 1672.94
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F4",
+      "key": "NVL.xg_total",
+      "label": "Northvale FC xG",
+      "value": 4.01,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F5",
+      "key": "NVL.shots",
+      "label": "Northvale FC shots",
+      "value": 18,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F6",
+      "key": "SLM.xg_total",
+      "label": "Saltmere Athletic xG",
+      "value": 0.38,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-1-F7",
+      "key": "SLM.shots",
+      "label": "Saltmere Athletic shots",
+      "value": 2,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 2827.35
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Half-time recap: 38:32 Vukovic (NVL)."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-RECAP-1",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "हाफ़-टाइम सार: NVL 1-0 SLM",
+    "body": "38:32 Vukovic (NVL)। 27:52 से अफ़रातफ़री का दौर। अपेक्षित गोल (xG): 4.01-0.38।",
+    "stat_callout": {
+     "label": "स्कोर",
+     "value": "1-0",
+     "fact_id": "RGS-2026-0001-RECAP-1-F1"
+    },
+    "claims": [
+     {
+      "text": "38:32 Vukovic (NVL)।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-1-F2"
+      ]
+     },
+     {
+      "text": "27:52 से अफ़रातफ़री का दौर।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-1-F3"
+      ]
+     },
+     {
+      "text": "अपेक्षित गोल (xG): 4.01-0.38।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-1-F4",
+       "RGS-2026-0001-RECAP-1-F6"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 3,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 33476.2,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-1-F1",
+       "RGS-2026-0001-RECAP-1-F2",
+       "RGS-2026-0001-RECAP-1-F4",
+       "RGS-2026-0001-RECAP-1-F5",
+       "RGS-2026-0001-RECAP-1-F6",
+       "RGS-2026-0001-RECAP-1-F7"
+      ],
+      "angle": "This moment matters because it marks a pivotal goal that shifted the game's momentum, boosting Northvale FC's offensive output and threatening Saltmere Athletic's defense.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.2,
+     "detail": {
+      "headline": "हाफ़-टाइम सार: NVL 1-0 SLM",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 1.9,
+     "detail": {
+      "notes": [],
+      "claims": 3
+     }
+    }
+   ],
+   "source": "template"
+  },
+  {
+   "insight_id": "RGS-2026-0001-RECAP-2",
+   "profile_id": "analyst-en",
+   "insight": {
+    "insight_id": "RGS-2026-0001-RECAP-2",
+    "match_id": "RGS-2026-0001",
+    "kind": "recap",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 2951.94,
+     "match_clock_s": 5651.94,
+     "display": "90+04:11"
+    },
+    "created_at": "2026-10-24T15:36:19.290000Z",
+    "ttl_ms": 20000,
+    "entities": {
+     "team_ids": [
+      "NVL",
+      "SLM"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "SLM-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F1",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "2-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02405",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F2",
+      "key": "recap.goal1",
+      "label": "Goal 1",
+      "value": "38:32 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F3",
+      "key": "recap.goal2",
+      "label": "Goal 2",
+      "value": "64:43 Shapira (SLM)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F4",
+      "key": "recap.goal3",
+      "label": "Goal 3",
+      "value": "88:19 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F5",
+      "key": "SLM.recap_press_start",
+      "label": "Press change began (SLM)",
+      "value": "59:15",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.press_cusum",
+        "window_start_s": 3682.76,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F6",
+      "key": "recap.chaos_start",
+      "label": "Chaotic spell began",
+      "value": "27:52",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "match.chaos_5m",
+        "window_start_s": 1372.94,
+        "window_end_s": 1672.94
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F7",
+      "key": "NVL-09.career_goals",
+      "label": "Vukovic career goals",
+      "value": 50,
+      "unit": null,
+      "previous_value": 49,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "metric",
+        "ref": "NVL-09.career_goals_before_match",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F8",
+      "key": "NVL.xg_total",
+      "label": "Northvale FC xG",
+      "value": 4.68,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F9",
+      "key": "NVL.shots",
+      "label": "Northvale FC shots",
+      "value": 25,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F10",
+      "key": "SLM.xg_total",
+      "label": "Saltmere Athletic xG",
+      "value": 2.63,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F11",
+      "key": "SLM.shots",
+      "label": "Saltmere Athletic shots",
+      "value": 11,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Full-time recap: 38:32 Vukovic (NVL); 64:43 Shapira (SLM); 88:19 Vukovic (NVL)."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-RECAP-2",
+    "profile_id": "analyst-en",
+    "language": "en",
+    "mode": "analyst",
+    "headline": "Northvale FC Goal-Score Recap: Vukovic's Scoring Run",
+    "body": "Vukovic (NVL) scores twice, reasserting momentum",
+    "stat_callout": {
+     "label": "Northvale FC xG",
+     "value": "4.68 xG",
+     "fact_id": "RGS-2026-0001-RECAP-2-F8"
+    },
+    "claims": [
+     {
+      "text": "Vukovic (NVL) scores twice, reasserting momentum",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F2",
+       "RGS-2026-0001-RECAP-2-F4",
+       "RGS-2026-0001-RECAP-2-F7"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 1,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 31727.0,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F1",
+       "RGS-2026-0001-RECAP-2-F6"
+      ],
+      "angle": "This goal-scoring run from Vukovic is a critical moment, as it reasserts Northvale FC's momentum after a chaotic spell.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 39830.3,
+     "detail": {
+      "headline": "Northvale FC Goal-Score Recap: Vukovic's Scoring Run",
+      "claims": [
+       {
+        "text": "Vukovic (NVL) scores twice, reasserting momentum",
+        "fact_ids": [
+         "RGS-2026-0001-RECAP-2-F2",
+         "RGS-2026-0001-RECAP-2-F4",
+         "RGS-2026-0001-RECAP-2-F7"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "ok",
+     "ms": 1.2,
+     "detail": {
+      "notes": [],
+      "claims": 1
+     }
+    }
+   ],
+   "source": "llm"
+  },
+  {
+   "insight_id": "RGS-2026-0001-RECAP-2",
+   "profile_id": "casual-es-slm",
+   "insight": {
+    "insight_id": "RGS-2026-0001-RECAP-2",
+    "match_id": "RGS-2026-0001",
+    "kind": "recap",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 2951.94,
+     "match_clock_s": 5651.94,
+     "display": "90+04:11"
+    },
+    "created_at": "2026-10-24T15:36:19.290000Z",
+    "ttl_ms": 20000,
+    "entities": {
+     "team_ids": [
+      "NVL",
+      "SLM"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "SLM-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F1",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "2-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02405",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F2",
+      "key": "recap.goal1",
+      "label": "Goal 1",
+      "value": "38:32 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F3",
+      "key": "recap.goal2",
+      "label": "Goal 2",
+      "value": "64:43 Shapira (SLM)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F4",
+      "key": "recap.goal3",
+      "label": "Goal 3",
+      "value": "88:19 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F5",
+      "key": "SLM.recap_press_start",
+      "label": "Press change began (SLM)",
+      "value": "59:15",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.press_cusum",
+        "window_start_s": 3682.76,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F6",
+      "key": "recap.chaos_start",
+      "label": "Chaotic spell began",
+      "value": "27:52",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "match.chaos_5m",
+        "window_start_s": 1372.94,
+        "window_end_s": 1672.94
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F7",
+      "key": "NVL-09.career_goals",
+      "label": "Vukovic career goals",
+      "value": 50,
+      "unit": null,
+      "previous_value": 49,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "metric",
+        "ref": "NVL-09.career_goals_before_match",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F8",
+      "key": "NVL.xg_total",
+      "label": "Northvale FC xG",
+      "value": 4.68,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F9",
+      "key": "NVL.shots",
+      "label": "Northvale FC shots",
+      "value": 25,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F10",
+      "key": "SLM.xg_total",
+      "label": "Saltmere Athletic xG",
+      "value": 2.63,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F11",
+      "key": "SLM.shots",
+      "label": "Saltmere Athletic shots",
+      "value": 11,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Full-time recap: 38:32 Vukovic (NVL); 64:43 Shapira (SLM); 88:19 Vukovic (NVL)."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-RECAP-2",
+    "profile_id": "casual-es-slm",
+    "language": "es",
+    "mode": "casual",
+    "headline": "Resumen final: NVL 2-1 SLM",
+    "body": "38:32 Vukovic (NVL). 64:43 Shapira (SLM). 88:19 Vukovic (NVL). Saltmere Athletic subieron la presión desde el 59:15. Una fase caótica desde el 27:52. Es el gol número 50 de la carrera de Vukovic. Goles esperados (xG): 4,68-2,63.",
+    "stat_callout": {
+     "label": "Marcador",
+     "value": "2-1",
+     "fact_id": "RGS-2026-0001-RECAP-2-F1"
+    },
+    "claims": [
+     {
+      "text": "38:32 Vukovic (NVL).",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F2"
+      ]
+     },
+     {
+      "text": "64:43 Shapira (SLM).",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F3"
+      ]
+     },
+     {
+      "text": "88:19 Vukovic (NVL).",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F4"
+      ]
+     },
+     {
+      "text": "Saltmere Athletic subieron la presión desde el 59:15.",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F5"
+      ]
+     },
+     {
+      "text": "Una fase caótica desde el 27:52.",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F6"
+      ]
+     },
+     {
+      "text": "Es el gol número 50 de la carrera de Vukovic.",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F7"
+      ]
+     },
+     {
+      "text": "Goles esperados (xG): 4,68-2,63.",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F8",
+       "RGS-2026-0001-RECAP-2-F10"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 7,
+     "rejected_claims": 0,
+     "notes": [
+      "template fallback after LLM drafts failed verification or errored"
+     ]
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 31727.0,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F1",
+       "RGS-2026-0001-RECAP-2-F6"
+      ],
+      "angle": "This goal-scoring run from Vukovic is a critical moment, as it reasserts Northvale FC's momentum after a chaotic spell.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 1",
+     "status": "ok",
+     "ms": 34468.9,
+     "detail": {
+      "headline": "Recovery Time for Northvale FC",
+      "claims": [
+       {
+        "text": "Full-time recap shows two goals from Vukovic, reasserting Northvale's momentum.",
+        "fact_ids": [
+         "RGS-2026-0001-RECAP-2-F2",
+         "RGS-2026-0001-RECAP-2-F4",
+         "RGS-2026-0001-RECAP-2-F7"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 1",
+     "status": "rejected",
+     "ms": 1.1,
+     "detail": {
+      "notes": [
+       "claim 1: number 2 does not match any cited fact"
+      ],
+      "claims": 1
+     }
+    },
+    {
+     "agent": "narrator",
+     "action": "draft 2",
+     "status": "ok",
+     "ms": 17305.5,
+     "detail": {
+      "headline": "Recap: Vukovic's Goals Reassert Northvale FC Momentum",
+      "claims": [
+       {
+        "text": "Vukovic scores two goals, reasserting Northvale FC's momentum.",
+        "fact_ids": [
+         "RGS-2026-0001-RECAP-2-F2",
+         "RGS-2026-0001-RECAP-2-F4"
+        ]
+       },
+       {
+        "text": "Shapira scores Saltmere Athletic's goal, changing the momentum.",
+        "fact_ids": [
+         "RGS-2026-0001-RECAP-2-F3"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 2",
+     "status": "rejected",
+     "ms": 1.7,
+     "detail": {
+      "notes": [
+       "claim 1: number 2 does not match any cited fact"
+      ],
+      "claims": 2
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "fallback",
+     "ms": 0.4,
+     "detail": {
+      "headline": "Resumen final: NVL 2-1 SLM"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 3.6,
+     "detail": {
+      "notes": [],
+      "claims": 7
+     }
+    }
+   ],
+   "source": "template_fallback"
+  },
+  {
+   "insight_id": "RGS-2026-0001-RECAP-2",
+   "profile_id": "focus-hi-nvl09",
+   "insight": {
+    "insight_id": "RGS-2026-0001-RECAP-2",
+    "match_id": "RGS-2026-0001",
+    "kind": "recap",
+    "priority": 4,
+    "clock": {
+     "period": 2,
+     "t": 2951.94,
+     "match_clock_s": 5651.94,
+     "display": "90+04:11"
+    },
+    "created_at": "2026-10-24T15:36:19.290000Z",
+    "ttl_ms": 20000,
+    "entities": {
+     "team_ids": [
+      "NVL",
+      "SLM"
+     ],
+     "player_ids": [
+      "NVL-09",
+      "SLM-09"
+     ]
+    },
+    "facts": [
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F1",
+      "key": "match.score",
+      "label": "Score (NVL-SLM)",
+      "value": "2-1",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02405",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F2",
+      "key": "recap.goal1",
+      "label": "Goal 1",
+      "value": "38:32 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F3",
+      "key": "recap.goal2",
+      "label": "Goal 2",
+      "value": "64:43 Shapira (SLM)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01712",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F4",
+      "key": "recap.goal3",
+      "label": "Goal 3",
+      "value": "88:19 Vukovic (NVL)",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F5",
+      "key": "SLM.recap_press_start",
+      "label": "Press change began (SLM)",
+      "value": "59:15",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.press_cusum",
+        "window_start_s": 3682.76,
+        "window_end_s": 3831.78
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F6",
+      "key": "recap.chaos_start",
+      "label": "Chaotic spell began",
+      "value": "27:52",
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "match.chaos_5m",
+        "window_start_s": 1372.94,
+        "window_end_s": 1672.94
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F7",
+      "key": "NVL-09.career_goals",
+      "label": "Vukovic career goals",
+      "value": 50,
+      "unit": null,
+      "previous_value": 49,
+      "evidence": [
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-01046",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "event",
+        "ref": "RGS-2026-0001-02290",
+        "window_start_s": null,
+        "window_end_s": null
+       },
+       {
+        "kind": "metric",
+        "ref": "NVL-09.career_goals_before_match",
+        "window_start_s": null,
+        "window_end_s": null
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F8",
+      "key": "NVL.xg_total",
+      "label": "Northvale FC xG",
+      "value": 4.68,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F9",
+      "key": "NVL.shots",
+      "label": "Northvale FC shots",
+      "value": 25,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "NVL.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F10",
+      "key": "SLM.xg_total",
+      "label": "Saltmere Athletic xG",
+      "value": 2.63,
+      "unit": "xG",
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.xg_total",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     },
+     {
+      "fact_id": "RGS-2026-0001-RECAP-2-F11",
+      "key": "SLM.shots",
+      "label": "Saltmere Athletic shots",
+      "value": 11,
+      "unit": null,
+      "previous_value": null,
+      "evidence": [
+       {
+        "kind": "metric",
+        "ref": "SLM.shots",
+        "window_start_s": 0.0,
+        "window_end_s": 5779.29
+       }
+      ]
+     }
+    ],
+    "why_it_matters_hint": "Full-time recap: 38:32 Vukovic (NVL); 64:43 Shapira (SLM); 88:19 Vukovic (NVL)."
+   },
+   "rendered": {
+    "insight_id": "RGS-2026-0001-RECAP-2",
+    "profile_id": "focus-hi-nvl09",
+    "language": "hi",
+    "mode": "player_focus",
+    "headline": "फ़ुल-टाइम सार: NVL 2-1 SLM",
+    "body": "38:32 Vukovic (NVL)। 64:43 Shapira (SLM)। 88:19 Vukovic (NVL)। 59:15 से Saltmere Athletic ने दबाव बढ़ाया। 27:52 से अफ़रातफ़री का दौर। यह Vukovic के करियर का गोल नंबर 50 है। अपेक्षित गोल (xG): 4.68-2.63।",
+    "stat_callout": {
+     "label": "स्कोर",
+     "value": "2-1",
+     "fact_id": "RGS-2026-0001-RECAP-2-F1"
+    },
+    "claims": [
+     {
+      "text": "38:32 Vukovic (NVL)।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F2"
+      ]
+     },
+     {
+      "text": "64:43 Shapira (SLM)।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F3"
+      ]
+     },
+     {
+      "text": "88:19 Vukovic (NVL)।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F4"
+      ]
+     },
+     {
+      "text": "59:15 से Saltmere Athletic ने दबाव बढ़ाया।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F5"
+      ]
+     },
+     {
+      "text": "27:52 से अफ़रातफ़री का दौर।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F6"
+      ]
+     },
+     {
+      "text": "यह Vukovic के करियर का गोल नंबर 50 है।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F7"
+      ]
+     },
+     {
+      "text": "अपेक्षित गोल (xG): 4.68-2.63।",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F8",
+       "RGS-2026-0001-RECAP-2-F10"
+      ]
+     }
+    ],
+    "verification": {
+     "status": "verified",
+     "checked_claims": 7,
+     "rejected_claims": 0,
+     "notes": []
+    }
+   },
+   "trace": [
+    {
+     "agent": "analyst",
+     "action": "brief",
+     "status": "ok",
+     "ms": 31727.0,
+     "detail": {
+      "source": "llm",
+      "fact_ids": [
+       "RGS-2026-0001-RECAP-2-F1",
+       "RGS-2026-0001-RECAP-2-F6"
+      ],
+      "angle": "This goal-scoring run from Vukovic is a critical moment, as it reasserts Northvale FC's momentum after a chaotic spell.",
+      "tool_calls": [
+       {
+        "tool": "get_facts",
+        "args": {}
+       }
+      ]
+     }
+    },
+    {
+     "agent": "template",
+     "action": "render",
+     "status": "ok",
+     "ms": 0.3,
+     "detail": {
+      "headline": "फ़ुल-टाइम सार: NVL 2-1 SLM",
+      "reason": "LLM narration not enabled for 'hi' (REGISTA_LLM_LANGUAGES)"
+     }
+    },
+    {
+     "agent": "verifier",
+     "action": "check draft 0",
+     "status": "ok",
+     "ms": 3.7,
+     "detail": {
+      "notes": [],
+      "claims": 7
+     }
+    }
+   ],
+   "source": "template"
+  }
+ ]
+}

@@ -173,3 +173,20 @@ def test_number_words_and_foreign_script_are_checked(seed7):
     mixed = [Claim(text="Shapira anota su gol en la比赛中.", fact_ids=[scorer.fact_id])]
     bad = r.model_copy(update={"claims": mixed, "body": mixed[0].text})
     assert any("outside the Latin script" in n for n in v.verify(bad, goal).verification.notes)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Saltmere Athletic scores a crucial goal, tying the game 1-1.",  # English, one stopword
+        "Vukovic anota seu segundo gol da partida, colocando o NVL em 2x1.",  # Portuguese
+    ],
+)
+def test_spanish_viewer_rejects_english_and_portuguese_drafts(seed7, text):
+    """Both drafts are what qwen2.5:3b wrote for the Spanish casual viewer in the second recording."""
+    match, insights = seed7
+    goal = next(i for i in insights if i.kind == "goal")
+    r = TemplateNarrator(match.meta).render(goal, PRESETS["casual-es-slm"])
+    bad = r.model_copy(update={"claims": [Claim(text=text, fact_ids=[])], "body": text})
+    notes = Verifier(match.meta).verify(bad, goal).verification.notes
+    assert any("not in the requested language (es)" in n for n in notes)

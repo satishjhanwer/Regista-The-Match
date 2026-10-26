@@ -43,6 +43,11 @@ Reply with JSON only:
  "stat_callout_fact_id": "<fact_id or null>"}"""
 
 
+def short_id(fact_id: str, insight_id: str) -> str:
+    """'RGS-2026-0001-INS-0024-F2' -> 'F2'. Small models abbreviate long ids, so the Narrator sees short aliases."""
+    return fact_id[len(insight_id) + 1 :] if fact_id.startswith(insight_id + "-") else fact_id
+
+
 def narration_prompt(brief: Brief, profile: FanProfile, meta: MatchMeta, feedback: str | None = None) -> str:
     ins = brief.insight
     rank = {fid: i + 1 for i, fid in enumerate(brief.fact_ids)}
@@ -62,7 +67,7 @@ def narration_prompt(brief: Brief, profile: FanProfile, meta: MatchMeta, feedbac
         "entities": {"teams": [teams[t] for t in ins.entities.team_ids], "players": [names.get(p, p) for p in ins.entities.player_ids]},
         "facts": [
             {
-                "fact_id": f.fact_id,
+                "fact_id": short_id(f.fact_id, ins.insight_id),
                 "label": f.label,
                 "value": f.value,
                 "unit": f.unit,
@@ -96,9 +101,15 @@ class LLMNarrator:
 
     def parse(self, text: str, brief: Brief, profile: FanProfile) -> RenderedInsight:
         data = extract_json(text)
-        claims = [Claim(text=str(c["text"]).strip(), fact_ids=[str(x) for x in c.get("fact_ids", [])]) for c in data.get("claims", [])]
+        iid = brief.insight.insight_id
+        real = {short_id(f.fact_id, iid): f.fact_id for f in brief.insight.facts}  # alias -> fact id; unknown ids pass through
+
+        def resolve(x) -> str:
+            return real.get(str(x), str(x))
+
+        claims = [Claim(text=str(c["text"]).strip(), fact_ids=[resolve(x) for x in c.get("fact_ids", [])]) for c in data.get("claims", [])]
         stat = None
-        fid = data.get("stat_callout_fact_id")
+        fid = resolve(data.get("stat_callout_fact_id"))
         fact = next((f for f in brief.insight.facts if f.fact_id == fid), None)
         if fact is not None:
             stat = stat_callout(fact, FactView(brief.insight, self.meta), profile.language)

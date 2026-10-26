@@ -235,11 +235,14 @@ mechanical, tested rule:
 | JSON followed by a second object | Parse the first complete JSON object |
 | 92-character headline truncated mid-word | Over-length drafts go back to the Narrator as feedback instead of being truncated |
 | "3 s before the goal" rejected though true (fact not selected) | Narrator gets every detector fact; the Analyst's picks are marked as priority |
+| "Shapira scored his **second** goal" (he had 1); "Saltmere took only **one** shot" (2) | Number words and ordinals that quantify a football noun (goal, shot, gol, tiro...) are checked like digits |
+| A Spanish claim that switches into Chinese mid-sentence | en/es renderings may contain only Latin-script letters |
+| 16 of 25 rejections were `"..."` headlines, copied from our own JSON example | Prompt examples use descriptive slots (`<headline, max 80 characters>`), never `...` |
 
 The attribution rule also caught one of our own templates (it named a sprint speed without the sprinter).
 
-**What stays out of reach of a mechanical check:** invented colour with no numbers or names ("his first goal of
-the tournament"), and the meaning of Hindi prose from a 3B model (it transliterated names into Devanagari and
+**What stays out of reach of a mechanical check:** invented colour with no numbers or names ("may be his last
+game", a "draw" at 64'), and the meaning of Hindi prose from a 3B model (it transliterated names into Devanagari and
 wrote nonsense). Prompts now forbid unstated context. `REGISTA_LLM_LANGUAGES` limits LLM narration to languages
 that have been validated by hand: en and es for qwen2.5:3b. Hindi then comes from the verified templates, and the
 trace says why. With a Foundry-class model, `hi` can be switched on after a manual check.
