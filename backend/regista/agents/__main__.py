@@ -24,14 +24,16 @@ from .orchestrator import WarmPath
 from .profiles import PRESETS, display_for
 
 
-async def record(match: MatchFile, out: Path, profiles: list[str], concurrency: int) -> None:
+async def record(match: MatchFile, out: Path, profiles: list[str], concurrency: int, kinds: set[str] | None = None) -> None:
     from ..api.replay import Replay
 
     provider = resolve_provider()
     warm = WarmPath(match.meta, build_chat_client(provider))
     replay = Replay(match)
     replay.advance_to(replay.end_s)
-    jobs = [(ctx, PRESETS[p]) for ctx in replay.history for p in profiles if display_for(ctx.insight, PRESETS[p]) is not None]
+    moments = [c for c in replay.history if kinds is None or c.insight.kind in kinds]
+    jobs = [(ctx, PRESETS[p]) for ctx in moments for p in profiles if display_for(ctx.insight, PRESETS[p]) is not None]
+    print(f"rendering {len(jobs)} (insight, profile) pairs from {len(moments)} insights", flush=True)
     sem = asyncio.Semaphore(concurrency)
     t0 = time.perf_counter()
 
@@ -64,7 +66,8 @@ def main() -> None:
     rec.add_argument("match", type=Path)
     rec.add_argument("--out", type=Path, required=True)
     rec.add_argument("--profiles", default=",".join(PRESETS))
-    rec.add_argument("--concurrency", type=int, default=4)
+    rec.add_argument("--concurrency", type=int, default=4, help="parallel renders; use 1 for a CPU-only local model")
+    rec.add_argument("--kinds", help="only these insight kinds, e.g. goal,press_change,milestone,recap")
     sh = sub.add_parser("show")
     sh.add_argument("path", type=Path)
     sh.add_argument("--profile")
@@ -77,7 +80,8 @@ def main() -> None:
         except ImportError:
             pass
         match = MatchFile.model_validate(json.loads(args.match.read_text(encoding="utf-8")))
-        asyncio.run(record(match, args.out, args.profiles.split(","), args.concurrency))
+        kinds = set(args.kinds.split(",")) if args.kinds else None
+        asyncio.run(record(match, args.out, args.profiles.split(","), args.concurrency, kinds))
     else:
         show(args.path, args.profile)
 

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -25,6 +26,8 @@ from .narrator import LLMNarrator
 from .templates import TemplateNarrator
 from .verifier import Verifier
 
+# Per-call budget for the Analyst and each Narrator draft. Cloud models answer in seconds; a CPU-only local
+# model can need minutes, so recording runs raise it with REGISTA_LLM_TIMEOUT_S.
 LLM_TIMEOUT_S = 20.0
 
 
@@ -68,14 +71,15 @@ def _ms(t0: float) -> float:
 
 class WarmPath:
     def __init__(
-        self, meta: MatchMeta, client=None, *, analyst=None, narrator=None, cache: dict | None = None, timeout_s: float = LLM_TIMEOUT_S
+        self, meta: MatchMeta, client=None, *, analyst=None, narrator=None, cache: dict | None = None, timeout_s: float | None = None
     ):
         self.meta = meta
         self.analyst = analyst or Analyst(client)
         self.narrator = narrator if narrator is not None else (LLMNarrator(client, meta) if client is not None else None)
         self.templates = TemplateNarrator(meta)
         self.verifier = Verifier(meta)
-        self.timeout_s = timeout_s
+        # read at construction, after any .env has been loaded
+        self.timeout_s = timeout_s if timeout_s is not None else float(os.getenv("REGISTA_LLM_TIMEOUT_S", LLM_TIMEOUT_S))
         self.cache: dict[tuple[str, str], RenderResult] = cache if cache is not None else {}
         self._briefs: dict[str, asyncio.Future] = {}
         self._inflight: dict[tuple[str, str], asyncio.Future] = {}
