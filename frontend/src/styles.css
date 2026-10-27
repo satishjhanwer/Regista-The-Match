@@ -137,6 +137,10 @@ input {
 }
 
 /* ---------- layout ---------- */
+/* full-height shell so the side column scrolls on its own and the broadcast frame stays put */
+.app {
+  height: 100%;
+}
 .live {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
