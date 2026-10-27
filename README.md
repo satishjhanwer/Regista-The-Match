@@ -10,6 +10,11 @@ screen is checked against computed match data before it airs.
 > Entry for *Inside the Game: Developer Hackathon* (Microsoft x Premier League). All clubs, players, venues and match
 > data in this repository are fictional and synthetic.
 
+**Demo video (1:44):** [regista-demo.mp4](regista-demo.mp4). It is a narrated recording of the live app replaying the
+Foundry Local run.
+
+[![Regista demo video](docs/img/cover.png)](regista-demo.mp4)
+
 ![Regista live view: the 64' goal on air, the press-change panel, momentum ribbon and the agent trace](docs/img/02-goal-64-trace.png)
 
 *The Spanish fan's view of the 38' goal: the model twice called a through ball a cross, the Verifier blocked both drafts, and a verified template aired.*
