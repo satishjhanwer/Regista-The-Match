@@ -206,6 +206,7 @@ or league data, multi-match scale.
 ## Docs
 
 - [`docs/DECISIONS.md`](docs/DECISIONS.md): every non-obvious design choice, with the numbers behind it
+- [`docs/FAQ.md`](docs/FAQ.md): where the input comes from, how a live feed plugs in, why the Verifier is code, and more
 - [`docs/API.md`](docs/API.md): REST and WebSocket protocol
 - [`docs/PLAN.md`](docs/PLAN.md): build plan and status
 - [`docs/HACKATHON.md`](docs/HACKATHON.md): brief, rubric and rules
