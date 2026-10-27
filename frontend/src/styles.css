@@ -931,3 +931,15 @@ input {
     grid-template-columns: 1fr;
   }
 }
+.angle-tag {
+  display: inline-block;
+  font-style: normal;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-right: 4px;
+}

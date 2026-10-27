@@ -10,6 +10,12 @@ screen is checked against computed match data before it airs.
 > Entry for *Inside the Game: Developer Hackathon* (Microsoft x Premier League). All clubs, players, venues and match
 > data in this repository are fictional and synthetic.
 
+![Regista live view: the 64' goal on air, the press-change panel, momentum ribbon and the agent trace](docs/img/02-goal-64-trace.png)
+
+*The Spanish fan's view of the 38' goal: the model twice called a through ball a cross, the Verifier blocked both drafts, and a verified template aired.*
+
+![Agent trace with two drafts rejected by the Verifier](docs/img/03-goal-38-es-rejected.png)
+
 ## What it does
 
 | Stage | In Regista |

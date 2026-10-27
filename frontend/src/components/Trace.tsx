@@ -49,7 +49,11 @@ function StepDetail({ step, facts }: { step: TraceStep; facts: Map<string, Fact>
     const calls = (d.tool_calls as { tool: string; args: Record<string, unknown> }[] | undefined) ?? [];
     return (
       <>
-        {typeof d.angle === "string" && <p className="angle">“{d.angle}”</p>}
+        {typeof d.angle === "string" && (
+          <p className="angle" title="The Analyst's internal framing for the Narrator. Viewers never see it; only verified claims air.">
+            <span className="angle-tag">internal framing, not shown to viewers</span> “{d.angle}”
+          </p>
+        )}
         {calls.length > 0 && (
           <p className="tools">
             tools:{" "}
