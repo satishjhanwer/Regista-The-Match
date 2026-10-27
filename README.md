@@ -15,6 +15,10 @@ Foundry Local run.
 
 [![Regista demo video](docs/img/cover.png)](regista-demo.mp4)
 
+
+https://github.com/user-attachments/assets/5b257184-0025-451e-96b0-c33d008862a6
+
+
 ![Regista live view: the 64' goal on air, the press-change panel, momentum ribbon and the agent trace](docs/img/02-goal-64-trace.png)
 
 *The Spanish fan's view of the 38' goal: the model twice called a through ball a cross, the Verifier blocked both drafts, and a verified template aired.*
