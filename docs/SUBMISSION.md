@@ -63,14 +63,15 @@ language. The overlay contract is timed to the match clock and prioritized per s
 partner. A React overlay with fan controls, a side-by-side compare view and a live agent trace shows it end to end.
 
 Built with: Microsoft Agent Framework (Analyst and Narrator agents, tool calling), Microsoft Foundry Local (on-device
-model runtime) RUNTIME-TBD, Python (FastAPI, analytics engine), React with TypeScript (overlay and fan experience).
+model runtime; the recorded demo is qwen2.5-3b on Foundry Local, CPU), Python (FastAPI, analytics engine), React with
+TypeScript (overlay and fan experience).
 Contracts flow from Pydantic to JSON Schema to TypeScript, and CI fails on drift.
 
 ## Goals
 
 1. Explain, don't just report: every insight carries why the moment matters, with evidence.
 2. Zero ungrounded numbers on screen: every number traces to a fact; enforced by the Verifier, measured by
-   `scripts/eval_run.py` (every rendering on air re-checked: 31 of 31 pass).
+   `scripts/eval_run.py` (every rendering on air in the Foundry Local recording re-checked: 17 of 17 pass).
 3. Live-ready: the hot path handles a whole match in about 70 ms; agents only run on moments, and a verified template
    is always ready.
 4. One intelligence, many experiences: one canonical insight stream, genuinely different renderings by mode, club,
@@ -86,8 +87,8 @@ multi-match scale, cloud deployment (no Azure subscription for this entry; every
 
 ## Demo video script (under 2:00)
 
-Record against the recorded run (`REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.json`) so every take is
-identical. No music, or royalty-free only. Fictional names only.
+Record against the Foundry Local recording (`REGISTA_LLM_PROVIDER=none REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.foundry-local.json python -m regista.api`) so
+every take is identical. No music, or royalty-free only. Fictional names only.
 
 | Time | Shot | Say |
 | --- | --- | --- |
@@ -95,5 +96,5 @@ identical. No music, or royalty-free only. Fictional names only.
 | 0:12-0:35 | Seek to 60', play: press-change side panel airs at 61:44, ribbon swings to Saltmere | "Saltmere switch to a high press. A change-point detector catches it two minutes after it starts. The numbers are on screen, and each one is computed, not generated." |
 | 0:35-0:55 | 64' goal lower third; click it, trace panel: claim → fact → event evidence | "Their goal comes straight out of the press: Lindqvist wins it 27 m out, three seconds later it's in. Every sentence cites the facts it uses." |
 | 0:55-1:20 | Compare viewers: same moment, analyst English vs casual Spanish / Hindi focus | "One set of facts, many viewers: an analyst in English, a Saltmere fan in Spanish, a Vukovic fan in Hindi." |
-| 1:20-1:45 | Trace of the 38' goal for the Spanish fan: drafts blocked ("segundo gol"), template aired | "The model wrote 'his second goal'. It was his first. The Verifier is code, not another model. It blocked it twice, and a verified template aired instead." |
+| 1:20-1:45 | Trace of the 38' goal for the Spanish fan: two drafts blocked ("centro"), template aired | "The model called Nordgren's through ball a cross. The Verifier is code, not another model: it blocked the draft twice, and a verified template aired instead." |
 | 1:45-1:58 | Full-time recap and architecture diagram from the README | "Deterministic analytics, agents on Microsoft Agent Framework, and nothing unverified on screen." |

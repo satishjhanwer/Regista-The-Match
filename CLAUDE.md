@@ -57,7 +57,9 @@ python -m regista.sim summary ../data/RGS-2026-0001.json
 python -m regista.detect ../data/RGS-2026-0001.json   # insight timeline + per-event latency
 python -m regista.api                       # replay API on :8000 (see docs/API.md)
 npm run dev --prefix ../frontend           # overlay app on :5173; npm test / typecheck / build likewise
-python -m regista.agents record ../data/RGS-2026-0001.json --out ../data/RGS-2026-0001.renders.json
+python -m regista.agents record ../data/RGS-2026-0001.json --out ../data/RGS-2026-0001.renders.json   # add --resume to re-audit
+REGISTA_LLM_PROVIDER=none REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.foundry-local.json python -m regista.api   # demo mode
+python scripts/eval_run.py ../data/RGS-2026-0001.renders.foundry-local.json --markdown   # recorded-run eval
 python scripts/fit_models.py                # refit pass/xG models on seeds 1-5, report vs truth on seed 7
 python scripts/hello_foundry.py             # needs .env (see .env.example) + az login
 

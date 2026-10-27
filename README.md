@@ -62,8 +62,9 @@ For every sentence it checks:
 
 A rejected draft goes back to the Narrator once, with the reasons. A second failure falls back to a verified template,
 and the trace records why. Most of these rules came from real drafts written by a local `qwen2.5:3b` model. For
-example, it wrote "Vukovic anota el **segundo** gol" for a first goal, put Vukovic in the wrong club, and answered a
-Spanish viewer in Portuguese. All three were blocked. See [D28](docs/DECISIONS.md) for the full list, and for what a
+example, it wrote "Vukovic anota el **segundo** gol" for a first goal, put Vukovic in the wrong club, answered a
+Spanish viewer in Portuguese, and on Foundry Local wrote "Shapira scores for Northvale" (he plays for Saltmere). All were
+blocked. See [D28](docs/DECISIONS.md) for the full list, and for what a
 mechanical check cannot catch.
 
 ## Measured results
@@ -75,7 +76,7 @@ mechanical check cannot catch.
 | xG model (same split) | expected Brier 0.136 vs 0.163 for mean xG |
 | Planted storylines and scripted moments (seeds 1-5 and 7) | all acceptance tests pass: 3 goals, brace milestone, record sprint, press change in 58-66' with none before 55', chaos spell |
 | Held-out seeds 8-25 (never tuned on) | 15 of 18 pass every criterion; all 3 misses are press-change timing (see [D18](docs/DECISIONS.md)) |
-| Recorded agent run (`data/RGS-2026-0001.renders.json`) | 31 renders: 15 by the model and verified, 6 verified templates after rejected drafts, 10 Hindi templates by configuration |
+| Recorded agent run on Microsoft Foundry Local (`data/RGS-2026-0001.renders.foundry-local.json`, qwen2.5-3b, CPU) | 17 renders on air, 17 pass a re-check; of 12 the model attempted, 8 passed first time and 4 were blocked twice and replaced by verified templates; the Analyst called its tools in 12 traces |
 | Tests | 216 backend (pytest), 9 frontend (Vitest); CI also fails on stale generated contracts |
 
 ## Run it locally
@@ -109,7 +110,7 @@ profile presets, open **Compare viewers** for one moment told two ways, and clic
 | Setting | What you get |
 | --- | --- |
 | `REGISTA_LLM_PROVIDER=none` | Verified templates only, instant, no model needed |
-| `REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.json` | The recorded model run, with its real Verifier rejections in the trace (best for a demo) |
+| `REGISTA_LLM_PROVIDER=none REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.foundry-local.json` | The Foundry Local recording, with its real tool calls and Verifier rejections in the trace; other moments use templates (best for a demo) |
 | `REGISTA_LLM_PROVIDER=foundry_local` + `FOUNDRY_LOCAL_MODEL` | Live narration on Microsoft Foundry Local, on this machine (`winget install Microsoft.FoundryLocal`, then `foundry model download <model>`; Regista starts the service and loads the model) |
 | `REGISTA_LLM_PROVIDER=openai_compat` + `OPENAI_BASE_URL` / `OPENAI_MODEL` | Live narration from any OpenAI-compatible model, e.g. Ollama |
 | `REGISTA_LLM_PROVIDER=foundry` + `FOUNDRY_PROJECT_ENDPOINT` / `FOUNDRY_MODEL` | Microsoft Foundry through Agent Framework (`az login`) |

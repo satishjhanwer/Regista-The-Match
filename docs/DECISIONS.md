@@ -251,8 +251,10 @@ wrote nonsense). Prompts now forbid unstated context. `REGISTA_LLM_LANGUAGES` li
 that have been validated by hand: en and es for qwen2.5:3b. Hindi then comes from the verified templates, and the
 trace says why. With a Foundry-class model, `hi` can be switched on after a manual check.
 
-Recorded run (`data/RGS-2026-0001.renders.json`, 31 renders): 15 LLM, 6 template fallbacks after rejected drafts,
-10 Hindi templates by configuration. `record --resume` re-audits a recorded run with the current Verifier and redoes
+Recorded runs: `data/RGS-2026-0001.renders.json` (Ollama, 31 renders: 15 LLM, 6 template fallbacks, 10 Hindi templates)
+and the demo recording `data/RGS-2026-0001.renders.foundry-local.json` (Microsoft Foundry Local, qwen2.5-3b CPU variant,
+goals / press / milestones, 17 renders: 8 LLM, 4 template fallbacks, 5 Hindi templates; Analyst tool calls in 12 traces;
+about 1.5-5 minutes per render on this laptop). `record --resume` re-audits a recorded run with the current Verifier and redoes
 only failing renders; it replaced the 2 wrong-language drafts above in 2.4 minutes.
 
 Latency on that laptop: 25-85 s per render (Analyst plus 1-2 drafts). That is fine for a recorded run, too slow
