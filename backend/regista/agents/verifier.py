@@ -9,7 +9,10 @@ not itself be able to hallucinate. Rules, per claim:
    value as a percentage, or the moment's own clock. A claim with no citations ("colour") may contain no numbers.
 3. Every player named is an entity of the insight or the value of a cited fact.
    Every team named appears in the insight (entities, or fact keys, labels or values).
-4. Attribution: when a cited numeric fact's label names a team or player ("Northvale FC passes
+4. Affiliation: a player tied to a team ("Shapira scores for Northvale", "para Northvale") must play for it.
+5. Categories: when the moment's facts say "through ball" or "header", no claim may use another category's word
+   ("cross", "centro") for it, in any language.
+6. Attribution: when a cited numeric fact's label names a team or player ("Northvale FC passes
    under pressure"), that subject must be named in the claim, the previous claim or the headline.
    Numbers that match but are pinned on the wrong subject (or on nobody) are rejected.
 
@@ -35,6 +38,20 @@ _STOP = {
     "pt": {"seu", "sua", "seus", "suas", "da", "das", "dos", "em", "não", "com", "um", "uma", "ao", "pelo", "pela", "é"},
 }
 _RENDER_LANGS = ("en", "es")
+
+# Words for categorical fact values, per language. A claim may not use another value's words.
+_CATEGORY_WORDS = {
+    "pass": {
+        "through ball": ("through ball", "through-ball", "pase al hueco", "pase filtrado", "थ्रू बॉल"),
+        "cross": ("cross", "centro", "क्रॉस"),
+    },
+    "finish": {
+        "header": ("header", "headed", "cabeza", "cabezazo", "हेडर"),
+        "foot": ("right foot", "left foot", "con la derecha", "con la izquierda", "pierna derecha", "pierna izquierda"),
+    },
+}
+_CATEGORY_OF = {"through ball": ("pass", "through ball"), "cross": ("pass", "cross"), "header": ("finish", "header")}
+_CATEGORY_OF |= {v: ("finish", "foot") for v in ("right foot", "left foot")}
 _DEVANAGARI_LETTER = re.compile(r"[ऀ-ॿ]")
 _DEVANAGARI = str.maketrans("०१२३४५६७८९", "0123456789")
 _NUMBER = re.compile(r"(?<![\w.])\d+(?:\.\d+)?")
@@ -159,9 +176,11 @@ class Verifier:
 
     def __init__(self, meta: MatchMeta) -> None:
         self.players: dict[str, tuple[str, ...]] = {}
+        self.team_of: dict[str, str] = {}
         for team in (meta.home, meta.away):
             for p in team.players:
                 self.players[p.player_id] = (p.name, p.short_name)
+                self.team_of[p.player_id] = team.team_id
         # name, short name, id, plus the bare first word broadcasters use ("Northvale", "Saltmere")
         self.teams = {t.team_id: (t.name, t.short_name, t.team_id, t.name.split()[0]) for t in (meta.home, meta.away)}
 
@@ -207,6 +226,39 @@ class Verifier:
                 issues.append(f"cites '{f.label}' but does not say who it is about (name {subjects[0][0]})")
         return issues
 
+    def _affiliation_issues(self, text: str) -> list[str]:
+        """A player tied to a team by "for" / "para" / "के लिए" must play for that team."""
+        issues = []
+        for pid, names in self.players.items():
+            if not any(_word_in(n, text) for n in names):
+                continue
+            own = self.team_of[pid]
+            for tid, tnames in self.teams.items():
+                if tid == own:
+                    continue
+                for tn in tnames:
+                    t = re.escape(tn)
+                    tied = re.search(rf"(?<!\w)(?:for|para)\s+(?:[^\W\d_]+\s+){{0,2}}(?:the\s+|el\s+)?{t}(?!\w)", text, re.IGNORECASE)
+                    if tied or re.search(rf"(?<!\w){t}\s+के\s+लिए", text):
+                        issues.append(f"ties {names[1]} to {tnames[0]}, but {names[1]} plays for {self.teams[own][0]}")
+                        break
+        return issues
+
+    @staticmethod
+    def _category_issues(text: str, insight: Insight) -> list[str]:
+        """Words for a different pass type or finish than the moment's facts state."""
+        issues = []
+        actual = {_CATEGORY_OF[v] for f in insight.facts if isinstance(f.value, str) and (v := f.value) in _CATEGORY_OF}
+        low = text.lower()
+        for group, value in actual:
+            for other, words in _CATEGORY_WORDS[group].items():
+                if other == value:
+                    continue
+                hit = next((w for w in words if re.search(rf"(?<![\w-]){re.escape(w)}(?![\w-])", low)), None)
+                if hit:
+                    issues.append(f"says '{hit}' but the facts say {value}")
+        return issues
+
     def check_claim(self, claim: Claim, insight: Insight) -> list[str]:
         """Citation, number and entity issues of one claim (empty list when it passes)."""
         by_id = {f.fact_id: f for f in insight.facts}
@@ -214,7 +266,12 @@ class Verifier:
         if unknown:
             return [f"cites unknown fact id {fid}" for fid in unknown]
         cited = [by_id[fid] for fid in claim.fact_ids]
-        return self._number_issues(claim.text, cited, insight, not cited) + self._entity_issues(claim.text, insight, cited)
+        return (
+            self._number_issues(claim.text, cited, insight, not cited)
+            + self._entity_issues(claim.text, insight, cited)
+            + self._affiliation_issues(claim.text)
+            + self._category_issues(claim.text, insight)
+        )
 
     def verify(self, rendered: RenderedInsight, insight: Insight) -> VerifierReport:
         """Check a whole rendering: every claim, attribution, the headline, language, shape and the stat callout."""
@@ -227,6 +284,7 @@ class Verifier:
                 claim_issues[i] = issues
         headline_issues = self._number_issues(rendered.headline, insight.facts, insight, False)
         headline_issues += self._entity_issues(rendered.headline, insight, insight.facts)
+        headline_issues += self._affiliation_issues(rendered.headline) + self._category_issues(rendered.headline, insight)
         if not rendered.claims:
             notes.append("no claims")
         if not _substantive(rendered.headline):

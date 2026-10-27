@@ -240,6 +240,8 @@ mechanical, tested rule:
 | 16 of 25 rejections were `"..."` headlines, copied from our own JSON example | Prompt examples use descriptive slots (`<headline, max 80 characters>`), never `...` |
 | A Spanish claim in English (one stopword) or in Portuguese ("seu segundo gol da partida") | A claim with no function word of the requested language but any of another (en / es / pt) is rejected |
 | "cites unknown fact id RGS-2026-0001-F2" (the model shortened long ids) | The Narrator sees short aliases (F1, C1) that are mapped back before verification |
+| "Shapira scores **for Northvale FC**" (he plays for Saltmere), on Foundry Local | Affiliation: a player tied to a team by "for" / "para" / "के लिए" must play for it |
+| "creado por un **centro** de Nordgren" (it was a through ball) | Categories: no claim may use another pass type's or finish's word than the facts state, in any language |
 
 The attribution rule also caught one of our own templates (it named a sprint speed without the sprinter).
 

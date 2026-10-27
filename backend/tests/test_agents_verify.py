@@ -190,3 +190,19 @@ def test_spanish_viewer_rejects_english_and_portuguese_drafts(seed7, text):
     bad = r.model_copy(update={"claims": [Claim(text=text, fact_ids=[])], "body": text})
     notes = Verifier(match.meta).verify(bad, goal).verification.notes
     assert any("not in the requested language (es)" in n for n in notes)
+
+
+def test_affiliation_and_category_rules(seed7):
+    """Drafts qwen2.5-3b wrote on Foundry Local that passed every earlier rule."""
+    match, insights = seed7
+    v = Verifier(match.meta)
+    g2 = next(i for i in insights if i.kind == "goal" and i.entities.player_ids[0] == "SLM-09")
+    assert v._affiliation_issues("Shapira scores for Northvale FC, leveling the score at 1-1.") == [
+        "ties Shapira to Northvale FC, but Shapira plays for Saltmere Athletic"
+    ]
+    assert v._affiliation_issues("Shapira anota el gol para igualar en Northvale FC.")
+    assert v._affiliation_issues("Shapira scores for Saltmere Athletic against Northvale.") == []
+    g1 = next(i for i in insights if i.kind == "goal" and i.entities.player_ids[0] == "NVL-09")
+    assert v._category_issues("Vukovic anota, creado por un centro de Nordgren.", g1) == ["says 'centro' but the facts say through ball"]
+    assert v._category_issues("Vukovic anota tras un pase al hueco de Nordgren.", g1) == []
+    assert v._category_issues("Shapira scores with his left foot.", g2) == []
