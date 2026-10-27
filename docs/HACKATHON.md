@@ -17,29 +17,29 @@ No real Premier League data is provided or allowed.
 
 ### (i) One pipeline, five stages
 
-- [ ] **Ingest** synthetic events as they happen: passes, shots, tackles, possession changes, pressure events, match metadata.
-- [ ] **Interpret** into meaningful statistics, patterns and context.
-- [ ] **Explain** why a moment matters, not only that it happened.
-- [ ] **Render** the insight as something that sits on screen alongside the match (timed, machine-readable, overlay-ready,
+- [x] **Ingest** synthetic events as they happen: passes, shots, tackles, possession changes, pressure events, match metadata.
+- [x] **Interpret** into meaningful statistics, patterns and context.
+- [x] **Explain** why a moment matters, not only that it happened.
+- [x] **Render** the insight as something that sits on screen alongside the match (timed, machine-readable, overlay-ready,
       as a broadcast rendering partner would consume).
-- [ ] **Personalize** so a data-hungry analyst and a casual fan get genuinely different experiences: viewing modes, favorite club(s),
+- [x] **Personalize** so a data-hungry analyst and a casual fan get genuinely different experiences: viewing modes, favorite club(s),
       favorite player(s), player-focus mode across the match, language, a single metric of interest.
 - A project that only generates metrics has no audience; one that only personalizes has nothing to personalize. Do both.
 
 ### (ii) Real-time match intelligence (features to consider)
 
-- [ ] Player identification: real-time name tagging, optional speed and distance indicators when thresholds are hit.
-- [ ] Pass quality: distance, accuracy, pass difficulty rating.
-- [ ] Speed metrics: ball speed, shot speed.
-- [ ] Auto-eventing from video (optional; **out of scope for Regista**, documented as a future producer behind the event contract).
+- [x] Player identification: real-time name tagging, optional speed and distance indicators when thresholds are hit.
+- [x] Pass quality: distance, accuracy, pass difficulty rating.
+- [x] Speed metrics: ball speed, shot speed.
+- [~] Auto-eventing from video (optional; **out of scope for Regista**, documented as a future producer behind the event contract).
 
 ### (iii) Narrative generation
 
-- [ ] Key narratives, player-performance context, notable milestones, match recaps.
+- [x] Key narratives, player-performance context, notable milestones, match recaps.
 
 ### (iv) Explainability
 
-- [ ] Why moments matter: control vs chaos, tactical pressure changes, game rhythm patterns.
+- [x] Why moments matter: control vs chaos, tactical pressure changes, game rhythm patterns.
 
 ### (v) Data innovation
 
@@ -47,7 +47,7 @@ No real Premier League data is provided or allowed.
 
 ### (vi) Multi-language storytelling
 
-- [ ] Clear natural-language output in multiple languages.
+- [x] Clear natural-language output in multiple languages.
 
 ## What to submit
 
@@ -66,6 +66,9 @@ No real Premier League data is provided or allowed.
 4. **User experience and presentation:** intuitive UX, clear communication of value in the demo, balanced frontend and backend.
 5. **Adherence to category:** matches the challenge description above.
 
+Regista has no Azure deployment (no subscription): it runs locally, with the model on Microsoft Foundry Local. Check
+the official rules for whether that is acceptable before submitting.
+
 Equal weights mean a weak area costs more than a single standout gains. Hero technologies were not listed explicitly; the
 hackathon's own Reactor session used AKS and Azure Container Apps, and prior Innovation Studio hackathons rewarded
 Microsoft Foundry and Microsoft Agent Framework / MCP multi-agent orchestration.
@@ -74,5 +77,5 @@ Microsoft Foundry and Microsoft Agent Framework / MCP multi-agent orchestration.
 
 - Title: **Regista: The Match, Explained and Verified, for Every Fan**
 - Tagline, description, goals: see `docs/SUBMISSION.md`.
-- Keywords: Azure OpenAI, Microsoft Foundry, Agent Framework, AI Agents, Real-Time Analytics, Explainable AI, Football Analytics,
+- Keywords: Microsoft Agent Framework, Microsoft Foundry Local, AI Agents, Real-Time Analytics, Explainable AI, Football Analytics,
   Synthetic Data, Personalization, Multilingual NLG, Broadcast Overlays.

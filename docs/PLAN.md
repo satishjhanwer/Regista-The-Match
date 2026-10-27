@@ -10,7 +10,7 @@ Update the checkboxes as stages land.
 - [x] Simulator with planted storylines, ground-truth file, CLI summary, demo match seed 7
 - [x] `hello_foundry.py` smoke test (Agent Framework + FoundryChatClient, one tool)
 - [x] Provider-agnostic LLM factory (`regista/llm.py`): foundry, azure_openai, foundry_local, openai_compat, none
-- [ ] Get Azure access (free account) and run `hello_foundry.py` against Foundry; meanwhile run it on a local model
+- [~] ~~Get Azure access and run `hello_foundry.py` against Foundry~~ dropped: no Azure subscription; agents run on Foundry Local instead
 
 ## Fri 23 Oct: match state engine + detectors (done)
 
@@ -30,21 +30,22 @@ Package `backend/regista/state/` and `backend/regista/detect/`.
       Press: all six acceptance seeds pass; on 40 seeds the gated CUSUM has 2 false SLM alarms before 55' and 2 misses
       in 58-66' (see D18). S4 is covered at metric level (long-ball share), no dedicated detector. Replay: `python -m regista.detect ../data/RGS-2026-0001.json` (p95 ~50 us per event).
 
-## Sat 24 Oct: agents + API (done, pending a real model run)
+## Sat 24 Oct: agents + API (done)
 
 Package `backend/regista/agents/` and `backend/regista/api/`.
 
 - [x] Analyst (tools: get_state, get_facts, get_player, get_window_stats), Narrator, Verifier on Agent Framework + Foundry
-      Built on Agent Framework and tested through its real tool loop with a scripted chat client. Not yet run against
-      Foundry or any live model (no Azure access or local model on this machine yet).
+      Built on Agent Framework and tested through its real tool loop with a scripted chat client; run against Ollama
+      and Microsoft Foundry Local (no Azure subscription, so never against cloud Foundry).
 - [x] Verifier: numeric/entity check of each `Claim` against cited facts; retry once; template fallback
 - [x] Recap at half time and full time from accumulated insights
 - [x] FastAPI: replay service (speed x10/x20, pause, seek), WebSocket `/ws?profile=...` streaming `OverlayPayload`
 - [x] Per-profile fan-out: one Insight -> N RenderedInsights (cache by insight_id + profile)
 - [x] Record a cached agent-output run for deterministic demo recording (`python -m regista.agents record`)
 - [x] First live-model runs (Ollama, qwen2.5:3b on CPU): real Verifier rejections and revisions, rules hardened (D28)
-- [x] Demo cache recorded with qwen2.5:3b: `data/RGS-2026-0001.renders.json` (serve with REGISTA_AGENT_CACHE)
-- [ ] Re-record with Foundry once Azure is available (`record --resume` keeps what still verifies)
+- [x] Ollama recording: `data/RGS-2026-0001.renders.json` (31 renders, kept as a fallback)
+- [x] Demo recording on Microsoft Foundry Local (qwen2.5-3b CPU): `data/RGS-2026-0001.renders.foundry-local.json`
+- [~] ~~Re-record with cloud Foundry~~ dropped with Azure
 
 ## Sun 25 Oct: frontend (done, built Fri ahead of the model run)
 
@@ -69,13 +70,13 @@ Vite + React + TypeScript in `frontend/`, types from `src/contracts` (incl. the 
 
 ## Tue 27 Oct: video + submit
 
-- [ ] 2-minute video (script in `docs/SUBMISSION.md`), no copyrighted music, fictional names only, upload to YouTube
+- [x] Demo video, 1:44 (`regista-demo.mp4`, linked from the README; shot list in `docs/SUBMISSION.md`), no music, fictional names only
+- [ ] Upload the video to YouTube
 - [ ] Make repo **public**
-- [ ] Project page: description, video URL, repo URL, cover image (architecture diagram + overlay frame)
+- [ ] Project page: description and goals from `docs/SUBMISSION.md`, video URL, repo URL, cover `docs/img/cover.png`
 - [ ] Submit by Tuesday night IST
 
 ## Stretch (only if ahead)
 
 - MCP server over match state (FastMCP), Analyst consumes it
-- Third language
 - Event Hubs ingest path

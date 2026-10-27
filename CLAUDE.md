@@ -43,7 +43,7 @@ frontend/src/components/    Pitch, Overlays (graphics slots), Metrics (ribbon, c
 data/                       Canonical demo match (seed 7) + truth file
 ```
 
-Planned (not yet built): `infra/` Bicep + `azure.yaml`.
+No `infra/`: Azure deployment was dropped (no subscription).
 
 ## Commands
 

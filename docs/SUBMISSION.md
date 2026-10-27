@@ -85,16 +85,20 @@ Contracts flow from Pydantic to JSON Schema to TypeScript, and CI fails on drift
 Computer-vision auto-eventing (a future producer behind the same event contract), real clubs, players or league data,
 multi-match scale, cloud deployment (no Azure subscription for this entry; everything runs locally).
 
-## Demo video script (under 2:00)
+## Demo video (1:44)
 
-Record against the Foundry Local recording (`REGISTA_LLM_PROVIDER=none REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.foundry-local.json python -m regista.api`) so
-every take is identical. No music, or royalty-free only. Fictional names only.
+File: `regista-demo.mp4` in the repo root (H.264 1600x900, AAC). Upload it to YouTube and put the URL on the project page.
+
+It is a screen recording of the live app in demo mode, replaying the Foundry Local recording so every take is identical:
+`REGISTA_LLM_PROVIDER=none REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.foundry-local.json python -m regista.api`.
+Narration is the built-in Windows voice (Microsoft Zira), with captions throughout. No music; fictional names only.
 
 | Time | Shot | Say |
 | --- | --- | --- |
-| 0:00-0:12 | Score bug at 0-0, pitch trail moving | "The scoreline never tells the story. Regista watches every event and explains why a moment matters." |
-| 0:12-0:35 | Seek to 60', play: press-change side panel airs at 61:44, ribbon swings to Saltmere | "Saltmere switch to a high press. A change-point detector catches it two minutes after it starts. The numbers are on screen, and each one is computed, not generated." |
-| 0:35-0:55 | 64' goal lower third; click it, trace panel: claim → fact → event evidence | "Their goal comes straight out of the press: Lindqvist wins it 27 m out, three seconds later it's in. Every sentence cites the facts it uses." |
-| 0:55-1:20 | Compare viewers: same moment, analyst English vs casual Spanish / Hindi focus | "One set of facts, many viewers: an analyst in English, a Saltmere fan in Spanish, a Vukovic fan in Hindi." |
-| 1:20-1:45 | Trace of the 38' goal for the Spanish fan: two drafts blocked ("centro"), template aired | "The model called Nordgren's through ball a cross. The Verifier is code, not another model: it blocked the draft twice, and a verified template aired instead." |
-| 1:45-1:58 | Full-time recap and architecture diagram from the README | "Deterministic analytics, agents on Microsoft Agent Framework, and nothing unverified on screen." |
+| 0:00 | Cover title card | "Football coverage still leans on the scoreline. Regista watches every event of a live match, explains why a moment matters, and checks every number before it reaches the screen." |
+| 0:13 | Play from 59.5': press-change side panel airs at 61:44 | "Here, Saltmere switch to a high press. A change-point detector on the event stream catches it within two minutes. Sixty-four percent of Northvale's passes are now under pressure, up from twenty-four. Every number is computed, not generated." |
+| 0:31 | 64' goal lower third; trace panel with the Analyst's tool calls | "Their equaliser comes straight out of that press. Agents built on Microsoft Agent Framework, running a local model on Microsoft Foundry Local, write the story. The Analyst calls tools over match state, and every sentence cites the facts it uses." |
+| 0:50 | Spanish casual fan, 38' goal: two "centro" drafts rejected, template aired | "For this Spanish fan, the model called Nordgren's through ball a cross. Twice. The Verifier is code, not another model. It blocked both drafts, and a verified template aired instead. Nothing unverified reaches the screen." |
+| 1:08 | Hindi Vukovic-focus fan, 88' brace | "The same facts, told for every fan. Here, a Vukovic fan follows his brace, and his fiftieth career goal, in Hindi." |
+| 1:19 | Compare viewers: English analyst vs Hindi casual on the press change | "One set of facts, many experiences. Analyst or casual, any club, any language. The telling changes. The facts never do." |
+| 1:32 | Closing title card | "Deterministic analytics in microseconds, agents on Microsoft Agent Framework and Foundry Local, and a Verifier that keeps every claim honest. This is Regista." |

@@ -56,6 +56,9 @@ FastAPI WebSocket instead of Event Hubs and SignalR; in-memory state instead of 
 Azure Container Apps with `azd up`. Observability via OpenTelemetry to Application Insights. Event Hubs is mentioned in the
 README as the production ingest swap.
 
+Outcome: no Azure subscription, so nothing is deployed. FastAPI serves the built frontend as one local service (D27),
+and the in-app agent trace replaces Application Insights for the explainability story.
+
 ## D10. Fictional universe
 
 No real clubs, players, competitions, crests or music (hackathon data rule and video trademark rule).
@@ -65,11 +68,18 @@ No real clubs, players, competitions, crests or music (hackathon data rule and v
 `FoundryChatClient` against a Foundry project endpoint is the primary path (hero technology, evals available). Plain Azure
 OpenAI via `OpenAIChatClient` is the fallback when only an AOAI resource exists.
 
+Outcome: never exercised without Azure. The code path stays (`REGISTA_LLM_PROVIDER=foundry`); the demo runs on
+Microsoft Foundry Local (D12, D28).
+
 ## D12. Provider-agnostic LLM layer
 
 No Azure subscription at build start. `regista/llm.py` selects foundry, azure_openai, foundry_local, openai_compat or none
 from env. Build and test against a local model or templates; switch to Foundry for the recorded demo and deployment, which
 the rubric (hero technologies, runs on Azure) needs. Agents must degrade to deterministic templates when the client is None.
+
+Outcome: Azure never became available. The demo recording uses `foundry_local` (qwen2.5-3b, CPU variant) through
+`OpenAIChatCompletionClient`, because Foundry Local does not keep Responses API history and
+agent-framework-foundry-local pins an SDK older than the current Foundry Local CLI (`llm.foundry_local_endpoint`).
 
 ## D13. State engine: one incremental object, pluggable components
 
@@ -257,5 +267,5 @@ goals / press / milestones, 17 renders: 8 LLM, 4 template fallbacks, 5 Hindi tem
 about 1.5-5 minutes per render on this laptop). `record --resume` re-audits a recorded run with the current Verifier and redoes
 only failing renders; it replaced the 2 wrong-language drafts above in 2.4 minutes.
 
-Latency on that laptop: 25-85 s per render (Analyst plus 1-2 drafts). That is fine for a recorded run, too slow
-for live. Production would use Foundry (seconds), and the template path keeps the live overlay instant either way.
+Latency with Ollama on that laptop: 25-85 s per render (Analyst plus 1-2 drafts). That is fine for a recorded run, too slow
+for live. Production would use cloud Foundry (seconds), and the template path keeps the live overlay instant either way.

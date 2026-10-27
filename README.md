@@ -192,9 +192,9 @@ clock used for replay and windows; `match_clock_s` is the broadcast clock.
 ## Status
 
 - [x] Contracts, simulator, state engine, detectors, agents, Verifier, recaps, replay API, React overlay
-- [x] Live model runs (local Ollama) and a recorded demo run
-- [ ] Microsoft Foundry run and Azure Container Apps deployment (`azd up`): pending an Azure subscription
-- [ ] OpenTelemetry tracing to Application Insights
+- [x] Live model runs (Ollama, then Microsoft Foundry Local) and the recorded demo run on Foundry Local
+- [x] Recorded-run eval (`scripts/eval_run.py`) and the demo video
+- [ ] Cloud Foundry run and Azure deployment: not done, no Azure subscription for this entry (the `foundry` provider is wired)
 
 Out of scope: computer-vision auto-eventing from video (a future producer behind the same event contract), real club
 or league data, multi-match scale.
@@ -205,6 +205,7 @@ or league data, multi-match scale.
 - [`docs/API.md`](docs/API.md): REST and WebSocket protocol
 - [`docs/PLAN.md`](docs/PLAN.md): build plan and status
 - [`docs/HACKATHON.md`](docs/HACKATHON.md): brief, rubric and rules
+- [`docs/SUBMISSION.md`](docs/SUBMISSION.md): project page copy and the demo video shot list
 - [`CLAUDE.md`](CLAUDE.md): working context for contributors and coding agents
 
 ## License
