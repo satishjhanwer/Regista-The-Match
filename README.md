@@ -214,4 +214,14 @@ or league data, multi-match scale.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE). The simulator, the synthetic match data in `data/` and the demo video are covered by the
+same license.
+
+Regista is an independent hackathon entry. It is not affiliated with, sponsored by or endorsed by the Premier League or
+any club; "Premier League" and "Microsoft" are trademarks of their owners and appear here only to name the hackathon
+and the technologies used. Every club, player, venue and match in this repository is fictional.
+
+Third-party pieces are not bundled: Python and npm dependencies install under their own licenses, fonts (Inter,
+Barlow Condensed, Noto Sans Devanagari, SIL Open Font License) load from Google Fonts, and no model weights are included.
+The recorded narration in `data/*.renders*.json` is model output from qwen2.5-3b (on Ollama and on Foundry Local),
+used under that model's own license; the video voice-over is the built-in Windows speech synthesizer.

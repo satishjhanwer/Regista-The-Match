@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "regista"
 version = "0.1.0"
-description = "Real-time, explainable, personalized football match intelligence on Azure"
+description = "Real-time, explained and verified, personalized football match intelligence"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Satish Jhanwer" }]
