@@ -28,6 +28,8 @@ InsightKind = Literal[
     "milestone",
     "period_summary",
     "recap",
+    "prediction",
+    "prediction_result",
 ]
 
 

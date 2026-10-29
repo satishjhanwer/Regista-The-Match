@@ -31,7 +31,7 @@ RULES = [
     ("number not attributed to its team / player", r"does not say who it is about|attributes it to"),
     ("names someone not in the moment", r"not part of this insight"),
     ("player tied to the wrong club", r"ties .* to .*, but"),
-    ("wrong pass type or finish", r"but the facts say"),
+    ("wrong pass type, finish or call verdict", r"but the facts say"),
     ("wrong language or script", r"not in the requested language|not in Hindi|outside the Latin script"),
     ("placeholder or empty text", r"placeholder|no claims"),
     ("too long for the overlay", r"limit is"),

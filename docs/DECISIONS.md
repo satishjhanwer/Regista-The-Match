@@ -290,3 +290,29 @@ It found two gaps on its first run, both fixed:
 Both recorded runs still pass a re-audit under the stricter rules (17/17 and 31/31). One limit stays and is pinned by a
 strict `xfail`: a role reversal that names both teams ("Northvale press, Saltmere are rattled" when it is the other way
 round) cannot be caught by a mechanical check.
+
+## D30. Calls about the next 10 minutes, graded in the open
+
+Idea credited to Halfspace, whose scout's calls are marked right or wrong at full time. Regista's version stays on the
+hot path, in code: `detect/predict.py`.
+
+- **What is called.** A momentum shift calls "the team with momentum creates more xG than the opponent over the next 10
+  minutes". A press change calls "the pressed team's pass completion stays below its pre-call level for 10 minutes".
+  Both are graded from the state's own match totals (xG, passes, completed passes) between the call and the grade, so
+  no ground truth and no model is involved. Tests re-derive every verdict from the raw shot and pass events.
+- **Stated chance.** Each call states its hit rate on training seeds 1-5, with add-one smoothing so a small sample never
+  states 0% or 100% (`scripts/fit_predictions.py` writes `state/models/predictions.json`). On held-out seeds 7-25:
+  momentum calls state 60% and came true 72% (42/58, Brier 0.215); press calls state 75% and came true 73% (19/26,
+  Brier 0.197). A coin flip scores 0.25. Momentum is under-stated because only 18 training calls exist, and the gap
+  is shown rather than tuned away.
+- **Voids.** A call cut short by the end of a half after at least 5 minutes is graded on the time it had. One cut
+  short before 5 minutes is void and never graded, so the record only counts fair tests.
+- **Ids.** Calls and results are numbered in their own `PRD-nnnn` series. Sharing the `INS` counter would renumber
+  every later moment and break the recorded agent runs, which are keyed by insight id. A test checks that the detector
+  insights are byte-identical with and without the predictor.
+- **Facts name their team.** The call's own facts ("Minutes the call on Northvale FC covers", "Result of the call on
+  Northvale FC") carry the team in their label. Without it the lying-model test (D29) got team swaps past the Verifier,
+  because a claim citing a team-less fact has no subject to check.
+- **Verdict words.** The Verifier's category check gained a "result" group: a telling of a call that missed may not say
+  it "came true" / "acertó" / "सही साबित", and the reverse. Spanish "se cumplió" is left out because it sits inside "no
+  se cumplió". The lying-model test now tells every graded call with the opposite verdict first.

@@ -55,6 +55,8 @@ export const KIND_LABEL: Record<string, string> = {
   milestone: "Milestone",
   period_summary: "Summary",
   recap: "Recap",
+  prediction: "Regista's call",
+  prediction_result: "Call graded",
 };
 
 /** Languages a fan can choose. */

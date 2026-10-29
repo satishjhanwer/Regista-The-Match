@@ -29,12 +29,14 @@ backend/regista/contracts/  Pydantic contracts. SINGLE SOURCE OF TRUTH for event
 backend/regista/sim/        Simulator: roster.py (fictional teams), director.py (storylines + script), engine.py, __main__.py (CLI)
 backend/regista/state/      Hot-path metrics: core.py (MatchState, rolling windows), models.py (+ models/*.json), momentum.py,
                             control.py, press.py (gated CUSUM), records.py (speeds, milestones). build_state(meta) wires all
-backend/regista/detect/     detectors.py (9 kinds), pipeline.py (InsightPipeline, cooldown/dedupe, run_match), __main__.py (CLI)
+backend/regista/detect/     detectors.py (9 kinds), pipeline.py (InsightPipeline, cooldown/dedupe, run_match), predict.py (calls on
+                            momentum/press, graded after 10 min; own PRD id series), __main__.py (CLI)
 backend/regista/agents/     verifier.py (code gate), templates.py + phrases.py (en/es/hi fallback), profiles.py (presets,
                             relevance, slots), context.py (snapshot + Analyst tools), analyst.py, narrator.py,
                             orchestrator.py (WarmPath: verify/retry/fallback, cache, traces), recap.py, __main__.py (record)
 backend/regista/api/        replay.py (deterministic Replay), hub.py (shared clock, fan-out), app.py (FastAPI + /ws). docs/API.md
-backend/scripts/            export_schemas.py (Pydantic -> JSON Schema), hello_foundry.py (agent smoke test), fit_models.py
+backend/scripts/            export_schemas.py (Pydantic -> JSON Schema), hello_foundry.py (agent smoke test), fit_models.py,
+                            fit_predictions.py
 backend/tests/              simulator, contracts, state/models/momentum/control/press/records, test_detect.py (acceptance)
 contracts/schema/           Exported JSON Schemas (generated, committed)
 frontend/src/contracts/     TS types generated from contracts/schema (generated, committed, never hand-edit)
@@ -61,6 +63,7 @@ python -m regista.agents record ../data/RGS-2026-0001.json --out ../data/RGS-202
 REGISTA_LLM_PROVIDER=none REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.foundry-local.json python -m regista.api   # demo mode
 python scripts/eval_run.py ../data/RGS-2026-0001.renders.foundry-local.json --markdown   # recorded-run eval
 python scripts/fit_models.py                # refit pass/xG models on seeds 1-5, report vs truth on seed 7
+python scripts/fit_predictions.py           # refit call hit rates on seeds 1-5, report on seeds 7-25
 python scripts/hello_foundry.py             # needs .env (see .env.example) + az login
 
 # after changing any contract model:
