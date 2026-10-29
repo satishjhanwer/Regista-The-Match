@@ -11,6 +11,7 @@ license = "MIT"
 authors = [{ name = "Satish Jhanwer" }]
 dependencies = [
     "pydantic>=2.7",
+    "opentelemetry-api>=1.30",
 ]
 
 [project.optional-dependencies]
@@ -31,9 +32,14 @@ api = [
 local = [
     "agent-framework-foundry-local>=1.0.0b261015",
 ]
+tracing = [
+    "opentelemetry-sdk>=1.30",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.30",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.6",
+    "opentelemetry-sdk>=1.30",
 ]
 
 [tool.hatch.build.targets.wheel]

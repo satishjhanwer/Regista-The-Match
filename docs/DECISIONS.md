@@ -335,3 +335,22 @@ state to any agent or MCP client through the official SDK (`mcp` 2.x, `MCPServer
   applied.
 - **The Analyst still calls its tools in process.** Routing it through MCP would add a hop per tool call for no change
   in what it sees, since the code is shared.
+
+## D32. OpenTelemetry traces of the warm path, viewable locally
+
+Application Insights was dropped with Azure (D9). The in-app trace panel shows one rendering at a time; an OTLP trace
+shows timing and nesting across all of them, in any viewer, with no cloud account.
+
+- **Agent Framework traces itself.** Its agent runs, model calls and tool executions already emit spans (GenAI semantic
+  conventions). `regista/telemetry.py` calls its `configure_otel_providers` so both sets of spans share one provider
+  and one exporter.
+- **Regista adds what the framework cannot see:** `regista.render` (insight, kind, profile, language, mode, and at the
+  end source, drafts and rejections), `regista.analyst.brief` (source, tool calls, fallback), each
+  `regista.narrator.draft`, each `regista.verifier.check` (status, claims checked, the notes), and
+  `regista.template.render`. A test checks a revised rendering produces one trace: rejected then ok, the Verifier's
+  note, two drafts, and Agent Framework's `Analyst` and `get_facts` spans in the same trace.
+- **Off unless asked.** Export starts only when `OTEL_EXPORTER_OTLP_ENDPOINT` (or the traces endpoint, or
+  `ENABLE_CONSOLE_EXPORTERS`) is set; otherwise the OpenTelemetry API is a no-op. `opentelemetry-api` is a core
+  dependency; the SDK and OTLP exporter are the `tracing` extra.
+- **The hot path is not traced.** A span per event would cost more than the event (about 27 µs). Its latency is
+  measured by `python -m regista.detect` instead.
