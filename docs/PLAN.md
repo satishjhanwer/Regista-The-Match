@@ -79,6 +79,7 @@ Vite + React + TypeScript in `frontend/`, types from `src/contracts` (incl. the 
 ## Stretch (only if ahead)
 
 - [x] MCP server over match state (`regista.mcp_server`, `/mcp` in the API); the Analyst keeps in-process tools, same code (D31)
+- [x] Player ratings with their breakdown at half time and full time (D33)
 - [x] Local OpenTelemetry traces of every rendering (`regista/telemetry.py`, any OTLP viewer) (D32)
 - [x] Whole-match test with a deliberately lying model (D29); calls about the next 10 minutes, graded (D30)
 - Event Hubs ingest path

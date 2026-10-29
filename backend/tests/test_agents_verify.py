@@ -85,7 +85,8 @@ def test_relevance_by_mode(seed7):
     _, insights = seed7
     focus, casual, analyst = PRESETS["focus-hi-nvl09"], PRESETS["casual-en-nvl"], PRESETS["analyst-en"]
     for ins in insights:
-        assert relevance(ins, analyst) is not None
+        follower_only = ins.kind == "player_rating" and ins.priority < 3
+        assert (relevance(ins, analyst) is None) == follower_only
         if ins.kind == "goal":
             assert relevance(ins, focus) == 5 and relevance(ins, casual) == 5
         if ins.priority <= 2 and ins.kind not in ("milestone", "period_summary"):

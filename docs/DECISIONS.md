@@ -354,3 +354,27 @@ shows timing and nesting across all of them, in any viewer, with no cloud accoun
   dependency; the SDK and OTLP exporter are the `tracing` extra.
 - **The hot path is not traced.** A span per event would cost more than the event (about 27 µs). Its latency is
   measured by `python -m regista.detect` instead.
+
+## D33. Player ratings from published weights, explained by their facts
+
+Idea credited to Halfspace, whose match ratings come with their reasons. `state/ratings.py` keeps running points per
+player in five categories, O(1) per event: goals and shots (per goal, plus per xG of every shot, so a good chance counts
+even if missed), chances created (per xG set up, plus per assist), passing (each completed pass weighted by its
+difficulty), defending (tackles won, interceptions, pressures, and per xG saved for goalkeepers), and points lost to
+mistakes (each failed pass weighted by how easy it was, and lost tackles). Rating = 6.0 + points, clipped to [3, 10].
+
+- **Published, not fitted.** No answer key says how well someone played, so the weights are set by hand and kept in
+  `state/models/ratings.json`. The first set saturated (average 8.4, strikers pinned at 10) because the simulator's
+  league creates about twice a real match's xG; scaled down, training seeds 1-5 average 6.9 with a standard deviation
+  of 0.6 and a range of 6.0-9.2. A test pins that spread, and another re-derives every rating from the raw events.
+  On the demo match Vukovic's brace rates 9.5, Haddad (the cross for the header) 7.6, Shapira (the equaliser) 7.8.
+- **Explained by facts.** Each `player_rating` insight carries the rating and every category with at least 0.1
+  points as facts, so the templates and any model can only quote numbers the Verifier can check. Short lines like
+  "Passing: +0.4." tripped the placeholder rule (fewer than two words), so they read "Passing added +0.4."
+- **Who sees what.** At half time and full time the top-rated player of each team airs for everyone (priority 3);
+  every other player with at least 15 actions gets a priority-1 rating that only a Player-focus viewer following them
+  sees. Ratings use their own `RTG` id series so the recorded agent runs stay keyed correctly.
+- **The recap comes last.** The replay now builds a period's recap after everything its final event produced
+  (summary, ratings, graded calls), not straight after the summary.
+- **The Analyst can cite it.** `get_player` (and so the MCP server) returns the rating as a candidate fact.
+- **Cost.** The hot path went from about 70 to about 80 ms for the whole match (mean 32 µs, p95 54 µs per event).

@@ -16,7 +16,7 @@ from typing import Annotated
 from pydantic import Field
 
 from ..contracts.insight import EvidenceRef, Fact, Insight
-from ..state import WINDOWS_S, ControlChaos, MatchState, Momentum
+from ..state import WINDOWS_S, ControlChaos, MatchState, Momentum, PlayerRatings
 
 # metric -> (numerator counter on the team, denominator spec, unit, label)
 # denominator: None = raw count/sum, "own" = team passes, "opp" = opponent passes, "both" = both teams' passes
@@ -31,7 +31,7 @@ WINDOW_METRICS: dict[str, tuple[str, str | None, str | None, str]] = {
     "xg": ("xg", None, "xG", "xG"),
     "final_third_passes": ("passes_final_third", None, None, "completed passes into the final third"),
 }
-PLAYER_STATS = ("goals", "passes", "passes_complete", "shots", "xg", "pressures", "tackles_won", "interceptions", "top_speed_kmh")
+PLAYER_STATS = ("rating", "goals", "passes", "passes_complete", "shots", "xg", "pressures", "tackles_won", "interceptions", "top_speed_kmh")
 
 
 @dataclass
@@ -82,6 +82,10 @@ def capture(st: MatchState, insight: Insight | None) -> InsightContext:
         "control_5m": {t: round(v, 2) for t, v in cc.control.items() if v is not None} if cc else {},
     }
     players = {pid: {k: (round(v, 2) if isinstance(v, float) else v) for k, v in pt.items()} for pid, pt in st.player_totals.items()}
+    ratings = st.component(PlayerRatings)
+    if ratings is not None:
+        for pid in players:
+            players[pid]["rating"] = ratings.rating(pid)
     info = {
         pid: {
             "name": p.name,
@@ -178,6 +182,7 @@ class ToolBox:
             return [EvidenceRef(kind="metric", ref=f"{player_id}.{stat}", window_start_s=0.0, window_end_s=end)]
 
         labels = {
+            "rating": "match rating",
             "goals": "goals this match",
             "passes": "passes",
             "shots": "shots",

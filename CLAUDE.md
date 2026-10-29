@@ -28,8 +28,9 @@ frontend as one service. No Azure deployment (no subscription).
 backend/regista/contracts/  Pydantic contracts. SINGLE SOURCE OF TRUTH for events, Insight, OverlayPayload, FanProfile
 backend/regista/sim/        Simulator: roster.py (fictional teams), director.py (storylines + script), engine.py, __main__.py (CLI)
 backend/regista/state/      Hot-path metrics: core.py (MatchState, rolling windows), models.py (+ models/*.json), momentum.py,
-                            control.py, press.py (gated CUSUM), records.py (speeds, milestones). build_state(meta) wires all
-backend/regista/detect/     detectors.py (9 kinds), pipeline.py (InsightPipeline, cooldown/dedupe, run_match), predict.py (calls on
+                            control.py, press.py (gated CUSUM), records.py (speeds, milestones), ratings.py (player ratings,
+                            weights in models/ratings.json). build_state(meta) wires all
+backend/regista/detect/     detectors.py (9 kinds + RatingDetector, own RTG id series), pipeline.py (InsightPipeline, cooldown/dedupe, run_match), predict.py (calls on
                             momentum/press, graded after 10 min; own PRD id series), __main__.py (CLI)
 backend/regista/agents/     verifier.py (code gate), templates.py + phrases.py (en/es/hi fallback), profiles.py (presets,
                             relevance, slots), context.py (snapshot + Analyst tools), analyst.py, narrator.py,

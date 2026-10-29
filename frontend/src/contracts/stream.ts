@@ -221,7 +221,8 @@ export interface Insight {
     | "period_summary"
     | "recap"
     | "prediction"
-    | "prediction_result";
+    | "prediction_result"
+    | "player_rating";
   /**
    * 5 = interrupt-worthy
    */

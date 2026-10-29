@@ -417,7 +417,8 @@
             "period_summary",
             "recap",
             "prediction",
-            "prediction_result"
+            "prediction_result",
+            "player_rating"
           ],
           "type": "string"
         },

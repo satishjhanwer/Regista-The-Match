@@ -57,6 +57,7 @@ export const KIND_LABEL: Record<string, string> = {
   recap: "Recap",
   prediction: "Regista's call",
   prediction_result: "Call graded",
+  player_rating: "Rating",
 };
 
 /** Languages a fan can choose. */

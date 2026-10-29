@@ -70,7 +70,7 @@ def test_every_verdict_matches_the_raw_events(sims, seed):
 def test_calls_never_renumber_the_detector_insights(sims, seed):
     match, _ = sims[seed]
     with_calls = [i for i in run(match).insights if "-INS-" in i.insight_id]
-    without = run(match, Silent()).insights
+    without = [i for i in run(match, Silent()).insights if "-INS-" in i.insight_id]
     assert [i.model_dump() for i in with_calls] == [i.model_dump() for i in without]
 
 

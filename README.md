@@ -30,8 +30,8 @@ https://github.com/user-attachments/assets/5b257184-0025-451e-96b0-c33d008862a6
 | Stage | In Regista |
 | --- | --- |
 | **Ingest** | A seeded simulator produces a football-realistic event stream (passes, carries, shots, pressures, tackles, possession changes, sprints) with player coordinates. A replay service streams it at any speed. |
-| **Interpret** | A deterministic state engine computes pass difficulty, xG, momentum, control vs chaos and press intensity on every event, in about 25 µs. |
-| **Explain** | Nine detectors fire on moments that matter (goals, big chances, key passes, momentum shifts, press changes, chaos spells, speed records, milestones, period summaries). Each fires with facts and evidence. Momentum shifts and press changes also trigger a checkable call about the next 10 minutes, with its fitted chance, graded right or wrong from the events when it falls due. |
+| **Interpret** | A deterministic state engine computes pass difficulty, xG, momentum, control vs chaos, press intensity and player ratings on every event, in about 30 µs. |
+| **Explain** | Nine detectors fire on moments that matter (goals, big chances, key passes, momentum shifts, press changes, chaos spells, speed records, milestones, period summaries). Each fires with facts and evidence. At half time and full time every player gets a rating with its breakdown (goals and shots, chances created, passing, defending, points lost to mistakes) from published weights. Momentum shifts and press changes also trigger a checkable call about the next 10 minutes, with its fitted chance, graded right or wrong from the events when it falls due. |
 | **Render** | Timed, prioritized, machine-readable `OverlayPayload`s over WebSocket, drawn by a React broadcast overlay with five graphics slots. |
 | **Personalize** | Analyst, casual and player-focus modes; favourite club; focus player; metric of interest; English, Spanish and Hindi. The facts never change between viewers, only the telling. |
 
@@ -86,14 +86,14 @@ mechanical check cannot catch.
 
 | What | Result |
 | --- | --- |
-| Hot path latency (seed 7, 2,406 events) | about 70 ms for the whole match; p95 under 0.05 ms per event |
+| Hot path latency (seed 7, 2,406 events) | about 80 ms for the whole match; p95 under 0.06 ms per event |
 | Pass difficulty model (fitted on seeds 1-5, tested on 7) | Brier 0.129 vs 0.165 for a constant rate; calibration within 0.03 in every bin |
 | xG model (same split) | expected Brier 0.136 vs 0.163 for mean xG |
 | Planted storylines and scripted moments (seeds 1-5 and 7) | all acceptance tests pass: 3 goals, brace milestone, record sprint, press change in 58-66' with none before 55', chaos spell |
 | Held-out seeds 8-25 (never tuned on) | 15 of 18 pass every criterion; all 3 misses are press-change timing (see [D18](docs/DECISIONS.md)) |
 | Calls about the next 10 minutes (chance fitted on seeds 1-5, graded on seeds 7-25) | momentum calls state 60%, came true 72% (42 of 58), Brier 0.215; press calls state 75%, came true 73% (19 of 26), Brier 0.197; a coin flip scores 0.25 (see [D30](docs/DECISIONS.md)) |
 | Recorded agent run on Microsoft Foundry Local (`data/RGS-2026-0001.renders.foundry-local.json`, qwen2.5-3b, CPU) | 17 renders on air, 17 pass a re-check; of 12 the model attempted, 8 passed first time and 4 were blocked twice and replaced by verified templates; the Analyst called its tools in 12 traces |
-| Tests | 254 backend (pytest, including a whole match narrated by a deliberately lying model: 400 bad drafts, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
+| Tests | 261 backend (pytest, including a whole match narrated by a deliberately lying model: every draft rejected, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
 
 ## Run it locally
 
