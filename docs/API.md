@@ -16,6 +16,14 @@ Every message and response below is a model in `backend/regista/contracts/stream
 | GET | `/api/momentum` | sampled `MomentumPoint`s `{minute, index}` up to the replay clock (ribbon backfill) |
 | GET | `/api/render/{insight_id}` | render on demand: `?profile=&mode=&lang=&team=&player=`; returns `{insight, rendered, trace, source}` |
 
+## MCP `/mcp`
+
+Match state over the Model Context Protocol (streamable HTTP), read-only and on the shared replay clock. Tools:
+`match_info`, `clock`, `list_moments`, `get_moment`, `get_state`, `get_player`, `get_window_stats` (the last three take
+an optional `insight_id` for the match as it was at that moment), `call_record`. Served when the `mcp` package is
+installed (it is in the `api` extra). `python -m regista.mcp_server` serves the same tools over stdio with its own
+replay and a `seek` tool.
+
 ## WebSocket `/ws?profile=<preset>&mode=&lang=&team=&player=`
 
 Query fields override the preset. Server messages:

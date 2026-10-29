@@ -93,7 +93,7 @@ mechanical check cannot catch.
 | Held-out seeds 8-25 (never tuned on) | 15 of 18 pass every criterion; all 3 misses are press-change timing (see [D18](docs/DECISIONS.md)) |
 | Calls about the next 10 minutes (chance fitted on seeds 1-5, graded on seeds 7-25) | momentum calls state 60%, came true 72% (42 of 58), Brier 0.215; press calls state 75%, came true 73% (19 of 26), Brier 0.197; a coin flip scores 0.25 (see [D30](docs/DECISIONS.md)) |
 | Recorded agent run on Microsoft Foundry Local (`data/RGS-2026-0001.renders.foundry-local.json`, qwen2.5-3b, CPU) | 17 renders on air, 17 pass a re-check; of 12 the model attempted, 8 passed first time and 4 were blocked twice and replaced by verified templates; the Analyst called its tools in 12 traces |
-| Tests | 246 backend (pytest, including a whole match narrated by a deliberately lying model: 400 bad drafts, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
+| Tests | 251 backend (pytest, including a whole match narrated by a deliberately lying model: 400 bad drafts, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
 
 ## Run it locally
 
@@ -148,7 +148,14 @@ python -m regista.sim generate --seed 7 --out ../data   # regenerate the demo ma
 python scripts/fit_models.py                            # refit pass / xG models, report vs ground truth
 python scripts/fit_predictions.py                       # refit the calls' stated chances, report on held-out seeds
 python scripts/hello_foundry.py                         # agent smoke test against the configured provider
+python -m regista.mcp_server --minute 60                # match state over MCP (stdio), with a seek tool
 ```
+
+**Any agent can use the match state over MCP.** The API serves the Analyst's own tools at `/mcp` (streamable HTTP,
+read-only, on the clock viewers watch): `clock`, `list_moments`, `get_moment`, `get_state`, `get_player`,
+`get_window_stats`, `call_record`. Nothing past the replay clock is visible. For a desktop MCP client, run it over
+stdio: `{"command": "python", "args": ["-m", "regista.mcp_server"], "cwd": "<repo>/backend"}`. See
+[D31](docs/DECISIONS.md).
 
 ## Repository layout
 
