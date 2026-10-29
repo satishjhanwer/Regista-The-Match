@@ -219,10 +219,21 @@ class Verifier:
         issues = []
         for fid in claim.fact_ids:
             f = by_id.get(fid)
-            if f is None or isinstance(f.value, str) or not numbers_in(claim.text):
+            if f is None:
                 continue
             subjects = self._subjects(f.label)
-            if subjects and not any(_word_in(n, f"{claim.text} {context}") for names in subjects for n in names):
+            if not subjects or any(_word_in(n, claim.text) for names in subjects for n in names):
+                continue
+            # Naming only the other team is a wrong attribution, whatever the headline says and with or without a number.
+            subject_teams = [names for names in subjects if names in self.teams.values()]
+            others = [names for names in self.teams.values() if names not in subject_teams and any(_word_in(n, claim.text) for n in names)]
+            if subject_teams and others:
+                issues.append(f"cites '{f.label}' but attributes it to {others[0][0]} (name {subject_teams[0][0]})")
+            elif (
+                not isinstance(f.value, str)
+                and numbers_in(claim.text)
+                and not any(_word_in(n, context) for names in subjects for n in names)
+            ):
                 issues.append(f"cites '{f.label}' but does not say who it is about (name {subjects[0][0]})")
         return issues
 
@@ -338,7 +349,10 @@ def _language_votes(text: str, lang: str) -> int:
 
 def _substantive(text: str) -> bool:
     """At least two whitespace-separated tokens containing a letter: rules out "", "...", "-" and similar
-    placeholders. Token-based because Devanagari vowel signs are combining marks, not word characters."""
+    placeholders, and any "<...>" slot copied from the prompt's JSON shape. Token-based because Devanagari vowel
+    signs are combining marks, not word characters."""
+    if re.search(r"<[^<>]+>", text):
+        return False
     return sum(1 for tok in text.split() if re.search(r"[^\W\d_]", tok)) >= 2
 
 

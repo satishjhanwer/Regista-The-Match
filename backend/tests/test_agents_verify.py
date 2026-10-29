@@ -112,11 +112,38 @@ def test_verifier_rejects_numbers_pinned_on_the_wrong_subject(seed7):
     text = "The player completed 64% of passes under pressure, while Saltmere Athletic applied 0.57 pressures per pass."
     wrong = Claim(text=text, fact_ids=[f1.fact_id, f2.fact_id])
     issues = v._attribution_issues(wrong, "Tactical Shift", ins)
-    assert issues == ["cites 'Northvale FC passes under pressure' but does not say who it is about (name Northvale FC)"]
+    assert issues == ["cites 'Northvale FC passes under pressure' but attributes it to Saltmere Athletic (name Northvale FC)"]
+    unnamed = Claim(text="The player completed 64% of passes under pressure.", fact_ids=[f1.fact_id])
+    assert v._attribution_issues(unnamed, "Tactical Shift", ins) == [
+        "cites 'Northvale FC passes under pressure' but does not say who it is about (name Northvale FC)"
+    ]
     right = Claim(text="Northvale now play 64% of their passes under pressure.", fact_ids=[f1.fact_id])
     assert v._attribution_issues(right, "Saltmere squeeze", ins) == []
     follow_up = Claim(text="They complete just 57% of them.", fact_ids=[ins.facts[2].fact_id])
     assert v._attribution_issues(follow_up, "x " + right.text, ins) == []
+
+
+def test_verifier_rejects_a_fact_credited_to_the_other_team(seed7):
+    """Found by the lying-model test: the headline named Northvale, so a claim crediting Saltmere with Northvale's
+    pressure share used to pass. Naming only the other team is wrong with or without a number."""
+    match, insights = seed7
+    ins = press_insight(insights)
+    f1 = ins.facts[0]  # Northvale FC passes under pressure
+    v = Verifier(match.meta)
+    swapped = Claim(text="Saltmere Athletic were playing 64% of their passes under pressure.", fact_ids=[f1.fact_id])
+    assert v._attribution_issues(swapped, "NVL 1-1 SLM", ins) == [
+        "cites 'Northvale FC passes under pressure' but attributes it to Saltmere Athletic (name Northvale FC)"
+    ]
+    no_number = Claim(text="Saltmere Athletic are feeling the squeeze.", fact_ids=[f1.fact_id])
+    assert v._attribution_issues(no_number, "Northvale", ins) != []
+
+
+def test_verifier_rejects_a_slot_copied_from_the_prompt():
+    from regista.agents.verifier import _substantive
+
+    assert not _substantive("<your headline, max 80 characters>")
+    assert not _substantive("Vukovic scores <one sentence>")
+    assert _substantive("Vukovic scores from 10.6 m")
 
 
 def test_extract_json_takes_the_first_object():

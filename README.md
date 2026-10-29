@@ -92,7 +92,7 @@ mechanical check cannot catch.
 | Planted storylines and scripted moments (seeds 1-5 and 7) | all acceptance tests pass: 3 goals, brace milestone, record sprint, press change in 58-66' with none before 55', chaos spell |
 | Held-out seeds 8-25 (never tuned on) | 15 of 18 pass every criterion; all 3 misses are press-change timing (see [D18](docs/DECISIONS.md)) |
 | Recorded agent run on Microsoft Foundry Local (`data/RGS-2026-0001.renders.foundry-local.json`, qwen2.5-3b, CPU) | 17 renders on air, 17 pass a re-check; of 12 the model attempted, 8 passed first time and 4 were blocked twice and replaced by verified templates; the Analyst called its tools in 12 traces |
-| Tests | 216 backend (pytest), 9 frontend (Vitest); CI also fails on stale generated contracts |
+| Tests | 225 backend (pytest, including a whole match narrated by a deliberately lying model: 400 bad drafts, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
 
 ## Run it locally
 
