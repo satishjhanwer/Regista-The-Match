@@ -5,6 +5,10 @@ import { defineConfig } from "vitest/config";
 const backend = process.env.REGISTA_BACKEND ?? "http://127.0.0.1:8000";
 
 export default defineConfig({
+  // GitHub Pages serves a project site under /<repo>/; the static build sets VITE_BASE to that.
+  base: process.env.VITE_BASE ?? "/",
+  // public/ holds only the static demo's bundle; the normal build is served by FastAPI and does not need it.
+  build: { copyPublicDir: process.env.VITE_STATIC === "1" },
   plugins: [react()],
   server: {
     port: 5173,

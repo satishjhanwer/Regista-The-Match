@@ -27,3 +27,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# Static demo bundle (python backend/scripts/export_static.py)
+frontend/public/demo/

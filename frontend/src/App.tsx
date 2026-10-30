@@ -11,6 +11,7 @@ import { api, useLiveStream, type ProfileParams } from "./lib/api";
 import { palette, playerNames } from "./lib/format";
 import { matchMinute } from "./lib/live";
 import { emptyQueue, enqueue, tick, type QueueState } from "./lib/overlayQueue";
+import { STATIC } from "./lib/static";
 
 const DEFAULT_PARAMS: ProfileParams = { profile: "analyst-en", mode: "analyst", lang: "en", team: "", player: "", metric: "" };
 const AIR_TICK_MS = 100;
@@ -76,11 +77,17 @@ export default function App() {
           </button>
         </nav>
         <Transport playing={live.playing} speed={live.speed} minute={minute} />
-        <span className={`conn ${live.connected ? "up" : "down"}`}>{live.connected ? "live" : "reconnecting"}</span>
+        {STATIC ? (
+          <span className="conn up" title="Precomputed replay, no backend">
+            static demo
+          </span>
+        ) : (
+          <span className={`conn ${live.connected ? "up" : "down"}`}>{live.connected ? "live" : "reconnecting"}</span>
+        )}
       </header>
 
       {!live.meta ? (
-        <div className="boot">Connecting to the Regista replay service…</div>
+        <div className="boot">{STATIC ? "Loading the match…" : "Connecting to the Regista replay service…"}</div>
       ) : tab === "compare" ? (
         <CompareView meta={live.meta} />
       ) : (
@@ -101,6 +108,12 @@ export default function App() {
           </section>
           <aside className="side">
             <FanPanel meta={live.meta} presets={presets} params={params} onChange={setParams} />
+            {STATIC && (
+              <p className="static-note">
+                Static demo: the replay and its renderings are precomputed (model drafts from the recorded Foundry Local run, templates
+                elsewhere). Viewer choices outside the precomputed set show the closest one. Run it locally for every combination and live models.
+              </p>
+            )}
             <Feed items={live.overlays} selected={traced?.payload.insight.insight_id ?? null} onSelect={setSelected} />
             {traced && <TracePanel insight={traced.payload.insight} rendered={traced.payload.rendered} trace={traced.trace} source={traced.source} />}
           </aside>

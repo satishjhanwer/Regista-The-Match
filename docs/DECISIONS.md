@@ -378,3 +378,28 @@ mistakes (each failed pass weighted by how easy it was, and lost tackles). Ratin
   (summary, ratings, graded calls), not straight after the summary.
 - **The Analyst can cite it.** `get_player` (and so the MCP server) returns the rating as a candidate fact.
 - **Cost.** The hot path went from about 70 to about 80 ms for the whole match (mean 32 µs, p95 54 µs per event).
+
+## D34. A static demo: the replay precomputed, the hub ported to the browser
+
+Idea credited to Halfspace, whose app runs on GitHub Pages with no backend. A judge or a LinkedIn reader should get a
+link, not "clone, install, run two servers".
+
+- **The bundle.** `scripts/export_static.py` replays the match once through the real pipeline and the real hub code
+  (`Hub.tick_message`, `compact_event`, `display_for`, `WarmPath` with the recorded Foundry Local cache) and writes
+  every event with its clock, the tick metrics and score after each event, momentum samples, every insight with the
+  replay time it fired, and every rendering for a fixed profile set. Insights are stored once and referenced by id.
+  About 6 MB, 0.5 MB gzipped (Pages serves it compressed); built in about 6 s, in CI, never committed.
+- **The hub, in the browser.** `frontend/src/lib/static.ts` ports `Replay` and `Hub`: the same clock rules, controls,
+  speed limits, seek semantics (skipped moments go to history; going back sends `reset`) and messages. `api.ts`
+  picks it at build time (`VITE_STATIC=1`), so no component changes. A backend test checks the bundle gives each
+  preset exactly the overlays the live hub sends and the same final tick; frontend tests cover the port.
+- **Viewer combinations.** The live app renders any profile on demand; a static site can only serve what was
+  precomputed: the five presets, analyst and casual x 3 languages x 3 club choices, Player focus x 3 languages x 5 key
+  players (35 distinct profiles, 3,360 renderings). Any other choice is served by the closest profile with the same
+  mode and language (focus player counts most, then club, then metric), and the page says so.
+- **One bug only the port could have.** The browser hub sends synchronously, so a backward seek's `reset` and `tick`
+  reached the hook before React re-rendered and the ribbon never backfilled. The hook now judges history needs on a
+  mirror run through the same reducer.
+- **Deploy.** `.github/workflows/pages.yml` builds the bundle and the static frontend with the repository's base path
+  and deploys from `main` or by hand. Nothing deploys before the branch is merged and Pages is switched to GitHub
+  Actions.
