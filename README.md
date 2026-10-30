@@ -15,9 +15,7 @@ Foundry Local run.
 
 [![Regista demo video](docs/img/cover.png)](regista-demo.mp4)
 
-
-https://github.com/user-attachments/assets/5b257184-0025-451e-96b0-c33d008862a6
-
+<https://github.com/user-attachments/assets/5b257184-0025-451e-96b0-c33d008862a6>
 
 ![Regista live view: the 64' goal on air, the press-change panel, momentum ribbon and the agent trace](docs/img/02-goal-64-trace.png)
 
