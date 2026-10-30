@@ -59,7 +59,8 @@ No. `*.truth.json` is read only by tests and evaluation scripts. The state engin
 
 The gate that keeps wrong numbers off screen must not be able to hallucinate itself. A model judging a model can agree
 with a confident mistake; a comparison against computed facts cannot. Every number, name, team attribution and
-language in a draft is checked mechanically against the facts the sentence cites. See D20 and D28.
+language in a draft is checked mechanically against the facts the sentence cites, and so is each number's unit: a
+34.8 km/h sprint cannot become "34.8 goals", and a clock must match a cited time whole. See D20, D28 and D35.
 
 ### What happens when the model is wrong, slow or offline?
 
