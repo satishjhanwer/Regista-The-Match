@@ -421,3 +421,31 @@ number to the cited facts' values only, so a line citing Balogun's 34.8 km/h spr
 - **No false rejections.** 24,465 template renderings (8 seeds, the 35 static-demo profiles) still verify, with
   about 15,000 numbers with units and 1,475 clocks checked; both recorded model runs re-audit clean (31/31, 17/17).
 
+## D36. A truth score on changes planted at random, with unplanted controls
+
+Idea credited to Regista (durjanh), which grades its detections against hidden plants on fresh seeds with
+unplanted controls. Our acceptance tests plant every storyline at the same minutes on every seed, so they show the
+detectors find changes where the demo puts them, not that they would find them anywhere.
+
+- **Plans.** `Director` now takes a `Plan` (storyline windows and scripted moments); the default is the demo's, and
+  seed 7 is byte-identical. `sim/plans.py` draws a plan per seed from its own RNG: one or two changes (press switch,
+  chaos spell, control spell) with a random side, strength (strong = the demo's overrides, or moderate), start and
+  length of 10-15 min inside one half, or nothing at all in one match in four. `Storyline` gained `mechanism`,
+  `team_id` and `difficulty` so the truth file says what to look for. Generated plans have no scripted moments, and
+  the simulator only scores scripted shots, so those matches are goalless.
+- **Scoring.** `scripts/truth_score.py` runs the real hot path, then reads the plan from the truth file. A change is
+  found by the first insight of its mechanism in the same half, from its start to 5 min after its end (never
+  before: the detectors cannot see ahead). Any other press or control/chaos insight is a false alarm, even when an
+  organic swing makes it arguably right.
+- **Results on seeds 101-148** (48 matches, 11 controls; nothing was tuned on them): 71% of 62 changes found, median
+  3.3 min to detect (p90 7.7), the right side named 95% of the time. Press 71% (0.42 false alarms per match),
+  chaos 70% (1.65), control 72% (3.92). False alarms are about the same on controls (5.8) as on planted matches (6.0).
+- **What it shows.**
+  - 5 of the 6 missed press switches start 7-12 min into a half, while the CUSUM is still learning its baseline
+    (first 20 min of the half, D18).
+  - The control/chaos detector re-announces whenever the 5-minute index re-crosses a threshold, up to 8 times in a
+    match. It describes regimes well in the demo but is not a change detector yet.
+  - Both are left as measured. Tuning them is a separate change, fitted on other seeds and re-scored here.
+- **Kept honest.** A test pins a floor on 16 of these seeds, below today's numbers, so a regression fails CI. CI's
+  job summary prints the full table on every run.
+

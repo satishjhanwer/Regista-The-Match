@@ -31,6 +31,15 @@ export interface Storyline {
   end_clock_s: number;
   description: string;
   expected_signals: string[];
+  /**
+   * What a truth score expects to see
+   */
+  mechanism: ("control" | "chaos" | "press" | "go_long") | null;
+  /**
+   * The side that changes; None when both do
+   */
+  team_id: string | null;
+  difficulty: ("strong" | "moderate") | null;
 }
 /**
  * The true xG of one shot (ground truth).

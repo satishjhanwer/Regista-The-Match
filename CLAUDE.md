@@ -26,7 +26,8 @@ frontend as one service. No Azure deployment (no subscription).
 
 ```text
 backend/regista/contracts/  Pydantic contracts. SINGLE SOURCE OF TRUTH for events, Insight, OverlayPayload, FanProfile
-backend/regista/sim/        Simulator: roster.py (fictional teams), director.py (storylines + script), engine.py, __main__.py (CLI)
+backend/regista/sim/        Simulator: roster.py (fictional teams), director.py (storylines + script, Plan), engine.py, plans.py
+                            (random plans for the truth score), __main__.py (CLI)
 backend/regista/state/      Hot-path metrics: core.py (MatchState, rolling windows), models.py (+ models/*.json), momentum.py,
                             control.py, press.py (gated CUSUM), records.py (speeds, milestones), ratings.py (player ratings,
                             weights in models/ratings.json). build_state(meta) wires all
@@ -39,7 +40,7 @@ backend/regista/api/        replay.py (deterministic Replay), hub.py (shared clo
 backend/regista/mcp_server/ server.py (Analyst tools over MCP, live-clock guard), __main__.py (stdio, with seek)
 backend/regista/telemetry.py  warm-path OpenTelemetry spans; OTLP export only when OTEL_EXPORTER_OTLP_ENDPOINT is set
 backend/scripts/            export_schemas.py (Pydantic -> JSON Schema), hello_foundry.py (agent smoke test), fit_models.py,
-                            fit_predictions.py, export_static.py (bundle for the static GitHub Pages demo)
+                            fit_predictions.py, export_static.py (bundle for the static GitHub Pages demo), truth_score.py
 backend/tests/              simulator, contracts, state/models/momentum/control/press/records, test_detect.py (acceptance)
 contracts/schema/           Exported JSON Schemas (generated, committed)
 frontend/src/contracts/     TS types generated from contracts/schema (generated, committed, never hand-edit)
@@ -68,6 +69,7 @@ REGISTA_LLM_PROVIDER=none REGISTA_AGENT_CACHE=../data/RGS-2026-0001.renders.foun
 python scripts/eval_run.py ../data/RGS-2026-0001.renders.foundry-local.json --markdown   # recorded-run eval
 python scripts/fit_models.py                # refit pass/xG models on seeds 1-5, report vs truth on seed 7
 python scripts/fit_predictions.py           # refit call hit rates on seeds 1-5, report on seeds 7-25
+python scripts/truth_score.py               # detectors vs changes planted at random on seeds 101-148 (also in the CI summary)
 python scripts/export_static.py             # static demo bundle; then VITE_STATIC=1 npm run build --prefix ../frontend
 python scripts/hello_foundry.py             # needs .env (see .env.example) + az login
 

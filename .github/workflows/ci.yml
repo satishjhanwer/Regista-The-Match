@@ -20,6 +20,10 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: pytest -q
+      - name: Truth score on 48 unseen matches (job summary)
+        run: |
+          echo "## Truth score" >> "$GITHUB_STEP_SUMMARY"
+          python scripts/truth_score.py --markdown >> "$GITHUB_STEP_SUMMARY"
 
   frontend:
     runs-on: ubuntu-latest

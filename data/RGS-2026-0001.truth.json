@@ -16,7 +16,10 @@
         "home pass completion high",
         "long home possession sequences",
         "low possession-sequence entropy"
-      ]
+      ],
+      "mechanism": "control",
+      "team_id": "NVL",
+      "difficulty": null
     },
     {
       "storyline_id": "S2_chaos_spell",
@@ -28,7 +31,10 @@
         "turnover rate up for both teams",
         "long-ball share up",
         "short possession sequences"
-      ]
+      ],
+      "mechanism": "chaos",
+      "team_id": null,
+      "difficulty": null
     },
     {
       "storyline_id": "S3_away_press_shift",
@@ -41,7 +47,10 @@
         "home PPDA-against down / away PPDA down",
         "home pass completion in own half down",
         "turnovers in home defensive third up"
-      ]
+      ],
+      "mechanism": "press",
+      "team_id": "SLM",
+      "difficulty": null
     },
     {
       "storyline_id": "S4_home_go_long",
@@ -52,7 +61,10 @@
       "expected_signals": [
         "home long-ball share up",
         "away pressure events fall from S3 levels"
-      ]
+      ],
+      "mechanism": "go_long",
+      "team_id": "NVL",
+      "difficulty": null
     }
   ],
   "scripted_event_ids": {
