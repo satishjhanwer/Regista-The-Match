@@ -89,9 +89,10 @@ mechanical check cannot catch.
 | xG model (same split) | expected Brier 0.136 vs 0.163 for mean xG |
 | Planted storylines and scripted moments (seeds 1-5 and 7) | all acceptance tests pass: 3 goals, brace milestone, record sprint, press change in 58-66' with none before 55', chaos spell |
 | Held-out seeds 8-25 (never tuned on) | 15 of 18 pass every criterion; all 3 misses are press-change timing (see [D18](docs/DECISIONS.md)) |
+| Truth score: tactical changes planted at random times and sides on 48 unseen matches, 11 of them with nothing planted (`scripts/truth_score.py`) | 71% of 62 changes found (press 71%, chaos 70%, control 72%), median 3.3 min to detect, right side named 95%; 6.0 false alarms per match, almost all control / chaos re-announcements on organic swings (press 0.42 per match). Press switches starting under 12 min into a half are the main misses (see [D36](docs/DECISIONS.md)) |
 | Calls about the next 10 minutes (chance fitted on seeds 1-5, graded on seeds 7-25) | momentum calls state 60%, came true 72% (42 of 58), Brier 0.215; press calls state 75%, came true 73% (19 of 26), Brier 0.197; a coin flip scores 0.25 (see [D30](docs/DECISIONS.md)) |
 | Recorded agent run on Microsoft Foundry Local (`data/RGS-2026-0001.renders.foundry-local.json`, qwen2.5-3b, CPU) | 17 renders on air, 17 pass a re-check; of 12 the model attempted, 8 passed first time and 4 were blocked twice and replaced by verified templates; the Analyst called its tools in 12 traces |
-| Tests | 271 backend (pytest, including a whole match narrated by a deliberately lying model: every draft rejected, none on air), 14 frontend (Vitest); CI also fails on stale generated contracts |
+| Tests | 275 backend (pytest, including a whole match narrated by a deliberately lying model: every draft rejected, none on air), 14 frontend (Vitest); CI also fails on stale generated contracts |
 
 ## Run it locally
 

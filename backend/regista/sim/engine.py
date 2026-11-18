@@ -52,7 +52,7 @@ from ..contracts.events import (
 from ..contracts.events import (
     PITCH_WIDTH_M as W,
 )
-from .director import STOPPAGE_S, Director, ScriptedMoment
+from .director import STOPPAGE_S, Director, Plan, ScriptedMoment
 from .roster import AWAY_ID, FORMATION_433, HOME_ID, build_meta
 
 GENERATOR = "regista-sim/0.1.0"
@@ -97,11 +97,11 @@ def goal_geometry(xr: float, yr: float) -> tuple[float, float]:
 class MatchSimulator:
     """One simulated match: positions, possession, director and event emission (see module docstring)."""
 
-    def __init__(self, seed: int = 7, match_id: str = "RGS-2026-0001") -> None:
+    def __init__(self, seed: int = 7, match_id: str = "RGS-2026-0001", plan: Plan | None = None) -> None:
         self.rng = random.Random(seed)
         self.seed = seed
         self.meta = build_meta(match_id, seed, GENERATOR)
-        self.director = Director()
+        self.director = Director(plan)
         self.events: list = []
         self.truth_shots: list[TruthShot] = []
         self.scripted_ids: dict[str, str] = {}
@@ -291,7 +291,7 @@ class MatchSimulator:
             match_id=self.meta.match_id,
             seed=self.seed,
             final_score=dict(self.score),
-            storylines=Director.storylines(),
+            storylines=self.director.storylines(),
             scripted_event_ids=self.scripted_ids,
             shots=self.truth_shots,
             pass_model=PASS_MODEL,
@@ -781,6 +781,6 @@ class MatchSimulator:
             self.do_shot(scripted_goal=m.moment_id, body="head")
 
 
-def simulate(seed: int = 7, match_id: str = "RGS-2026-0001") -> tuple[MatchFile, GroundTruth]:
-    """Simulate one match; same seed, same match."""
-    return MatchSimulator(seed=seed, match_id=match_id).run()
+def simulate(seed: int = 7, match_id: str = "RGS-2026-0001", plan: Plan | None = None) -> tuple[MatchFile, GroundTruth]:
+    """Simulate one match; same seed and plan, same match. ``plan`` defaults to the demo's storylines and script."""
+    return MatchSimulator(seed=seed, match_id=match_id, plan=plan).run()

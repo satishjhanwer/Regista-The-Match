@@ -284,6 +284,9 @@ class Storyline(Model):
     end_clock_s: float
     description: str
     expected_signals: list[str]
+    mechanism: Literal["control", "chaos", "press", "go_long"] | None = Field(default=None, description="What a truth score expects to see")
+    team_id: str | None = Field(default=None, description="The side that changes; None when both do")
+    difficulty: Literal["strong", "moderate"] | None = None
 
 
 class TruthShot(Model):

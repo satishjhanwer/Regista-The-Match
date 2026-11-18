@@ -139,6 +139,16 @@ are set by hand, not fitted: no answer key says how well someone played. On trai
 spread of 0.6. The top-rated player of each team airs for everyone at half time and full time; every other player's
 rating goes only to a viewer following them. See D33.
 
+### How do you know the detectors aren't just tuned to the demo?
+
+The demo plants its storylines at fixed minutes, so on its own it can't show that. The truth score can:
+`scripts/truth_score.py` plants press switches, chaos spells and control spells at random minutes, sides and
+strengths across 48 matches never used for tuning, leaves 11 of them with nothing planted, and scores the real
+detectors against the plan. Today 71% of the changes are found, a median 3.3 minutes after they start, and the right
+side is named 95% of the time. False alarms are the weak spot: about 6 per match, almost all control and chaos
+re-announcements on organic swings, while press false alarms are 0.42 per match. CI prints the table on every run.
+See D36.
+
 ### Does Regista predict anything?
 
 A little, and it keeps score. When momentum swings or a press starts, the hot path makes a checkable call about the

@@ -45,6 +45,9 @@ class Window:
     description: str
     expected_signals: tuple[str, ...]
     overrides: dict  # team_id -> dict of TeamParams overrides
+    mechanism: str | None = None  # control | chaos | press | go_long: what a truth score expects to see
+    team_id: str | None = None  # the side that changes (None: both)
+    difficulty: str | None = None  # strong | moderate, for generated plans
 
 
 WINDOWS: list[Window] = [
@@ -59,6 +62,8 @@ WINDOWS: list[Window] = [
             HOME_ID: dict(pass_skill=0.75, tempo=0.85, directness=0.8),
             AWAY_ID: dict(press=0.25, line_push_m=-4.0),
         },
+        "control",
+        HOME_ID,
     ),
     Window(
         "S2_chaos_spell",
@@ -71,6 +76,7 @@ WINDOWS: list[Window] = [
             HOME_ID: dict(pass_skill=-0.95, long_ball=0.32, tempo=0.75, directness=1.8, press=0.65),
             AWAY_ID: dict(pass_skill=-0.95, long_ball=0.35, tempo=0.75, directness=1.8, press=0.65),
         },
+        "chaos",
     ),
     Window(
         "S3_away_press_shift",
@@ -88,6 +94,8 @@ WINDOWS: list[Window] = [
             HOME_ID: dict(pass_skill=-0.30, tempo=1.1),
             AWAY_ID: dict(press=0.92, line_push_m=12.0, directness=1.3),
         },
+        "press",
+        AWAY_ID,
     ),
     Window(
         "S4_home_go_long",
@@ -100,6 +108,8 @@ WINDOWS: list[Window] = [
             HOME_ID: dict(long_ball=0.30, pass_skill=0.40, directness=1.4),
             AWAY_ID: dict(press=0.55, line_push_m=4.0),
         },
+        "go_long",
+        HOME_ID,
     ),
 ]
 
@@ -154,31 +164,39 @@ SCRIPT: list[ScriptedMoment] = [
 STOPPAGE_S = {1: 125.0, 2: 250.0}
 
 
+@dataclass(frozen=True)
+class Plan:
+    """What the director plants in one match: storyline windows and scripted moments."""
+
+    windows: tuple[Window, ...] = tuple(WINDOWS)
+    script: tuple[ScriptedMoment, ...] = tuple(SCRIPT)
+
+
 class Director:
     """Applies storyline overrides by match clock and releases each scripted moment once."""
 
-    def __init__(self) -> None:
+    def __init__(self, plan: Plan | None = None) -> None:
+        self.plan = plan or Plan()
         self._done: set[str] = set()
 
     def params(self, team_id: str, match_clock_s: float) -> TeamParams:
         """Team parameters at a match clock, with any storyline overrides applied."""
         p = BASE[team_id]
         minute = match_clock_s / 60.0
-        for w in WINDOWS:
+        for w in self.plan.windows:
             if w.start_min <= minute < w.end_min and team_id in w.overrides:
                 p = replace(p, **w.overrides[team_id])
         return p
 
     def due(self, period: int, t: float) -> ScriptedMoment | None:
         """The next scripted moment due at this time, or None. Each moment is released once."""
-        for m in SCRIPT:
+        for m in self.plan.script:
             if m.moment_id not in self._done and m.period == period and t >= m.t:
                 self._done.add(m.moment_id)
                 return m
         return None
 
-    @staticmethod
-    def storylines() -> list[Storyline]:
+    def storylines(self) -> list[Storyline]:
         """The planted storylines, for the truth file."""
         return [
             Storyline(
@@ -188,6 +206,9 @@ class Director:
                 end_clock_s=w.end_min * 60,
                 description=w.description,
                 expected_signals=list(w.expected_signals),
+                mechanism=w.mechanism,
+                team_id=w.team_id,
+                difficulty=w.difficulty,
             )
-            for w in WINDOWS
+            for w in self.plan.windows
         ]

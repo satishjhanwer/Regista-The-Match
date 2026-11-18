@@ -24,6 +24,51 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "mechanism": {
+          "anyOf": [
+            {
+              "enum": [
+                "control",
+                "chaos",
+                "press",
+                "go_long"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What a truth score expects to see"
+        },
+        "team_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The side that changes; None when both do"
+        },
+        "difficulty": {
+          "anyOf": [
+            {
+              "enum": [
+                "strong",
+                "moderate"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -32,7 +77,10 @@
         "start_clock_s",
         "end_clock_s",
         "description",
-        "expected_signals"
+        "expected_signals",
+        "mechanism",
+        "team_id",
+        "difficulty"
       ],
       "title": "Storyline",
       "type": "object"
