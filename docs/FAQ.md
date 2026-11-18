@@ -93,6 +93,13 @@ check.
 
 ## Running it
 
+### Can I try it without installing anything?
+
+Yes, once the static demo is deployed to GitHub Pages: the whole replay is precomputed into one JSON bundle and the
+browser plays it, with the same live view, controls, compare view and agent traces as the local app. It covers the
+presets plus a grid of viewers (analyst and casual in every language and club, Player focus on five key players);
+any other choice shows the closest precomputed viewer, and live models need the local app. See D34.
+
 ### Do I need Azure or a model to run it?
 
 No. `REGISTA_LLM_PROVIDER=none` runs everything on verified templates, with no model and no network. For the demo
