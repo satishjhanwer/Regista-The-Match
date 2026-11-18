@@ -316,3 +316,22 @@ hot path, in code: `detect/predict.py`.
 - **Verdict words.** The Verifier's category check gained a "result" group: a telling of a call that missed may not say
   it "came true" / "acertó" / "सही साबित", and the reverse. Spanish "se cumplió" is left out because it sits inside "no
   se cumplió". The lying-model test now tells every graded call with the opposite verdict first.
+
+## D31. The Analyst's tools over MCP, on the viewers' clock
+
+Idea credited to Halfspace, whose MCP server clamps live tools to the match clock. `regista/mcp_server` exposes match
+state to any agent or MCP client through the official SDK (`mcp` 2.x, `MCPServer`).
+
+- **Same code as the Analyst.** `get_state`, `get_player` and `get_window_stats` are the Analyst's `ToolBox` methods, so
+  an outside agent gets identical numbers, labels and evidence; a test compares them. Each takes an optional
+  `insight_id` to see the match as it was at a reached moment (the Analyst's frozen snapshot), or answers "as of now"
+  from a fresh snapshot. `list_moments`, `get_moment`, `clock`, `match_info` and `call_record` complete the set.
+- **Live-clock guard.** Everything reads the replay as it stands. An insight the replay has not reached is reported
+  as not existing yet; seeking back makes later moments disappear again. Tested through a real MCP client.
+- **Two ways to run it.** Inside the API it is mounted at `/mcp` (streamable HTTP) over the hub's shared replay and is
+  read-only: an agent follows the broadcast clock and cannot move it. `python -m regista.mcp_server` runs it over stdio
+  with its own replay and a `seek` tool, for desktop MCP clients.
+- **Async tools.** In the API they run on the replay's event loop, so they never read state while an event is half
+  applied.
+- **The Analyst still calls its tools in process.** Routing it through MCP would add a hop per tool call for no change
+  in what it sees, since the code is shared.

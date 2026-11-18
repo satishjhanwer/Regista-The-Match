@@ -9,6 +9,7 @@ Environment:
     REGISTA_AUTOPLAY      1 to start playing on boot (default 1)
     REGISTA_CORS_ORIGINS  comma-separated origins (default *)
     REGISTA_STATIC        built frontend to serve at / (default ../frontend/dist when it exists)
+    + /mcp serves match state over MCP (streamable HTTP, read-only, on the viewers' clock) when ``mcp`` is installed
     + the LLM provider variables in regista/llm.py (none configured = template Narrator)
 """
 
@@ -65,7 +66,11 @@ def create_app(
         app.state.provider = "injected" if match is not None else resolve_provider()
         app.state.cache_size = len(cache or {})
         await hub.start()
-        yield
+        if mcp_server is None:
+            yield
+        else:
+            async with mcp_server.session_manager.run():
+                yield
         await hub.stop()
 
     app = FastAPI(title="Regista", version="0.2.0", lifespan=lifespan)
@@ -74,6 +79,11 @@ def create_app(
 
     def hub(app_: FastAPI = app) -> Hub:
         return app_.state.hub
+
+    mcp_server = _mcp(lambda: app.state.hub.replay)
+    app.state.mcp = mcp_server
+    if mcp_server is not None:  # read-only: agents follow the shared clock, they never move it
+        app.mount("/mcp", mcp_server.streamable_http_app(streamable_http_path="/"))
 
     @app.get("/api/health")
     async def health():
@@ -154,6 +164,15 @@ def create_app(
         app.mount("/", StaticFiles(directory=static, html=True), name="web")
 
     return app
+
+
+def _mcp(get_replay):
+    """The MCP server over the shared replay, or None when the ``mcp`` package is not installed."""
+    try:
+        from ..mcp_server import build_server
+    except ImportError:
+        return None
+    return build_server(get_replay)
 
 
 def _env_app() -> FastAPI:

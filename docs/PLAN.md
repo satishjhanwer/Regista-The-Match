@@ -78,5 +78,5 @@ Vite + React + TypeScript in `frontend/`, types from `src/contracts` (incl. the 
 
 ## Stretch (only if ahead)
 
-- MCP server over match state (FastMCP), Analyst consumes it
+- [x] MCP server over match state (`regista.mcp_server`, `/mcp` in the API); the Analyst keeps in-process tools, same code (D31)
 - Event Hubs ingest path

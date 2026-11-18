@@ -143,6 +143,12 @@ works without a model. Teach the Verifier's language check about it in
 [`agents/verifier.py`](../backend/regista/agents/verifier.py) (script, or stopwords for a Latin-script language). Then
 add it to the language picker in the frontend. `FanProfile.language` is a plain BCP 47 tag, so the contracts don't change.
 
+### Can other agents use Regista's match state?
+
+Yes, over MCP. The running API serves the Analyst's own tools at `/mcp`, read-only and on the clock viewers watch, so
+an outside agent gets the same numbers, labels and evidence as Regista's agents, and nothing from the future.
+`python -m regista.mcp_server` runs the same tools over stdio for desktop MCP clients, with a `seek` tool. See D31.
+
 ### What would a broadcast graphics partner consume?
 
 `OverlayPayload` messages over WebSocket: the insight with its facts and evidence, the verified rendering, and a

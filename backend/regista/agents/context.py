@@ -36,9 +36,12 @@ PLAYER_STATS = ("goals", "passes", "passes_complete", "shots", "xg", "pressures"
 
 @dataclass
 class InsightContext:
-    """Everything the Analyst may look at for one insight, frozen when the insight fired."""
+    """Everything the Analyst may look at for one insight, frozen when the insight fired.
 
-    insight: Insight
+    ``insight`` is None for a snapshot of the match at an arbitrary moment (the MCP server's "as of now").
+    """
+
+    insight: Insight | None
     elapsed_s: float
     team_names: dict[str, str]
     player_info: dict[str, dict]
@@ -47,7 +50,7 @@ class InsightContext:
     players: dict[str, dict[str, float]]
 
 
-def capture(st: MatchState, insight: Insight) -> InsightContext:
+def capture(st: MatchState, insight: Insight | None) -> InsightContext:
     """Snapshot what the Analyst may look at, at the moment the insight fired. O(metrics), only on insights."""
     windows: dict[str, dict] = {}
     for label in WINDOWS_S:
@@ -102,12 +105,16 @@ class ToolBox:
     ctx: InsightContext
     candidates: dict[str, Fact] = field(default_factory=dict)  # fact_id -> Fact
     calls: list[dict] = field(default_factory=list)
+    prefix: str = ""  # candidate fact ids are "<prefix>-C<n>"; defaults to the insight id
+
+    def __post_init__(self) -> None:
+        self.prefix = self.prefix or (self.ctx.insight.insight_id if self.ctx.insight else "NOW")
 
     def _candidate(self, key: str, label: str, value, unit: str | None, evidence: list[EvidenceRef]) -> dict:
         for f in self.candidates.values():
             if f.key == key:
                 return {"fact_id": f.fact_id, "label": f.label, "value": f.value, "unit": f.unit}
-        fid = f"{self.ctx.insight.insight_id}-C{len(self.candidates) + 1}"
+        fid = f"{self.prefix}-C{len(self.candidates) + 1}"
         self.candidates[fid] = Fact(fact_id=fid, key=key, label=label, value=value, unit=unit, evidence=evidence)
         return {"fact_id": fid, "label": label, "value": value, "unit": unit}
 
@@ -120,7 +127,7 @@ class ToolBox:
         """Return the facts the detector attached to this moment, with fact ids."""
         facts = [
             {"fact_id": f.fact_id, "label": f.label, "value": f.value, "unit": f.unit, "previous_value": f.previous_value}
-            for f in self.ctx.insight.facts
+            for f in (self.ctx.insight.facts if self.ctx.insight else [])
         ]
         return self._log("get_facts", {}, facts)
 
