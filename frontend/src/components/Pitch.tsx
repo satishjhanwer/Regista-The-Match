@@ -104,11 +104,12 @@ export function Pitch({ events, colors, names }: { events: StreamEvent[]; colors
       {trail.map((e, i) => (
         <EventMark key={e.id} e={e} color={colors.ink[e.team ?? ""] ?? "#ddd"} opacity={0.2 + (0.8 * (i + 1)) / trail.length} latest={i === trail.length - 1} />
       ))}
+      {/* the label goes below the ball near the top line, where a label above would be cut off */}
       {ball && (
         <g className="ball" style={{ transform: `translate(${ball.x}px, ${ball.y}px)` }}>
           <circle r={1.15} fill="#fff" stroke="#111" strokeWidth={0.25} />
           {ball.player && (
-            <text y={-2.2} textAnchor="middle" className="ball-label" fill={colors.ink[ball.team ?? ""] ?? "#fff"}>
+            <text y={ball.y < 4 ? 3.6 : -2.2} textAnchor="middle" className="ball-label" fill={colors.ink[ball.team ?? ""] ?? "#fff"}>
               {names[ball.player] ?? ball.player}
             </text>
           )}
