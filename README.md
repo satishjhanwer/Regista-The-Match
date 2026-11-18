@@ -91,7 +91,7 @@ mechanical check cannot catch.
 | Held-out seeds 8-25 (never tuned on) | 15 of 18 pass every criterion; all 3 misses are press-change timing (see [D18](docs/DECISIONS.md)) |
 | Calls about the next 10 minutes (chance fitted on seeds 1-5, graded on seeds 7-25) | momentum calls state 60%, came true 72% (42 of 58), Brier 0.215; press calls state 75%, came true 73% (19 of 26), Brier 0.197; a coin flip scores 0.25 (see [D30](docs/DECISIONS.md)) |
 | Recorded agent run on Microsoft Foundry Local (`data/RGS-2026-0001.renders.foundry-local.json`, qwen2.5-3b, CPU) | 17 renders on air, 17 pass a re-check; of 12 the model attempted, 8 passed first time and 4 were blocked twice and replaced by verified templates; the Analyst called its tools in 12 traces |
-| Tests | 265 backend (pytest, including a whole match narrated by a deliberately lying model: every draft rejected, none on air), 14 frontend (Vitest); CI also fails on stale generated contracts |
+| Tests | 271 backend (pytest, including a whole match narrated by a deliberately lying model: every draft rejected, none on air), 14 frontend (Vitest); CI also fails on stale generated contracts |
 
 ## Run it locally
 

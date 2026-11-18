@@ -403,3 +403,21 @@ link, not "clone, install, run two servers".
 - **Deploy.** `.github/workflows/pages.yml` builds the bundle and the static frontend with the repository's base path
   and deploys from `main` or by hand. Nothing deploys before the branch is merged and Pages is switched to GitHub
   Actions.
+
+## D35. Numbers keep their units, and clocks are read whole
+
+Idea credited to Regista (iSharaf6), whose Verifier checks a figure's unit against the fact's kind. Ours matched a
+number to the cited facts' values only, so a line citing Balogun's 34.8 km/h sprint could say "34.8 goals" and pass.
+
+- **Units.** `Fact.unit` already said what each dimension is (`km/h`, `%`, `m`, `xG`, `min`, `s`, `bits`); counts take
+  their noun from the label ("Vukovic career goals" is in goals). A number written with a unit, in English, Spanish or
+  Hindi, must match a cited fact in that unit. The nearest unit word wins ("0.31 xG chance" is in xG), shots and
+  chances are interchangeable, and a count whose label names no noun may be called anything countable.
+- **What the new lie found.** A `unit_swap` lie in the lying-model test put three drafts on air on its first run,
+  and none of them was a unit mix-up at heart. Every one borrowed digits from a clock: "57 goals of the passes"
+  (57 was the moment's clock, 53:57), "0 goals" (the 00 of a call made at 52:00) and "the 90:23 call" (83:23, with
+  90 from the moment's 90+03 and 23 from the fact). Clocks are now matched whole against a cited time or the moment's
+  clock, a clock's digits count only as minutes, and a score's ("2-1") only as goals.
+- **No false rejections.** 24,465 template renderings (8 seeds, the 35 static-demo profiles) still verify, with
+  about 15,000 numbers with units and 1,475 clocks checked; both recorded model runs re-audit clean (31/31, 17/17).
+
