@@ -9,6 +9,7 @@ Environment:
     REGISTA_AUTOPLAY      1 to start playing on boot (default 1)
     REGISTA_CORS_ORIGINS  comma-separated origins (default *)
     REGISTA_STATIC        built frontend to serve at / (default ../frontend/dist when it exists)
+    OTEL_EXPORTER_OTLP_ENDPOINT  export warm-path traces over OTLP (e.g. http://localhost:4317); see regista/telemetry.py
     + /mcp serves match state over MCP (streamable HTTP, read-only, on the viewers' clock) when ``mcp`` is installed
     + the LLM provider variables in regista/llm.py (none configured = template Narrator)
 """
@@ -182,6 +183,9 @@ def _env_app() -> FastAPI:
         load_dotenv()
     except ImportError:
         pass
+    from ..telemetry import setup_tracing
+
+    setup_tracing()  # only when OTEL_EXPORTER_OTLP_ENDPOINT or ENABLE_CONSOLE_EXPORTERS asks for it
     return create_app()
 
 

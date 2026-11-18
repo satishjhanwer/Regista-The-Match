@@ -93,7 +93,7 @@ mechanical check cannot catch.
 | Held-out seeds 8-25 (never tuned on) | 15 of 18 pass every criterion; all 3 misses are press-change timing (see [D18](docs/DECISIONS.md)) |
 | Calls about the next 10 minutes (chance fitted on seeds 1-5, graded on seeds 7-25) | momentum calls state 60%, came true 72% (42 of 58), Brier 0.215; press calls state 75%, came true 73% (19 of 26), Brier 0.197; a coin flip scores 0.25 (see [D30](docs/DECISIONS.md)) |
 | Recorded agent run on Microsoft Foundry Local (`data/RGS-2026-0001.renders.foundry-local.json`, qwen2.5-3b, CPU) | 17 renders on air, 17 pass a re-check; of 12 the model attempted, 8 passed first time and 4 were blocked twice and replaced by verified templates; the Analyst called its tools in 12 traces |
-| Tests | 251 backend (pytest, including a whole match narrated by a deliberately lying model: 400 bad drafts, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
+| Tests | 254 backend (pytest, including a whole match narrated by a deliberately lying model: 400 bad drafts, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
 
 ## Run it locally
 
@@ -156,6 +156,13 @@ read-only, on the clock viewers watch): `clock`, `list_moments`, `get_moment`, `
 `get_window_stats`, `call_record`. Nothing past the replay clock is visible. For a desktop MCP client, run it over
 stdio: `{"command": "python", "args": ["-m", "regista.mcp_server"], "cwd": "<repo>/backend"}`. See
 [D31](docs/DECISIONS.md).
+
+**Traces of every rendering, locally.** With the `tracing` extra installed (`pip install -e ".[tracing]"`), set
+`OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317` and each rendering becomes one OpenTelemetry trace: the Analyst
+brief with its tool calls, every Narrator draft, every Verifier verdict with its notes, and the template fallback,
+nested with Agent Framework's own agent, model and tool spans. Any OTLP viewer works, for example the Aspire dashboard
+(`docker run --rm -p 18888:18888 -p 4317:18889 mcr.microsoft.com/dotnet/aspire-dashboard:latest`, then
+<http://localhost:18888>) or Jaeger. No cloud account needed. See [D32](docs/DECISIONS.md).
 
 ## Repository layout
 

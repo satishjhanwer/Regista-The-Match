@@ -36,6 +36,7 @@ backend/regista/agents/     verifier.py (code gate), templates.py + phrases.py (
                             orchestrator.py (WarmPath: verify/retry/fallback, cache, traces), recap.py, __main__.py (record)
 backend/regista/api/        replay.py (deterministic Replay), hub.py (shared clock, fan-out), app.py (FastAPI + /ws + /mcp). docs/API.md
 backend/regista/mcp_server/ server.py (Analyst tools over MCP, live-clock guard), __main__.py (stdio, with seek)
+backend/regista/telemetry.py  warm-path OpenTelemetry spans; OTLP export only when OTEL_EXPORTER_OTLP_ENDPOINT is set
 backend/scripts/            export_schemas.py (Pydantic -> JSON Schema), hello_foundry.py (agent smoke test), fit_models.py,
                             fit_predictions.py
 backend/tests/              simulator, contracts, state/models/momentum/control/press/records, test_detect.py (acceptance)

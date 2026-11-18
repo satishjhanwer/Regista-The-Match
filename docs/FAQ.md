@@ -109,7 +109,8 @@ changes. Foundry Local runs the same agents on the laptop. See D11, D12 and D28.
 
 The hot path processes the whole demo match in about 70 ms (p95 under 0.05 ms per event). A model rendering took
 roughly 1.5 to 5 minutes on a CPU-only laptop, which is why the demo plays a recorded run; a cloud model would take
-seconds, and the template path is instant either way. Measured results are in the
+seconds, and the template path is instant either way. To see where the time goes in a rendering, export its
+OpenTelemetry trace to a local viewer (see the README). Measured results are in the
 [README](../README.md#measured-results).
 
 ### How good are the xG and pass-difficulty models?
