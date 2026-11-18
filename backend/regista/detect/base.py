@@ -40,7 +40,8 @@ class Draft:
     """An insight before the pipeline assigns ids.
 
     ``dedupe_key`` identifies the moment; cooldowns apply per (kind, ``scope``), where scope is a team, a player or
-    ``match``.
+    ``match``. ``series`` names the id counter: moments are ``INS``; additions that must not renumber them (and so
+    the recorded agent runs keyed by those ids) get their own.
     """
 
     kind: str
@@ -52,6 +53,7 @@ class Draft:
     scope: str = "match"
     team_ids: list[str] = field(default_factory=list)
     player_ids: list[str] = field(default_factory=list)
+    series: str = "INS"
 
 
 class Detector:

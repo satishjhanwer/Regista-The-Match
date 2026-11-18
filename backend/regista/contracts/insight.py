@@ -30,6 +30,7 @@ InsightKind = Literal[
     "recap",
     "prediction",
     "prediction_result",
+    "player_rating",
 ]
 
 

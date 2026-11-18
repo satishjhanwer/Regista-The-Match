@@ -107,7 +107,7 @@ changes. Foundry Local runs the same agents on the laptop. See D11, D12 and D28.
 
 ### How fast is it?
 
-The hot path processes the whole demo match in about 70 ms (p95 under 0.05 ms per event). A model rendering took
+The hot path processes the whole demo match in about 80 ms (p95 under 0.06 ms per event). A model rendering took
 roughly 1.5 to 5 minutes on a CPU-only laptop, which is why the demo plays a recorded run; a cloud model would take
 seconds, and the template path is instant either way. To see where the time goes in a rendering, export its
 OpenTelemetry trace to a local viewer (see the README). Measured results are in the
@@ -120,6 +120,16 @@ difficulty Brier 0.129 vs 0.165 for a constant rate, xG expected Brier 0.136 vs 
 with `python scripts/fit_models.py`. See D14 and D15.
 
 ## Extending it
+
+### How are player ratings worked out?
+
+From published weights in `backend/regista/state/models/ratings.json`, applied to every event. A rating starts at 6.0
+and moves with goals and the quality of every shot (xG), chances created for others, completed passes weighted by how
+hard they were, tackles, interceptions, pressures and saves, minus points lost to failed passes (an easy one costs
+more) and lost tackles. Every rating airs with its breakdown as facts, so the Verifier checks each number. The weights
+are set by hand, not fitted: no answer key says how well someone played. On training seeds they average 6.9 with a
+spread of 0.6. The top-rated player of each team airs for everyone at half time and full time; every other player's
+rating goes only to a viewer following them. See D33.
 
 ### Does Regista predict anything?
 

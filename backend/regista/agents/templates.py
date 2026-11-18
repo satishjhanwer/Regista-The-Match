@@ -311,6 +311,23 @@ class TemplateNarrator:
         if kind in ("period_summary", "recap"):
             return self._summary_spec(ins, view, profile, n)
 
+        if kind == "player_rating":
+            pname = {"player": self._player_name(ins.entities.player_ids[0]), **n}
+            rating = {"rating": "player.match_rating"}
+            head = Line("player_rating.h_top" if ins.priority >= 3 else "player_rating.h", rating, pname)
+            parts = [
+                Line(f"player_rating.{cat}", {"v": f"player.rating_{cat}"})
+                for cat in ("goals", "chances_created", "passing", "defending")
+                if view.get(f"player.rating_{cat}") is not None
+            ]
+            parts.sort(key=lambda line: -view.get(line.slots["v"]).value)
+            mistakes = view.get("player.rating_mistakes")
+            if mistakes is not None and mistakes.value >= 0.3:
+                parts = parts[:2] + [Line("player_rating.mistakes", {"v": "player.rating_mistakes"})]
+            analyst = [Line("player_rating.a1", rating, pname), *parts[:3]]
+            casual = [Line(f"player_rating.casual_{ins.clock.period}", rating, pname)]
+            return head, self._pick(mode, analyst, casual, analyst), ["player.match_rating"]
+
         if kind == "prediction":
             head = Line("prediction.h", extra=n)
             on_xg = view.get("team.xg_total") is not None
