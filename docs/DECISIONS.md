@@ -269,3 +269,24 @@ only failing renders; it replaced the 2 wrong-language drafts above in 2.4 minut
 
 Latency with Ollama on that laptop: 25-85 s per render (Analyst plus 1-2 drafts). That is fine for a recorded run, too slow
 for live. Production would use cloud Foundry (seconds), and the template path keeps the live overlay instant either way.
+
+## D29. A whole match narrated by a lying model
+
+Idea credited to Halfspace (another entry in the same hackathon): drive the agents with a model that misbehaves on
+purpose and prove none of it airs. `tests/test_lying_model.py` narrates every insight of the demo match for every preset
+(40 x 5 = 200 renders, about 4 s) through the real `LLMNarrator.parse`, Verifier and WarmPath retry and fallback. Each
+draft is a verified template rendering corrupted one way: an inflated number, a fact id that does not exist, a stranger's
+name, a number with no citation, the wrong language, a team swap, a "<...>" slot copied from the prompt, or an overlong
+draft. The Analyst also invents fact ids or answers in prose. All 400 drafts must be rejected, every render must air a
+re-verified template, and each rejection must map to a named rule (no "other"). A control run without lies must air
+every model draft, so the harness is not rejecting everything.
+
+It found two gaps on its first run, both fixed:
+
+- A `<your headline, ...>` slot passed as a headline. Placeholders now include any `<...>` slot.
+- A claim crediting Saltmere with Northvale's pressure share passed because the headline ("NVL 1-1 SLM") named
+  Northvale. A claim that cites a team's fact and names only the other team is now rejected, with or without a number.
+
+Both recorded runs still pass a re-audit under the stricter rules (17/17 and 31/31). One limit stays and is pinned by a
+strict `xfail`: a role reversal that names both teams ("Northvale press, Saltmere are rattled" when it is the other way
+round) cannot be caught by a mechanical check.

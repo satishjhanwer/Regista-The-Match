@@ -28,7 +28,7 @@ from regista.contracts.events import MatchFile  # noqa: E402
 RULES = [
     ("number not in a cited fact", r"number .* does not match|number .* with no cited fact"),
     ("unknown fact id", r"unknown fact id"),
-    ("number not attributed to its team / player", r"does not say who it is about"),
+    ("number not attributed to its team / player", r"does not say who it is about|attributes it to"),
     ("names someone not in the moment", r"not part of this insight"),
     ("player tied to the wrong club", r"ties .* to .*, but"),
     ("wrong pass type or finish", r"but the facts say"),
