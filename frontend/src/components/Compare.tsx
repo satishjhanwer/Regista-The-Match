@@ -17,24 +17,24 @@ function ProfileEditor({ meta, value, onChange }: { meta: MatchMeta; value: Prof
   const players = [...meta.home.players, ...meta.away.players];
   return (
     <div className="cmp-editor">
-      <select value={value.mode} onChange={(e) => onChange({ ...value, mode: e.target.value as FanProfile["mode"] })}>
+      <select aria-label="Viewing mode" value={value.mode} onChange={(e) => onChange({ ...value, mode: e.target.value as FanProfile["mode"] })}>
         <option value="analyst">Analyst</option>
         <option value="casual">Casual</option>
         <option value="player_focus">Player focus</option>
       </select>
-      <select value={value.lang} onChange={(e) => onChange({ ...value, lang: e.target.value })}>
+      <select aria-label="Language" value={value.lang} onChange={(e) => onChange({ ...value, lang: e.target.value })}>
         {LANGS.map((l) => (
           <option key={l.code} value={l.code}>
             {l.label}
           </option>
         ))}
       </select>
-      <select value={value.team ?? ""} onChange={(e) => onChange({ ...value, team: e.target.value })}>
+      <select aria-label="Favourite club" value={value.team ?? ""} onChange={(e) => onChange({ ...value, team: e.target.value })}>
         <option value="">Neutral</option>
         <option value={meta.home.team_id}>{meta.home.name} fan</option>
         <option value={meta.away.team_id}>{meta.away.name} fan</option>
       </select>
-      <select value={value.player ?? ""} onChange={(e) => onChange({ ...value, player: e.target.value })}>
+      <select aria-label="Focus player" value={value.player ?? ""} onChange={(e) => onChange({ ...value, player: e.target.value })}>
         <option value="">No focus player</option>
         {players.map((p) => (
           <option key={p.player_id} value={p.player_id}>
@@ -103,7 +103,7 @@ export function CompareView({ meta }: { meta: MatchMeta }) {
   return (
     <div className="compare">
       <div className="cmp-bar">
-        <select value={selected} onChange={(e) => setSelected(e.target.value)}>
+        <select aria-label="Moment" value={selected} onChange={(e) => setSelected(e.target.value)}>
           {insights.length === 0 && <option value="">Play the match to reach some moments</option>}
           {insights.map((i) => (
             <option key={i.insight_id} value={i.insight_id}>

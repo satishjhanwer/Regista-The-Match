@@ -150,7 +150,7 @@ export function TracePanel({ insight, rendered, trace, source }: { insight: Insi
               <span className="ag">{AGENT_LABEL[s.agent]}</span>
               <span className="act">{s.action}</span>
               <span className="st">{s.status}</span>
-              <span className="ms">{s.ms} ms</span>
+              <span className="ms">{s.ms >= 1000 ? `${(s.ms / 1000).toFixed(1)} s` : `${s.ms} ms`}</span>
             </div>
             <StepDetail step={s} facts={facts} />
           </li>
