@@ -290,3 +290,162 @@ It found two gaps on its first run, both fixed:
 Both recorded runs still pass a re-audit under the stricter rules (17/17 and 31/31). One limit stays and is pinned by a
 strict `xfail`: a role reversal that names both teams ("Northvale press, Saltmere are rattled" when it is the other way
 round) cannot be caught by a mechanical check.
+
+## D30. Calls about the next 10 minutes, graded in the open
+
+Idea credited to Halfspace, whose scout's calls are marked right or wrong at full time. Regista's version stays on the
+hot path, in code: `detect/predict.py`.
+
+- **What is called.** A momentum shift calls "the team with momentum creates more xG than the opponent over the next 10
+  minutes". A press change calls "the pressed team's pass completion stays below its pre-call level for 10 minutes".
+  Both are graded from the state's own match totals (xG, passes, completed passes) between the call and the grade, so
+  no ground truth and no model is involved. Tests re-derive every verdict from the raw shot and pass events.
+- **Stated chance.** Each call states its hit rate on training seeds 1-5, with add-one smoothing so a small sample never
+  states 0% or 100% (`scripts/fit_predictions.py` writes `state/models/predictions.json`). On held-out seeds 7-25:
+  momentum calls state 60% and came true 72% (42/58, Brier 0.215); press calls state 75% and came true 73% (19/26,
+  Brier 0.197). A coin flip scores 0.25. Momentum is under-stated because only 18 training calls exist, and the gap
+  is shown rather than tuned away.
+- **Voids.** A call cut short by the end of a half after at least 5 minutes is graded on the time it had. One cut
+  short before 5 minutes is void and never graded, so the record only counts fair tests.
+- **Ids.** Calls and results are numbered in their own `PRD-nnnn` series. Sharing the `INS` counter would renumber
+  every later moment and break the recorded agent runs, which are keyed by insight id. A test checks that the detector
+  insights are byte-identical with and without the predictor.
+- **Facts name their team.** The call's own facts ("Minutes the call on Northvale FC covers", "Result of the call on
+  Northvale FC") carry the team in their label. Without it the lying-model test (D29) got team swaps past the Verifier,
+  because a claim citing a team-less fact has no subject to check.
+- **Verdict words.** The Verifier's category check gained a "result" group: a telling of a call that missed may not say
+  it "came true" / "acertó" / "सही साबित", and the reverse. Spanish "se cumplió" is left out because it sits inside "no
+  se cumplió". The lying-model test now tells every graded call with the opposite verdict first.
+
+## D31. The Analyst's tools over MCP, on the viewers' clock
+
+Idea credited to Halfspace, whose MCP server clamps live tools to the match clock. `regista/mcp_server` exposes match
+state to any agent or MCP client through the official SDK (`mcp` 2.x, `MCPServer`).
+
+- **Same code as the Analyst.** `get_state`, `get_player` and `get_window_stats` are the Analyst's `ToolBox` methods, so
+  an outside agent gets identical numbers, labels and evidence; a test compares them. Each takes an optional
+  `insight_id` to see the match as it was at a reached moment (the Analyst's frozen snapshot), or answers "as of now"
+  from a fresh snapshot. `list_moments`, `get_moment`, `clock`, `match_info` and `call_record` complete the set.
+- **Live-clock guard.** Everything reads the replay as it stands. An insight the replay has not reached is reported
+  as not existing yet; seeking back makes later moments disappear again. Tested through a real MCP client.
+- **Two ways to run it.** Inside the API it is mounted at `/mcp` (streamable HTTP) over the hub's shared replay and is
+  read-only: an agent follows the broadcast clock and cannot move it. `python -m regista.mcp_server` runs it over stdio
+  with its own replay and a `seek` tool, for desktop MCP clients.
+- **Async tools.** In the API they run on the replay's event loop, so they never read state while an event is half
+  applied.
+- **The Analyst still calls its tools in process.** Routing it through MCP would add a hop per tool call for no change
+  in what it sees, since the code is shared.
+
+## D32. OpenTelemetry traces of the warm path, viewable locally
+
+Application Insights was dropped with Azure (D9). The in-app trace panel shows one rendering at a time; an OTLP trace
+shows timing and nesting across all of them, in any viewer, with no cloud account.
+
+- **Agent Framework traces itself.** Its agent runs, model calls and tool executions already emit spans (GenAI semantic
+  conventions). `regista/telemetry.py` calls its `configure_otel_providers` so both sets of spans share one provider
+  and one exporter.
+- **Regista adds what the framework cannot see:** `regista.render` (insight, kind, profile, language, mode, and at the
+  end source, drafts and rejections), `regista.analyst.brief` (source, tool calls, fallback), each
+  `regista.narrator.draft`, each `regista.verifier.check` (status, claims checked, the notes), and
+  `regista.template.render`. A test checks a revised rendering produces one trace: rejected then ok, the Verifier's
+  note, two drafts, and Agent Framework's `Analyst` and `get_facts` spans in the same trace.
+- **Off unless asked.** Export starts only when `OTEL_EXPORTER_OTLP_ENDPOINT` (or the traces endpoint, or
+  `ENABLE_CONSOLE_EXPORTERS`) is set; otherwise the OpenTelemetry API is a no-op. `opentelemetry-api` is a core
+  dependency; the SDK and OTLP exporter are the `tracing` extra.
+- **The hot path is not traced.** A span per event would cost more than the event (about 27 µs). Its latency is
+  measured by `python -m regista.detect` instead.
+
+## D33. Player ratings from published weights, explained by their facts
+
+Idea credited to Halfspace, whose match ratings come with their reasons. `state/ratings.py` keeps running points per
+player in five categories, O(1) per event: goals and shots (per goal, plus per xG of every shot, so a good chance counts
+even if missed), chances created (per xG set up, plus per assist), passing (each completed pass weighted by its
+difficulty), defending (tackles won, interceptions, pressures, and per xG saved for goalkeepers), and points lost to
+mistakes (each failed pass weighted by how easy it was, and lost tackles). Rating = 6.0 + points, clipped to [3, 10].
+
+- **Published, not fitted.** No answer key says how well someone played, so the weights are set by hand and kept in
+  `state/models/ratings.json`. The first set saturated (average 8.4, strikers pinned at 10) because the simulator's
+  league creates about twice a real match's xG; scaled down, training seeds 1-5 average 6.9 with a standard deviation
+  of 0.6 and a range of 6.0-9.2. A test pins that spread, and another re-derives every rating from the raw events.
+  On the demo match Vukovic's brace rates 9.5, Haddad (the cross for the header) 7.6, Shapira (the equaliser) 7.8.
+- **Explained by facts.** Each `player_rating` insight carries the rating and every category with at least 0.1
+  points as facts, so the templates and any model can only quote numbers the Verifier can check. Short lines like
+  "Passing: +0.4." tripped the placeholder rule (fewer than two words), so they read "Passing added +0.4."
+- **Who sees what.** At half time and full time the top-rated player of each team airs for everyone (priority 3);
+  every other player with at least 15 actions gets a priority-1 rating that only a Player-focus viewer following them
+  sees. Ratings use their own `RTG` id series so the recorded agent runs stay keyed correctly.
+- **The recap comes last.** The replay now builds a period's recap after everything its final event produced
+  (summary, ratings, graded calls), not straight after the summary.
+- **The Analyst can cite it.** `get_player` (and so the MCP server) returns the rating as a candidate fact.
+- **Cost.** The hot path went from about 70 to about 80 ms for the whole match (mean 32 µs, p95 54 µs per event).
+
+## D34. A static demo: the replay precomputed, the hub ported to the browser
+
+Idea credited to Halfspace, whose app runs on GitHub Pages with no backend. A judge or a LinkedIn reader should get a
+link, not "clone, install, run two servers".
+
+- **The bundle.** `scripts/export_static.py` replays the match once through the real pipeline and the real hub code
+  (`Hub.tick_message`, `compact_event`, `display_for`, `WarmPath` with the recorded Foundry Local cache) and writes
+  every event with its clock, the tick metrics and score after each event, momentum samples, every insight with the
+  replay time it fired, and every rendering for a fixed profile set. Insights are stored once and referenced by id.
+  About 6 MB, 0.5 MB gzipped (Pages serves it compressed); built in about 6 s, in CI, never committed.
+- **The hub, in the browser.** `frontend/src/lib/static.ts` ports `Replay` and `Hub`: the same clock rules, controls,
+  speed limits, seek semantics (skipped moments go to history; going back sends `reset`) and messages. `api.ts`
+  picks it at build time (`VITE_STATIC=1`), so no component changes. A backend test checks the bundle gives each
+  preset exactly the overlays the live hub sends and the same final tick; frontend tests cover the port.
+- **Viewer combinations.** The live app renders any profile on demand; a static site can only serve what was
+  precomputed: the five presets, analyst and casual x 3 languages x 3 club choices, Player focus x 3 languages x 5 key
+  players (35 distinct profiles, 3,360 renderings). Any other choice is served by the closest profile with the same
+  mode and language (focus player counts most, then club, then metric), and the page says so.
+- **One bug only the port could have.** The browser hub sends synchronously, so a backward seek's `reset` and `tick`
+  reached the hook before React re-rendered and the ribbon never backfilled. The hook now judges history needs on a
+  mirror run through the same reducer.
+- **Deploy.** `.github/workflows/pages.yml` builds the bundle and the static frontend with the repository's base path
+  and deploys from `main` or by hand. Nothing deploys before the branch is merged and Pages is switched to GitHub
+  Actions.
+
+## D35. Numbers keep their units, and clocks are read whole
+
+Idea credited to Regista (iSharaf6), whose Verifier checks a figure's unit against the fact's kind. Ours matched a
+number to the cited facts' values only, so a line citing Balogun's 34.8 km/h sprint could say "34.8 goals" and pass.
+
+- **Units.** `Fact.unit` already said what each dimension is (`km/h`, `%`, `m`, `xG`, `min`, `s`, `bits`); counts take
+  their noun from the label ("Vukovic career goals" is in goals). A number written with a unit, in English, Spanish or
+  Hindi, must match a cited fact in that unit. The nearest unit word wins ("0.31 xG chance" is in xG), shots and
+  chances are interchangeable, and a count whose label names no noun may be called anything countable.
+- **What the new lie found.** A `unit_swap` lie in the lying-model test put three drafts on air on its first run,
+  and none of them was a unit mix-up at heart. Every one borrowed digits from a clock: "57 goals of the passes"
+  (57 was the moment's clock, 53:57), "0 goals" (the 00 of a call made at 52:00) and "the 90:23 call" (83:23, with
+  90 from the moment's 90+03 and 23 from the fact). Clocks are now matched whole against a cited time or the moment's
+  clock, a clock's digits count only as minutes, and a score's ("2-1") only as goals.
+- **No false rejections.** 24,465 template renderings (8 seeds, the 35 static-demo profiles) still verify, with
+  about 15,000 numbers with units and 1,475 clocks checked; both recorded model runs re-audit clean (31/31, 17/17).
+
+## D36. A truth score on changes planted at random, with unplanted controls
+
+Idea credited to Regista (durjanh), which grades its detections against hidden plants on fresh seeds with
+unplanted controls. Our acceptance tests plant every storyline at the same minutes on every seed, so they show the
+detectors find changes where the demo puts them, not that they would find them anywhere.
+
+- **Plans.** `Director` now takes a `Plan` (storyline windows and scripted moments); the default is the demo's, and
+  seed 7 is byte-identical. `sim/plans.py` draws a plan per seed from its own RNG: one or two changes (press switch,
+  chaos spell, control spell) with a random side, strength (strong = the demo's overrides, or moderate), start and
+  length of 10-15 min inside one half, or nothing at all in one match in four. `Storyline` gained `mechanism`,
+  `team_id` and `difficulty` so the truth file says what to look for. Generated plans have no scripted moments, and
+  the simulator only scores scripted shots, so those matches are goalless.
+- **Scoring.** `scripts/truth_score.py` runs the real hot path, then reads the plan from the truth file. A change is
+  found by the first insight of its mechanism in the same half, from its start to 5 min after its end (never
+  before: the detectors cannot see ahead). Any other press or control/chaos insight is a false alarm, even when an
+  organic swing makes it arguably right.
+- **Results on seeds 101-148** (48 matches, 11 controls; nothing was tuned on them): 71% of 62 changes found, median
+  3.3 min to detect (p90 7.7), the right side named 95% of the time. Press 71% (0.42 false alarms per match),
+  chaos 70% (1.65), control 72% (3.92). False alarms are about the same on controls (5.8) as on planted matches (6.0).
+- **What it shows.**
+  - 5 of the 6 missed press switches start 7-12 min into a half, while the CUSUM is still learning its baseline
+    (first 20 min of the half, D18).
+  - The control/chaos detector re-announces whenever the 5-minute index re-crosses a threshold, up to 8 times in a
+    match. It describes regimes well in the demo but is not a change detector yet.
+  - Both are left as measured. Tuning them is a separate change, fitted on other seeds and re-scored here.
+- **Kept honest.** A test pins a floor on 16 of these seeds, below today's numbers, so a regression fails CI. CI's
+  job summary prints the full table on every run.
+

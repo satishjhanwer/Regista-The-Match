@@ -33,11 +33,14 @@ SLOT: dict[str, OverlaySlot] = {
     "rhythm_shift": "side_panel",
     "period_summary": "top_bar",
     "recap": "side_panel",
+    "prediction": "ticker",
+    "prediction_result": "side_panel",
+    "player_rating": "lower_third",
 }
 
 # metric_of_interest -> insight kinds it boosts
 INTEREST = {
-    "press": {"press_change"},
+    "press": {"press_change", "prediction", "prediction_result"},
     "xg": {"shot_quality", "key_pass"},
     "momentum": {"momentum_shift", "control_vs_chaos"},
     "speed": {"player_tag"},
@@ -75,6 +78,8 @@ def relevance(insight: Insight, profile: FanProfile) -> int | None:
     if insight.kind in ("period_summary", "recap", "goal"):
         return p
     involved = profile.focus_player_id is not None and profile.focus_player_id in insight.entities.player_ids
+    if insight.kind == "player_rating" and p < 3 and not involved:  # every player's rating, but only for their followers
+        return None
     if profile.mode == "player_focus":
         if involved:
             return min(5, p + 1)

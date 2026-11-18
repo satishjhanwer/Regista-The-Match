@@ -6,13 +6,14 @@ from .core import WINDOWS_S, MatchState, MetricUpdate, replay
 from .models import ExpectedGoals, PassDifficulty
 from .momentum import Momentum
 from .press import Press
+from .ratings import PlayerRatings
 from .records import Records
 from .rolling import DecayedSum, RollingSum
 
 
 def default_components() -> list:
-    """All analytical components, in dependency order (xG before momentum)."""
-    return [PassDifficulty(), ExpectedGoals(), Momentum(), ControlChaos(), Press(), Records()]
+    """All analytical components, in dependency order (pass difficulty and xG before momentum and ratings)."""
+    return [PassDifficulty(), ExpectedGoals(), Momentum(), ControlChaos(), Press(), Records(), PlayerRatings()]
 
 
 def build_state(meta: MatchMeta) -> MatchState:
@@ -29,6 +30,7 @@ __all__ = [
     "MetricUpdate",
     "Momentum",
     "PassDifficulty",
+    "PlayerRatings",
     "Press",
     "Records",
     "RollingSum",

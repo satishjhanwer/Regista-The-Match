@@ -6,7 +6,7 @@ import pytest
 
 from regista.agents.profiles import PRESETS, display_for, profile_from_params, relevance
 from regista.agents.templates import TemplateNarrator
-from regista.agents.verifier import Verifier, numbers_in
+from regista.agents.verifier import Verifier, numbers_in, quantities_in
 from regista.contracts.insight import Claim, FanProfile
 from regista.detect import run_match
 
@@ -85,7 +85,8 @@ def test_relevance_by_mode(seed7):
     _, insights = seed7
     focus, casual, analyst = PRESETS["focus-hi-nvl09"], PRESETS["casual-en-nvl"], PRESETS["analyst-en"]
     for ins in insights:
-        assert relevance(ins, analyst) is not None
+        follower_only = ins.kind == "player_rating" and ins.priority < 3
+        assert (relevance(ins, analyst) is None) == follower_only
         if ins.kind == "goal":
             assert relevance(ins, focus) == 5 and relevance(ins, casual) == 5
         if ins.priority <= 2 and ins.kind not in ("milestone", "period_summary"):
@@ -233,3 +234,60 @@ def test_affiliation_and_category_rules(seed7):
     assert v._category_issues("Vukovic anota, creado por un centro de Nordgren.", g1) == ["says 'centro' but the facts say through ball"]
     assert v._category_issues("Vukovic anota tras un pase al hueco de Nordgren.", g1) == []
     assert v._category_issues("Shapira scores with his left foot.", g2) == []
+
+
+def test_units_are_read_in_every_language():
+    assert quantities_in("Balogun hits 34.8 km/h, 61% of passes, 0.31 xG chance") == [(34.8, "km/h"), (61.0, "%"), (0.31, "xG")]
+    assert quantities_in("a 18,4 metros, en 10 minutos, 23 career goals") == [(18.4, "m"), (10.0, "min"), (23.0, "goal")]
+    assert quantities_in("३४.८ km/h की रफ़्तार, १८ मीटर") == [(34.8, "km/h"), (18.0, "m")]
+    assert quantities_in("his second goal of the match, 2-1") == [(2.0, "goal")]
+
+
+@pytest.mark.parametrize("profile", ["analyst-en", "casual-es-slm", "focus-hi-nvl09"])
+def test_verifier_rejects_a_right_number_in_the_wrong_unit(seed7, profile):
+    """The sprint's own number, written as goals: every other rule passes it, so the unit rule must catch it."""
+    match, insights = seed7
+    sprint = next(i for i in insights if any(f.unit == "km/h" for f in i.facts))
+    honest = TemplateNarrator(match.meta).render(sprint, PRESETS[profile])
+    goals = {"en": "goals", "es": "goles", "hi": "गोल"}[PRESETS[profile].language]
+    claims = [c.model_copy(update={"text": c.text.replace("km/h", goals)}) for c in honest.claims]
+    assert claims != list(honest.claims)
+    bad = honest.model_copy(update={"claims": claims, "body": " ".join(c.text for c in claims)})
+    notes = Verifier(match.meta).verify(bad, sprint).verification.notes
+    assert notes and all("as goal, but the cited fact is in km/h" in n for n in notes), notes
+
+
+def test_unit_rule_accepts_close_and_unitless_tellings(seed7):
+    match, insights = seed7
+    v = Verifier(match.meta)
+    shot = next(i for i in insights if any(f.unit == "xG" for f in i.facts) and i.kind == "shot_quality")
+    xg = next(f for f in shot.facts if f.unit == "xG")
+    pct = round(float(xg.value) * 100)
+    for text in (f"A {xg.value} xG chance.", f"A {pct}% chance.", f"Worth {xg.value}.", f"{xg.value} xG, a big chance."):
+        assert v._unit_issues(text, [xg], shot) == [], text
+    assert v._unit_issues(f"From {xg.value} m out.", [xg], shot) == [f"writes {xg.value} as m, but the cited fact is in xG"]
+
+
+def test_clock_digits_lend_themselves_to_nothing_else(seed7):
+    """Three lies that passed before clocks were read whole: each borrowed digits from a clock."""
+    match, insights = seed7
+    v = Verifier(match.meta)
+    control = next(i for i in insights if i.insight_id.endswith("INS-0019"))
+    share = next(f for f in control.facts if f.unit == "%")
+    assert control.clock.display.endswith(f":{share.value}")  # the moment's own clock (53:57) holds the share
+    lie = Claim(text=f"Northvale FC have {share.value} goals of the passes.", fact_ids=[share.fact_id])
+    assert v.check_claim(lie, control) == [f"writes {share.value} as goal, but the cited fact is in %"]
+
+    call = next(i for i in insights if i.insight_id.endswith("PRD-0006"))
+    made_at, xg = (next(f for f in call.facts if p(f)) for p in (lambda f: f.key == "prediction.call_made", lambda f: f.unit == "xG"))
+    assert made_at.value.endswith(":00") and float(xg.value) == 0.0
+    lie = Claim(text=f"Since the {made_at.value} call, Saltmere Athletic have created 0 goals.", fact_ids=[made_at.fact_id, xg.fact_id])
+    assert v.check_claim(lie, call) == ["writes 0 as goal, but the cited fact is in xG"]
+
+    late = next(i for i in insights if i.insight_id.endswith("PRD-0012"))
+    made_at = next(f for f in late.facts if f.key == "prediction.call_made")
+    assert made_at.value == "83:23" and late.clock.display.startswith("90+")
+    lie = Claim(text="El pronóstico del 90:23 sobre Northvale FC falló.", fact_ids=[made_at.fact_id])
+    assert v.check_claim(lie, late) == ["clock 90:23 does not match any cited fact"]
+    honest = Claim(text="El pronóstico del 83:23 sobre Northvale FC falló.", fact_ids=[made_at.fact_id])
+    assert v.check_claim(honest, late) == []

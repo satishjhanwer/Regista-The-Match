@@ -5,8 +5,9 @@ not itself be able to hallucinate. Rules, per claim:
 
 1. Every cited ``fact_id`` exists in the insight.
 2. Every number in the text matches a cited fact: its value, its previous value, a number
-   inside a string value (score "2-1", clock "59:15") or its label (window "5 min"), the 0-1
-   value as a percentage, or the moment's own clock. A claim with no citations ("colour") may contain no numbers.
+   inside a string value (score "2-1") or its label (window "5 min"), the 0-1 value as a percentage,
+   or the moment's own clock. A clock ("83:23") must match a cited clock or the moment's clock whole, not
+   number by number. A claim with no citations ("colour") may contain no numbers.
 3. Every player named is an entity of the insight or the value of a cited fact.
    Every team named appears in the insight (entities, or fact keys, labels or values).
 4. Affiliation: a player tied to a team ("Shapira scores for Northvale", "para Northvale") must play for it.
@@ -15,6 +16,8 @@ not itself be able to hallucinate. Rules, per claim:
 6. Attribution: when a cited numeric fact's label names a team or player ("Northvale FC passes
    under pressure"), that subject must be named in the claim, the previous claim or the headline.
    Numbers that match but are pinned on the wrong subject (or on nobody) are rejected.
+7. Units: a number written with a unit ("34.8 km/h", "61%", "2 goals", "10 minutes") must match a cited fact
+   in that unit. A sprint's 34.8 cannot become "34.8 goals", nor a 0.4 xG "0.4 m".
 
 The headline is checked against all of the insight's facts. Length limits come from the contract.
 Numbers are read after normalizing Devanagari digits and decimal commas, so the
@@ -49,13 +52,35 @@ _CATEGORY_WORDS = {
         "header": ("header", "headed", "cabeza", "cabezazo", "हेडर"),
         "foot": ("right foot", "left foot", "con la derecha", "con la izquierda", "pierna derecha", "pierna izquierda"),
     },
+    # A graded call: the telling must not flip the verdict. Spanish "se cumplió" is left out because it sits
+    # inside "no se cumplió".
+    "result": {
+        "right": ("came true", "correct", "was right", "spot on", "acertó", "acertado", "acertada", "सही साबित"),
+        "wrong": (
+            "did not come true",
+            "didn't come true",
+            "missed",
+            "wrong",
+            "incorrect",
+            "failed",
+            "falló",
+            "fallido",
+            "fallida",
+            "no se cumplió",
+            "ग़लत साबित",
+            "गलत साबित",
+        ),
+    },
 }
 _CATEGORY_OF = {"through ball": ("pass", "through ball"), "cross": ("pass", "cross"), "header": ("finish", "header")}
 _CATEGORY_OF |= {v: ("finish", "foot") for v in ("right foot", "left foot")}
+_CATEGORY_OF |= {"right": ("result", "right"), "wrong": ("result", "wrong")}
 _DEVANAGARI_LETTER = re.compile(r"[ऀ-ॿ]")
 _DEVANAGARI = str.maketrans("०१२३४५६७८९", "0123456789")
 _NUMBER = re.compile(r"(?<![\w.])\d+(?:\.\d+)?")
 _DECIMAL_COMMA = re.compile(r"(?<=\d),(?=\d)")
+_CLOCK = re.compile(r"(?<![\w.:+])\d+(?:\+\d+)?:\d{2}(?![\w:])")  # "83:23", "90+03:24"
+_SCORE = re.compile(r"(?<![\w.-])\d+-\d+(?![\w.-])")
 
 
 # Number words and ordinals count as numbers when they quantify a football noun ("second goal", "only one
@@ -118,16 +143,110 @@ _NUMBER_WORD = re.compile(
 )
 _NON_LATIN_LETTER = re.compile(r"[^\W\d_a-zA-Z\u00C0-\u024F]")
 
+# Words that give a number its unit, per language. Dimensions come from ``Fact.unit``; counts take their noun
+# from the fact's label ("Vukovic career goals"), so label words are listed here too.
+_UNIT_WORDS = {
+    "km/h": ("km/h", "kph", "km por hora", "\u0915\u093f\u092e\u0940/\u0918\u0902\u091f\u093e"),
+    "%": ("%", "percent", "per cent", "por ciento", "\u092a\u094d\u0930\u0924\u093f\u0936\u0924"),
+    "m": ("m", "metres", "metre", "meters", "meter", "metros", "metro", "\u092e\u0940\u091f\u0930"),
+    "xG": ("xg",),
+    "min": ("min", "mins", "minutes", "minute", "minutos", "minuto", "\u092e\u093f\u0928\u091f"),
+    "s": ("s", "sec", "seconds", "segundos", "\u0938\u0947\u0915\u0902\u0921"),
+    "bits": ("bits",),
+    "goal": ("goals", "goal", "goles", "gol", "\u0917\u094b\u0932"),
+    "shot": ("shots", "shot", "tiros", "tiro", "disparos", "disparo", "\u0936\u0949\u091f"),
+    "chance": ("chances", "chance", "ocasiones", "ocasi\u00f3n", "ocasion"),
+    "assist": ("assists", "assist", "asistencias", "asistencia"),
+    "save": ("saves", "save", "paradas", "parada"),
+    "pass": ("passes", "pass", "pases", "pase", "\u092a\u093e\u0938"),
+    "appearance": ("appearances", "appearance", "apariciones", "partidos", "partido", "games", "matches", "match"),
+    "call": ("calls", "call", "predicciones", "pron\u00f3sticos"),
+    "point": ("points", "point", "puntos", "\u0905\u0902\u0915"),
+}
+_DIMENSIONS = {"km/h", "%", "m", "xG", "min", "s", "bits"}
+# Units close enough that a telling may use either ("his third chance" for the third shot).
+_SAME_UNIT = [{"shot", "chance"}, {"rating", "point"}]
+_UNIT_OF_WORD = {w: u for u, ws in _UNIT_WORDS.items() for w in ws}
+_UNIT_ALT = "|".join(re.escape(w) for w in sorted(_UNIT_OF_WORD, key=len, reverse=True) if w != "%")
+# A number, then "%" or a unit word, at most one word apart ("12 accurate passes", "23 career goals"). The nearest
+# unit wins: "0.31 xG chance" is in xG.
+_QUANTITY = re.compile(
+    rf"(?<![\w.])(\d+(?:\.\d+)?)(?:\s*(%)|\s+({_UNIT_ALT})(?![\w/])|\s+[^\W\d_]+\s+({_UNIT_ALT})(?![\w/]))", re.IGNORECASE
+)
+
+
+def quantities_in(text: str) -> list[tuple[float, str]]:
+    """Numbers written with a unit, as (value, unit): '34.8 km/h' -> (34.8, 'km/h'), 'his second goal' -> (2.0, 'goal')."""
+    norm = _CLOCK.sub(" ", _normalize(text))  # a clock's seconds are not a quantity ("52:00 call")
+    out = [(float(m.group(1)), _UNIT_OF_WORD[(m.group(2) or m.group(3) or m.group(4)).lower()]) for m in _QUANTITY.finditer(norm)]
+    for m in _NUMBER_WORD.finditer(text):
+        noun = re.search(rf"({_UNIT_ALT})\s*$", m.group(0), re.IGNORECASE)
+        if noun:
+            out.append((float(_WORD_VALUES[m.group(1).lower()]), _UNIT_OF_WORD[noun.group(1).lower()]))
+    return out
+
+
+def fact_unit(fact: Fact) -> str:
+    """Unit of a fact's numeric value: its ``unit``, else the first count noun of its label, else 'count'."""
+    if fact.unit:
+        return fact.unit
+    if "rating" in fact.label.lower():
+        return "point" if "points" in fact.label.lower() else "rating"
+    for word in re.findall(r"[^\W\d_]+", fact.label.lower()):
+        if (u := _UNIT_OF_WORD.get(word)) and u not in _DIMENSIONS:
+            return u
+    return "count"
+
+
+def fact_quantities(fact: Fact) -> list[tuple[float, str | None]]:
+    """Numbers a claim citing ``fact`` may contain, each with the unit it carries there (None: any unit)."""
+    out: list[tuple[float, str | None]] = []
+    for text in (fact.label, *(v for v in (fact.value, fact.previous_value) if isinstance(v, str))):
+        # A number inside a label or string value takes the unit written next to it ("5 min"); a clock's
+        # numbers are minutes and a score's are goals, so neither lends its digits to any other unit.
+        out += [(n, "clock") for c in clocks_in(text) for n in numbers_in(c)]
+        out += [(n, "goal") for sc in _SCORE.findall(_normalize(text)) for n in numbers_in(sc)]
+        rest = _SCORE.sub(" ", _CLOCK.sub(" ", _normalize(text)))
+        tagged = dict(quantities_in(rest))
+        out += [(n, tagged.get(n)) for n in numbers_in(rest)]
+    unit = fact_unit(fact)
+    for v in (fact.value, fact.previous_value):
+        if v is None or isinstance(v, str):
+            continue
+        fv = float(v)
+        out += [(x, unit) for x in {fv, round(fv), round(fv, 1), round(fv, 2)}]
+        if isinstance(v, float) and 0.0 <= fv <= 1.0:
+            out.append((round(fv * 100), "%"))
+    return out
+
+
+def _unit_fits(written: str, unit: str | None) -> bool:
+    if unit is None or written == unit:
+        return True
+    if unit == "clock":
+        return written == "min"
+    if unit == "count":  # a count with no noun in its label may be called anything countable
+        return written not in _DIMENSIONS
+    return any({written, unit} <= group for group in _SAME_UNIT)
+
 
 def counted_words(text: str) -> list[float]:
     """Values of number words that quantify a football noun, e.g. 'his second goal' -> [2.0]."""
     return [float(_WORD_VALUES[m.group(1).lower()]) for m in _NUMBER_WORD.finditer(text)]
 
 
+def _normalize(text: str) -> str:
+    return _DECIMAL_COMMA.sub(".", text.translate(_DEVANAGARI))
+
+
 def numbers_in(text: str) -> list[float]:
     """Every number written in digits, after normalizing Devanagari digits and decimal commas."""
-    text = _DECIMAL_COMMA.sub(".", text.translate(_DEVANAGARI))
-    return [float(m) for m in _NUMBER.findall(text)]
+    return [float(m) for m in _NUMBER.findall(_normalize(text))]
+
+
+def clocks_in(text: str) -> list[str]:
+    """Match clocks written in the text, e.g. 'the 83:23 call' -> ['83:23']."""
+    return _CLOCK.findall(_normalize(text))
 
 
 def allowed_numbers(fact: Fact) -> set[float]:
@@ -204,9 +323,26 @@ class Verifier:
         nums = numbers_in(text) + counted_words(text)
         if colour and nums:
             return [f"number {_fmt(nums[0])} with no cited fact"]
+        cited_clocks = {c for f in facts for v in (f.value, f.previous_value) if isinstance(v, str) for c in clocks_in(v)}
+        cited_clocks |= set(clocks_in(insight.clock.display))
+        issues = [f"clock {c} does not match any cited fact" for c in clocks_in(text) if c not in cited_clocks]
         allowed = set().union(*(allowed_numbers(f) for f in facts)) if facts else set()
         allowed |= set(numbers_in(insight.clock.display))
-        return [f"number {_fmt(n)} does not match any cited fact" for n in nums if not _matches(n, allowed)]
+        nums = numbers_in(_CLOCK.sub(" ", _normalize(text))) + counted_words(text)
+        return issues + [f"number {_fmt(n)} does not match any cited fact" for n in nums if not _matches(n, allowed)]
+
+    @staticmethod
+    def _unit_issues(text: str, facts: list[Fact], insight: Insight) -> list[str]:
+        """Numbers whose written unit differs from the unit of every cited fact they match."""
+        known = [q for f in facts for q in fact_quantities(f)] + [(n, "clock") for n in numbers_in(insight.clock.display)]
+        issues = []
+        for n, written in quantities_in(text):
+            # A fact's own unit first, then its derived percentage, then digits that belong to a clock.
+            units = sorted((u for a, u in known if abs(n - a) < 1e-6), key=lambda u: u == "clock")
+            if units and not any(_unit_fits(written, u) for u in units):
+                unit = "a clock" if units[0] == "clock" else units[0]
+                issues.append(f"writes {_fmt(n)} as {written}, but the cited fact is in {unit}")
+        return issues
 
     def _subjects(self, label: str) -> list[tuple[str, ...]]:
         """Name variants of each team or player that a fact label names."""
@@ -257,7 +393,7 @@ class Verifier:
 
     @staticmethod
     def _category_issues(text: str, insight: Insight) -> list[str]:
-        """Words for a different pass type or finish than the moment's facts state."""
+        """Words for a different pass type, finish or call verdict than the moment's facts state."""
         issues = []
         actual = {_CATEGORY_OF[v] for f in insight.facts if isinstance(f.value, str) and (v := f.value) in _CATEGORY_OF}
         low = text.lower()
@@ -279,6 +415,7 @@ class Verifier:
         cited = [by_id[fid] for fid in claim.fact_ids]
         return (
             self._number_issues(claim.text, cited, insight, not cited)
+            + self._unit_issues(claim.text, cited, insight)
             + self._entity_issues(claim.text, insight, cited)
             + self._affiliation_issues(claim.text)
             + self._category_issues(claim.text, insight)
@@ -294,6 +431,7 @@ class Verifier:
             if issues:
                 claim_issues[i] = issues
         headline_issues = self._number_issues(rendered.headline, insight.facts, insight, False)
+        headline_issues += self._unit_issues(rendered.headline, insight.facts, insight)
         headline_issues += self._entity_issues(rendered.headline, insight, insight.facts)
         headline_issues += self._affiliation_issues(rendered.headline) + self._category_issues(rendered.headline, insight)
         if not rendered.claims:

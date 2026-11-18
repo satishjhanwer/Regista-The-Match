@@ -85,7 +85,9 @@ def test_replay_adds_recaps(sims):
     rp = Replay(match)
     rp.advance_to(rp.end_s)
     kinds = [c.insight.kind for c in rp.history]
-    assert kinds.count("recap") == 2 and kinds[-1] == "recap" and kinds[-2] == "period_summary"
+    assert kinds.count("recap") == 2 and kinds[-1] == "recap"
+    last = kinds[kinds.index("recap") + 1 :]  # after the half-time recap: the second half, ending summary, ratings, recap
+    assert "period_summary" in last[-24:] and "player_rating" in last[-24:]
     assert rp.finished and rp.clock()["display"].startswith("90+")
 
 

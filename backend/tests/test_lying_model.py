@@ -2,7 +2,7 @@
 
 The Narrator below starts from a verified template rendering, then corrupts it the way real models did
 (D28): an inflated number, a fact id that does not exist, a stranger's name, a number with no citation,
-the wrong language, a team swap, a placeholder, an overlong draft. The Analyst model misbehaves too
+the wrong language, a team swap, a number in the wrong unit, a placeholder, an overlong draft. The Analyst model misbehaves too
 (invented fact ids, prose instead of JSON). Every draft still goes through the real ``LLMNarrator.parse``,
 the real Verifier and the real WarmPath retry and fallback, over every insight of the demo match for
 every preset profile.
@@ -32,7 +32,11 @@ from regista.detect import InsightPipeline
 ROOT = Path(__file__).resolve().parents[2]
 TEAM_SWAP = {"Northvale FC": "Saltmere Athletic", "Saltmere Athletic": "Northvale FC", "Northvale": "Saltmere", "Saltmere": "Northvale"}
 OTHER_LANGUAGE = {"en": "hi", "es": "hi", "hi": "en"}
-LIES = {"inflate", "phantom_fact", "stranger", "uncited_number", "wrong_language", "team_swap", "placeholder", "overlong"}
+LIES = {"flip_verdict", "inflate", "phantom_fact", "stranger", "uncited_number", "wrong_language", "team_swap", "unit_swap"}
+LIES |= {"placeholder", "overlong"}
+# A measured number with its unit, and the count noun a lie swaps in for it ("34.8 km/h" -> "34.8 goals").
+UNIT = re.compile(r"(\d+(?:[.,]\d+)?)\s*(km/h|%|xG|metros|metres|मीटर|minutes|minutos|मिनट|m)(?![\w/])")
+GOALS = {"en": "goals", "es": "goles", "hi": "गोल"}
 
 
 def _rule_of():
@@ -77,19 +81,34 @@ class LyingNarrator(LLMNarrator):
             "stat_callout_fact_id": None,
         }
         if self.lie:
-            kind = self._corrupt(draft, brief, profile)
+            # A graded call is first told with the opposite verdict, then lied about the usual ways.
+            first = feedback is None and self._flip_verdict(draft, brief, profile)
+            kind = "flip_verdict" if first else self._corrupt(draft, brief, profile)
             self.told[kind].append(profile.profile_id)
         self.calls += 1
         return self.parse(json.dumps(draft, ensure_ascii=False), brief, profile)
 
     def _corrupt(self, draft, brief, profile) -> str:
         lies = [self._inflate, self._phantom_fact, self._stranger, self._uncited_number, self._wrong_language, self._team_swap]
-        lies += [self._placeholder, self._overlong]
+        lies += [self._unit_swap, self._placeholder, self._overlong]
         for i in range(len(lies)):
             lie = lies[(self.calls + i) % len(lies)]
             if lie(draft, brief, profile):
                 return lie.__name__.lstrip("_")
         raise AssertionError("no lie applies")  # _placeholder always applies
+
+    def _flip_verdict(self, draft, brief, profile) -> bool:
+        ins = brief.insight
+        if ins.kind != "prediction_result":
+            return False
+        flip = {"right": "wrong", "wrong": "right"}
+        flipped = ins.model_copy(
+            update={"facts": [f.model_copy(update={"value": flip[f.value]}) if f.key == "prediction.result" else f for f in ins.facts]}
+        )
+        lie = self.templates.render(flipped, profile)
+        draft["headline"] = lie.headline
+        draft["claims"] = [{"text": c.text, "fact_ids": list(c.fact_ids)} for c in lie.claims]
+        return True
 
     def _inflate(self, draft, brief, profile) -> bool:
         for c in draft["claims"]:
@@ -131,6 +150,14 @@ class LyingNarrator(LLMNarrator):
                 c["text"] = pattern.sub(lambda m: TEAM_SWAP[m.group()], c["text"])
                 swapped = True
         return swapped
+
+    def _unit_swap(self, draft, brief, profile) -> bool:
+        """Keep the right number, give it the wrong unit."""
+        for c in draft["claims"]:
+            if c["fact_ids"] and UNIT.search(c["text"]):
+                c["text"] = UNIT.sub(lambda m: f"{m.group(1)} {GOALS[profile.language]}", c["text"], count=1)
+                return True
+        return False
 
     def _placeholder(self, draft, brief, profile) -> bool:
         draft["headline"] = "<your headline, max 80 characters>"
@@ -198,6 +225,8 @@ def test_nothing_a_lying_model_writes_reaches_the_screen(seed7, monkeypatch):
         "wrong language or script",
         "placeholder or empty text",
         "too long for the overlay",
+        "wrong pass type, finish or call verdict",
+        "number in the wrong unit",
     ):
         assert rules[rule] > 0, rules
     assert rules["other"] == 0, rules

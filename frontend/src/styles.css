@@ -130,6 +130,16 @@ input {
   color: var(--warn);
   border: 1px solid var(--warn);
 }
+.static-note {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
 .boot {
   padding: 60px;
   text-align: center;

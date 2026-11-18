@@ -16,7 +16,7 @@ from typing import Annotated
 from pydantic import Field
 
 from ..contracts.insight import EvidenceRef, Fact, Insight
-from ..state import WINDOWS_S, ControlChaos, MatchState, Momentum
+from ..state import WINDOWS_S, ControlChaos, MatchState, Momentum, PlayerRatings
 
 # metric -> (numerator counter on the team, denominator spec, unit, label)
 # denominator: None = raw count/sum, "own" = team passes, "opp" = opponent passes, "both" = both teams' passes
@@ -31,14 +31,17 @@ WINDOW_METRICS: dict[str, tuple[str, str | None, str | None, str]] = {
     "xg": ("xg", None, "xG", "xG"),
     "final_third_passes": ("passes_final_third", None, None, "completed passes into the final third"),
 }
-PLAYER_STATS = ("goals", "passes", "passes_complete", "shots", "xg", "pressures", "tackles_won", "interceptions", "top_speed_kmh")
+PLAYER_STATS = ("rating", "goals", "passes", "passes_complete", "shots", "xg", "pressures", "tackles_won", "interceptions", "top_speed_kmh")
 
 
 @dataclass
 class InsightContext:
-    """Everything the Analyst may look at for one insight, frozen when the insight fired."""
+    """Everything the Analyst may look at for one insight, frozen when the insight fired.
 
-    insight: Insight
+    ``insight`` is None for a snapshot of the match at an arbitrary moment (the MCP server's "as of now").
+    """
+
+    insight: Insight | None
     elapsed_s: float
     team_names: dict[str, str]
     player_info: dict[str, dict]
@@ -47,7 +50,7 @@ class InsightContext:
     players: dict[str, dict[str, float]]
 
 
-def capture(st: MatchState, insight: Insight) -> InsightContext:
+def capture(st: MatchState, insight: Insight | None) -> InsightContext:
     """Snapshot what the Analyst may look at, at the moment the insight fired. O(metrics), only on insights."""
     windows: dict[str, dict] = {}
     for label in WINDOWS_S:
@@ -79,6 +82,10 @@ def capture(st: MatchState, insight: Insight) -> InsightContext:
         "control_5m": {t: round(v, 2) for t, v in cc.control.items() if v is not None} if cc else {},
     }
     players = {pid: {k: (round(v, 2) if isinstance(v, float) else v) for k, v in pt.items()} for pid, pt in st.player_totals.items()}
+    ratings = st.component(PlayerRatings)
+    if ratings is not None:
+        for pid in players:
+            players[pid]["rating"] = ratings.rating(pid)
     info = {
         pid: {
             "name": p.name,
@@ -102,12 +109,16 @@ class ToolBox:
     ctx: InsightContext
     candidates: dict[str, Fact] = field(default_factory=dict)  # fact_id -> Fact
     calls: list[dict] = field(default_factory=list)
+    prefix: str = ""  # candidate fact ids are "<prefix>-C<n>"; defaults to the insight id
+
+    def __post_init__(self) -> None:
+        self.prefix = self.prefix or (self.ctx.insight.insight_id if self.ctx.insight else "NOW")
 
     def _candidate(self, key: str, label: str, value, unit: str | None, evidence: list[EvidenceRef]) -> dict:
         for f in self.candidates.values():
             if f.key == key:
                 return {"fact_id": f.fact_id, "label": f.label, "value": f.value, "unit": f.unit}
-        fid = f"{self.ctx.insight.insight_id}-C{len(self.candidates) + 1}"
+        fid = f"{self.prefix}-C{len(self.candidates) + 1}"
         self.candidates[fid] = Fact(fact_id=fid, key=key, label=label, value=value, unit=unit, evidence=evidence)
         return {"fact_id": fid, "label": label, "value": value, "unit": unit}
 
@@ -120,7 +131,7 @@ class ToolBox:
         """Return the facts the detector attached to this moment, with fact ids."""
         facts = [
             {"fact_id": f.fact_id, "label": f.label, "value": f.value, "unit": f.unit, "previous_value": f.previous_value}
-            for f in self.ctx.insight.facts
+            for f in (self.ctx.insight.facts if self.ctx.insight else [])
         ]
         return self._log("get_facts", {}, facts)
 
@@ -171,6 +182,7 @@ class ToolBox:
             return [EvidenceRef(kind="metric", ref=f"{player_id}.{stat}", window_start_s=0.0, window_end_s=end)]
 
         labels = {
+            "rating": "match rating",
             "goals": "goals this match",
             "passes": "passes",
             "shots": "shots",

@@ -59,7 +59,8 @@ No. `*.truth.json` is read only by tests and evaluation scripts. The state engin
 
 The gate that keeps wrong numbers off screen must not be able to hallucinate itself. A model judging a model can agree
 with a confident mistake; a comparison against computed facts cannot. Every number, name, team attribution and
-language in a draft is checked mechanically against the facts the sentence cites. See D20 and D28.
+language in a draft is checked mechanically against the facts the sentence cites, and so is each number's unit: a
+34.8 km/h sprint cannot become "34.8 goals", and a clock must match a cited time whole. See D20, D28 and D35.
 
 ### What happens when the model is wrong, slow or offline?
 
@@ -93,6 +94,13 @@ check.
 
 ## Running it
 
+### Can I try it without installing anything?
+
+Yes, once the static demo is deployed to GitHub Pages: the whole replay is precomputed into one JSON bundle and the
+browser plays it, with the same live view, controls, compare view and agent traces as the local app. It covers the
+presets plus a grid of viewers (analyst and casual in every language and club, Player focus on five key players);
+any other choice shows the closest precomputed viewer, and live models need the local app. See D34.
+
 ### Do I need Azure or a model to run it?
 
 No. `REGISTA_LLM_PROVIDER=none` runs everything on verified templates, with no model and no network. For the demo
@@ -107,9 +115,10 @@ changes. Foundry Local runs the same agents on the laptop. See D11, D12 and D28.
 
 ### How fast is it?
 
-The hot path processes the whole demo match in about 70 ms (p95 under 0.05 ms per event). A model rendering took
+The hot path processes the whole demo match in about 80 ms (p95 under 0.06 ms per event). A model rendering took
 roughly 1.5 to 5 minutes on a CPU-only laptop, which is why the demo plays a recorded run; a cloud model would take
-seconds, and the template path is instant either way. Measured results are in the
+seconds, and the template path is instant either way. To see where the time goes in a rendering, export its
+OpenTelemetry trace to a local viewer (see the README). Measured results are in the
 [README](../README.md#measured-results).
 
 ### How good are the xG and pass-difficulty models?
@@ -119,6 +128,35 @@ difficulty Brier 0.129 vs 0.165 for a constant rate, xG expected Brier 0.136 vs 
 with `python scripts/fit_models.py`. See D14 and D15.
 
 ## Extending it
+
+### How are player ratings worked out?
+
+From published weights in `backend/regista/state/models/ratings.json`, applied to every event. A rating starts at 6.0
+and moves with goals and the quality of every shot (xG), chances created for others, completed passes weighted by how
+hard they were, tackles, interceptions, pressures and saves, minus points lost to failed passes (an easy one costs
+more) and lost tackles. Every rating airs with its breakdown as facts, so the Verifier checks each number. The weights
+are set by hand, not fitted: no answer key says how well someone played. On training seeds they average 6.9 with a
+spread of 0.6. The top-rated player of each team airs for everyone at half time and full time; every other player's
+rating goes only to a viewer following them. See D33.
+
+### How do you know the detectors aren't just tuned to the demo?
+
+The demo plants its storylines at fixed minutes, so on its own it can't show that. The truth score can:
+`scripts/truth_score.py` plants press switches, chaos spells and control spells at random minutes, sides and
+strengths across 48 matches never used for tuning, leaves 11 of them with nothing planted, and scores the real
+detectors against the plan. Today 71% of the changes are found, a median 3.3 minutes after they start, and the right
+side is named 95% of the time. False alarms are the weak spot: about 6 per match, almost all control and chaos
+re-announcements on organic swings, while press false alarms are 0.42 per match. CI prints the table on every run.
+See D36.
+
+### Does Regista predict anything?
+
+A little, and it keeps score. When momentum swings or a press starts, the hot path makes a checkable call about the
+next 10 minutes: "Northvale create more xG than Saltmere" or "Northvale's pass completion stays below 82%". Each call
+states its chance, which is its hit rate on training seeds 1-5. When the 10 minutes are up, the call is graded right
+or wrong from the event stream, and the running record ("2 hits from 4 calls") goes on screen with the result. On
+unseen matches the stated chances hold up (60% stated, 72% came true; 75% stated, 73% came true). The Verifier
+rejects any telling that flips the verdict. See D30.
 
 ### How do I add a detector?
 
@@ -133,6 +171,12 @@ Add phrase tables for templates in [`agents/phrases.py`](../backend/regista/agen
 works without a model. Teach the Verifier's language check about it in
 [`agents/verifier.py`](../backend/regista/agents/verifier.py) (script, or stopwords for a Latin-script language). Then
 add it to the language picker in the frontend. `FanProfile.language` is a plain BCP 47 tag, so the contracts don't change.
+
+### Can other agents use Regista's match state?
+
+Yes, over MCP. The running API serves the Analyst's own tools at `/mcp`, read-only and on the clock viewers watch, so
+an outside agent gets the same numbers, labels and evidence as Regista's agents, and nothing from the future.
+`python -m regista.mcp_server` runs the same tools over stdio for desktop MCP clients, with a `seek` tool. See D31.
 
 ### What would a broadcast graphics partner consume?
 

@@ -71,12 +71,12 @@ class Replay:
             self.cursor += 1
             step.events.append(ev)
             self._sample_momentum(ev)
-            for ins in self.pipe.process(ev):
-                ctx = capture(self.pipe.state, ins)
-                step.moments.append(ctx)
-                if ins.kind == "period_summary":
-                    recap = build_recap(self.match.meta, [c.insight for c in self.history] + [m.insight for m in step.moments], ins)
-                    step.moments.append(capture(self.pipe.state, recap))
+            new = self.pipe.process(ev)
+            step.moments += [capture(self.pipe.state, ins) for ins in new]
+            # The recap comes after everything the period's last event produced (summary, ratings, graded calls).
+            for summary in (i for i in new if i.kind == "period_summary"):
+                recap = build_recap(self.match.meta, [c.insight for c in self.history] + [m.insight for m in step.moments], summary)
+                step.moments.append(capture(self.pipe.state, recap))
         self.history.extend(step.moments)
         self.clock_s = max(self.clock_s, target)
         return step

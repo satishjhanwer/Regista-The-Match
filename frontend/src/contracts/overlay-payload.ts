@@ -26,7 +26,10 @@ export interface Insight {
     | "player_tag"
     | "milestone"
     | "period_summary"
-    | "recap";
+    | "recap"
+    | "prediction"
+    | "prediction_result"
+    | "player_rating";
   /**
    * 5 = interrupt-worthy
    */

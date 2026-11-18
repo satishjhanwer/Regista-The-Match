@@ -78,5 +78,11 @@ Vite + React + TypeScript in `frontend/`, types from `src/contracts` (incl. the 
 
 ## Stretch (only if ahead)
 
-- MCP server over match state (FastMCP), Analyst consumes it
+- [x] MCP server over match state (`regista.mcp_server`, `/mcp` in the API); the Analyst keeps in-process tools, same code (D31)
+- [x] Static demo on GitHub Pages: precomputed bundle, in-browser hub, Pages workflow (D34)
+- [x] Verifier checks units and reads clocks whole; `unit_swap` lie in the lying-model test (D35)
+- [x] Truth score: random plants and unplanted controls on 48 unseen matches, in the CI summary (D36)
+- [x] Player ratings with their breakdown at half time and full time (D33)
+- [x] Local OpenTelemetry traces of every rendering (`regista/telemetry.py`, any OTLP viewer) (D32)
+- [x] Whole-match test with a deliberately lying model (D29); calls about the next 10 minutes, graded (D30)
 - Event Hubs ingest path

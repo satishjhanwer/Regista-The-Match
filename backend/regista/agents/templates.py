@@ -311,6 +311,51 @@ class TemplateNarrator:
         if kind in ("period_summary", "recap"):
             return self._summary_spec(ins, view, profile, n)
 
+        if kind == "player_rating":
+            pname = {"player": self._player_name(ins.entities.player_ids[0]), **n}
+            rating = {"rating": "player.match_rating"}
+            head = Line("player_rating.h_top" if ins.priority >= 3 else "player_rating.h", rating, pname)
+            parts = [
+                Line(f"player_rating.{cat}", {"v": f"player.rating_{cat}"})
+                for cat in ("goals", "chances_created", "passing", "defending")
+                if view.get(f"player.rating_{cat}") is not None
+            ]
+            parts.sort(key=lambda line: -view.get(line.slots["v"]).value)
+            mistakes = view.get("player.rating_mistakes")
+            if mistakes is not None and mistakes.value >= 0.3:
+                parts = parts[:2] + [Line("player_rating.mistakes", {"v": "player.rating_mistakes"})]
+            analyst = [Line("player_rating.a1", rating, pname), *parts[:3]]
+            casual = [Line(f"player_rating.casual_{ins.clock.period}", rating, pname)]
+            return head, self._pick(mode, analyst, casual, analyst), ["player.match_rating"]
+
+        if kind == "prediction":
+            head = Line("prediction.h", extra=n)
+            on_xg = view.get("team.xg_total") is not None
+            mins = {"mins": "prediction.horizon_min"}
+            call = (
+                Line("prediction.xg", mins, n)
+                if on_xg
+                else Line("prediction.comp", {**mins, "comp": "team.pass_completion_before_call"}, n)
+            )
+            chance = Line("prediction.chance", {"p": "prediction.probability", "n": "prediction.sample"})
+            casual = [Line("prediction.casual_xg" if on_xg else "prediction.casual_comp", mins, n)]
+            return head, self._pick(mode, [call, chance], casual, casual), ["prediction.probability"]
+
+        if kind == "prediction_result":
+            verdict = "right" if view.get("prediction.result").value == "right" else "wrong"
+            head = Line(f"prediction_result.h_{verdict}", extra=n, cite=("prediction.result",))
+            made = {"made": "prediction.call_made"}
+            if view.get("team.xg_since_call") is not None:
+                detail = Line("prediction_result.xg", {**made, "mine": "team.xg_since_call", "theirs": "opp.xg_since_call"}, n)
+                stat = "team.xg_since_call"
+            else:
+                slots = {**made, "comp": "team.pass_completion_since_call", "prev": "team.pass_completion_since_call:prev"}
+                detail = Line("prediction_result.comp", slots, n)
+                stat = "team.pass_completion_since_call"
+            record = Line("prediction_result.record", {"right": "prediction.calls_right", "graded": "prediction.calls_graded"})
+            casual = [Line(f"prediction_result.casual_{verdict}", made, n, cite=("prediction.result",))]
+            return head, self._pick(mode, [detail, record], casual, casual), [stat]
+
         return Line("chaos.h"), [], []
 
     def _summary_spec(self, ins: Insight, view: FactView, profile: FanProfile, n: dict[str, str]) -> tuple[Line, list[Line], list[str]]:

@@ -20,6 +20,7 @@ from pathlib import Path
 
 from ..contracts.events import MatchMeta
 from ..contracts.insight import FanProfile, Insight, RenderedInsight, Verification
+from ..telemetry import tracer
 from .analyst import Analyst, Brief, rule_brief
 from .context import InsightContext
 from .narrator import DraftShapeError, LLMNarrator
@@ -129,6 +130,15 @@ class WarmPath:
         return brief, self._brief_steps[iid]
 
     async def _analyze(self, ctx: InsightContext) -> Brief:
+        with tracer.start_as_current_span("regista.analyst.brief", attributes={"regista.insight_id": ctx.insight.insight_id}) as span:
+            brief = await self._analyze_traced(ctx)
+            step = self._brief_steps[ctx.insight.insight_id][0]
+            span.set_attributes(
+                {"regista.status": step.status, "regista.source": brief.source, "regista.tool_calls": len(brief.tool_calls)}
+            )
+            return brief
+
+    async def _analyze_traced(self, ctx: InsightContext) -> Brief:
         t0 = time.perf_counter()
         try:
             brief = await asyncio.wait_for(self.analyst.brief(ctx), self.timeout_s)
@@ -169,8 +179,16 @@ class WarmPath:
 
     def _verify(self, r: RenderedInsight, insight: Insight, trace: list[TraceStep], attempt: int):
         t0 = time.perf_counter()
-        report = self.verifier.verify(r, insight)
-        status = "ok" if report.ok else "rejected"
+        with tracer.start_as_current_span("regista.verifier.check", attributes={"regista.attempt": attempt}) as span:
+            report = self.verifier.verify(r, insight)
+            status = "ok" if report.ok else "rejected"
+            span.set_attributes(
+                {
+                    "regista.status": status,
+                    "regista.checked_claims": report.verification.checked_claims,
+                    "regista.notes": [n[:200] for n in report.verification.notes],
+                }
+            )
         trace.append(
             TraceStep(
                 "verifier",
@@ -183,6 +201,26 @@ class WarmPath:
         return report
 
     async def _render(self, ctx: InsightContext, profile: FanProfile) -> RenderResult:
+        attrs = {
+            "regista.insight_id": ctx.insight.insight_id,
+            "regista.kind": ctx.insight.kind,
+            "regista.profile_id": profile.profile_id,
+            "regista.language": profile.language,
+            "regista.mode": profile.mode,
+        }
+        with tracer.start_as_current_span("regista.render", attributes=attrs) as span:
+            result = await self._compose(ctx, profile)
+            span.set_attributes(
+                {
+                    "regista.source": result.source,
+                    "regista.narrated_by": result.narrated_by,
+                    "regista.drafts": sum(1 for s in result.trace if s.agent == "narrator"),
+                    "regista.rejections": sum(1 for s in result.trace if s.agent == "verifier" and s.status == "rejected"),
+                }
+            )
+            return result
+
+    async def _compose(self, ctx: InsightContext, profile: FanProfile) -> RenderResult:
         brief, brief_steps = await self.brief(ctx)
         trace = list(brief_steps)
         insight = brief.insight
@@ -192,7 +230,8 @@ class WarmPath:
             for attempt in (1, 2):
                 t0 = time.perf_counter()
                 try:
-                    draft = await asyncio.wait_for(self.narrator.render(brief, profile, feedback), self.timeout_s)
+                    with tracer.start_as_current_span("regista.narrator.draft", attributes={"regista.attempt": attempt}):
+                        draft = await asyncio.wait_for(self.narrator.render(brief, profile, feedback), self.timeout_s)
                 except DraftShapeError as exc:  # too long to display: a rejection with feedback, not an error
                     trace.append(TraceStep("narrator", f"draft {attempt}", "ok", _ms(t0), {}))
                     trace.append(TraceStep("verifier", f"check draft {attempt}", "rejected", 0.0, {"notes": [str(exc)], "claims": 0}))
@@ -226,7 +265,8 @@ class WarmPath:
                 feedback = report.feedback()
         # Template narration over the detector's facts only (it never cites Analyst-promoted facts).
         t0 = time.perf_counter()
-        r = self.templates.render(ctx.insight, profile)
+        with tracer.start_as_current_span("regista.template.render", attributes={"regista.fallback": use_llm}):
+            r = self.templates.render(ctx.insight, profile)
         detail = {"headline": r.headline}
         if self.narrator is not None and not use_llm:
             detail["reason"] = f"LLM narration not enabled for '{profile.language}' (REGISTA_LLM_LANGUAGES)"

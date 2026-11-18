@@ -1,0 +1,16 @@
+{
+ "base": 6.0,
+ "min": 3.0,
+ "max": 10.0,
+ "goal": 0.5,
+ "per_xg_shot": 0.35,
+ "per_xg_created": 0.3,
+ "assist": 0.3,
+ "per_difficulty_completed": 0.07,
+ "per_p_failed": 0.06,
+ "tackle_won": 0.05,
+ "tackle_lost": 0.02,
+ "interception": 0.05,
+ "pressure": 0.004,
+ "per_xg_saved": 0.5
+}

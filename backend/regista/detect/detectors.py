@@ -7,7 +7,7 @@ rendering and the Verifier see the same value.
 from __future__ import annotations
 
 from ..contracts.events import format_clock
-from ..state import ControlChaos, MatchState, MetricUpdate, Momentum, Press, Records
+from ..state import ControlChaos, MatchState, MetricUpdate, Momentum, PlayerRatings, Press, Records
 from ..state.core import TURNOVER_CAUSES
 from .base import Detector, Draft, FactDraft, event_ref, metric_ref, pct
 
@@ -579,8 +579,55 @@ class PeriodSummaryDetector(Detector):
         return [Draft("period_summary", 3, 15000, facts, hint, f"period:{ev.period}", "match", list(st.team_ids), players)]
 
 
+RATING_LABELS = {
+    "goals": "goals and shots",
+    "chances_created": "chances created",
+    "passing": "passing",
+    "defending": "defending",
+}
+
+
+class RatingDetector(Detector):
+    """Player ratings at half time and full time, each with its breakdown by category.
+
+    The top-rated player of each team airs for everyone (priority 3); every other player with at least
+    ``min_actions`` actions gets a priority-1 rating that only a Player-focus viewer following them sees.
+    """
+
+    kind = "player_rating"
+    min_actions = 15
+
+    def detect(self, ev, updates, st):
+        """On a period end, one rating per player who has done enough to rate."""
+        comp = st.component(PlayerRatings)
+        if ev.type != "period_end" or comp is None:
+            return []
+        out = []
+        for team in st.team_ids:
+            rated = [pid for pid in comp.points if st.team_of.get(pid) == team and comp.actions[pid] >= self.min_actions]
+            rated.sort(key=lambda pid: (-comp.rating(pid), pid))
+            for rank, pid in enumerate(rated):
+                out.append(self._draft(ev, st, comp, pid, team, top=rank == 0))
+        return out
+
+    def _draft(self, ev, st: MatchState, comp: PlayerRatings, pid: str, team: str, top: bool) -> Draft:
+        name, rating, parts = _name(st, pid), comp.rating(pid), comp.breakdown(pid)
+        ref = [metric_ref(f"{pid}.rating", None, st.now)]
+        facts = [FactDraft(f"{pid}.match_rating", f"{name} match rating", rating, ref)]
+        for cat, label in RATING_LABELS.items():
+            if parts[cat] >= 0.1:
+                facts.append(FactDraft(f"{pid}.rating_{cat}", f"{name} rating points from {label}", parts[cat], ref))
+        if parts["mistakes"] >= 0.1:
+            facts.append(FactDraft(f"{pid}.rating_mistakes", f"{name} rating points lost to mistakes", parts["mistakes"], ref))
+        best = max(RATING_LABELS, key=lambda c: parts[c])
+        when = "half time" if ev.period == 1 else "full time"
+        lead = f"top-rated for {_team_name(st, team)}" if top else "rated"
+        hint = f"{name} is {lead} at {when} with {rating}, mostly from {RATING_LABELS[best]} (+{parts[best]})."
+        return Draft("player_rating", 3 if top else 1, 9000, facts, hint, f"rating:{pid}:{ev.period}", pid, [team], [pid], series="RTG")
+
+
 def default_detectors() -> list[Detector]:
-    """The nine detectors, in the order they run."""
+    """The detectors, in the order they run (nine moment kinds, plus player ratings at the end of each half)."""
     return [
         GoalDetector(),
         KeyPassDetector(),
@@ -591,4 +638,5 @@ def default_detectors() -> list[Detector]:
         MomentumShiftDetector(),
         ControlChaosDetector(),
         PeriodSummaryDetector(),
+        RatingDetector(),
     ]

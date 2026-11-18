@@ -99,6 +99,9 @@ def main() -> None:
             pass
         match = MatchFile.model_validate(json.loads(args.match.read_text(encoding="utf-8")))
         kinds = set(args.kinds.split(",")) if args.kinds else None
+        from ..telemetry import setup_tracing
+
+        setup_tracing()
         asyncio.run(record(match, args.out, args.profiles.split(","), args.concurrency, kinds, args.resume))
     else:
         show(args.path, args.profile)

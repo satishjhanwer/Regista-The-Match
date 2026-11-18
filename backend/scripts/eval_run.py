@@ -26,12 +26,13 @@ from regista.agents.verifier import Verifier  # noqa: E402
 from regista.contracts.events import MatchFile  # noqa: E402
 
 RULES = [
-    ("number not in a cited fact", r"number .* does not match|number .* with no cited fact"),
+    ("number not in a cited fact", r"number .* does not match|number .* with no cited fact|clock .* does not match"),
     ("unknown fact id", r"unknown fact id"),
+    ("number in the wrong unit", r"writes .* as .*, but the cited fact is in"),
     ("number not attributed to its team / player", r"does not say who it is about|attributes it to"),
     ("names someone not in the moment", r"not part of this insight"),
     ("player tied to the wrong club", r"ties .* to .*, but"),
-    ("wrong pass type or finish", r"but the facts say"),
+    ("wrong pass type, finish or call verdict", r"but the facts say"),
     ("wrong language or script", r"not in the requested language|not in Hindi|outside the Latin script"),
     ("placeholder or empty text", r"placeholder|no claims"),
     ("too long for the overlay", r"limit is"),
