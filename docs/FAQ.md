@@ -120,6 +120,15 @@ with `python scripts/fit_models.py`. See D14 and D15.
 
 ## Extending it
 
+### Does Regista predict anything?
+
+A little, and it keeps score. When momentum swings or a press starts, the hot path makes a checkable call about the
+next 10 minutes: "Northvale create more xG than Saltmere" or "Northvale's pass completion stays below 82%". Each call
+states its chance, which is its hit rate on training seeds 1-5. When the 10 minutes are up, the call is graded right
+or wrong from the event stream, and the running record ("2 hits from 4 calls") goes on screen with the result. On
+unseen matches the stated chances hold up (60% stated, 72% came true; 75% stated, 73% came true). The Verifier
+rejects any telling that flips the verdict. See D30.
+
 ### How do I add a detector?
 
 Subclass `Detector` in [`detect/base.py`](../backend/regista/detect/base.py): set `kind` and `cooldown_s`, and

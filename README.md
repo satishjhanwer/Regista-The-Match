@@ -31,7 +31,7 @@ https://github.com/user-attachments/assets/5b257184-0025-451e-96b0-c33d008862a6
 | --- | --- |
 | **Ingest** | A seeded simulator produces a football-realistic event stream (passes, carries, shots, pressures, tackles, possession changes, sprints) with player coordinates. A replay service streams it at any speed. |
 | **Interpret** | A deterministic state engine computes pass difficulty, xG, momentum, control vs chaos and press intensity on every event, in about 25 µs. |
-| **Explain** | Nine detectors fire on moments that matter (goals, big chances, key passes, momentum shifts, press changes, chaos spells, speed records, milestones, period summaries). Each fires with facts and evidence. |
+| **Explain** | Nine detectors fire on moments that matter (goals, big chances, key passes, momentum shifts, press changes, chaos spells, speed records, milestones, period summaries). Each fires with facts and evidence. Momentum shifts and press changes also trigger a checkable call about the next 10 minutes, with its fitted chance, graded right or wrong from the events when it falls due. |
 | **Render** | Timed, prioritized, machine-readable `OverlayPayload`s over WebSocket, drawn by a React broadcast overlay with five graphics slots. |
 | **Personalize** | Analyst, casual and player-focus modes; favourite club; focus player; metric of interest; English, Spanish and Hindi. The facts never change between viewers, only the telling. |
 
@@ -91,8 +91,9 @@ mechanical check cannot catch.
 | xG model (same split) | expected Brier 0.136 vs 0.163 for mean xG |
 | Planted storylines and scripted moments (seeds 1-5 and 7) | all acceptance tests pass: 3 goals, brace milestone, record sprint, press change in 58-66' with none before 55', chaos spell |
 | Held-out seeds 8-25 (never tuned on) | 15 of 18 pass every criterion; all 3 misses are press-change timing (see [D18](docs/DECISIONS.md)) |
+| Calls about the next 10 minutes (chance fitted on seeds 1-5, graded on seeds 7-25) | momentum calls state 60%, came true 72% (42 of 58), Brier 0.215; press calls state 75%, came true 73% (19 of 26), Brier 0.197; a coin flip scores 0.25 (see [D30](docs/DECISIONS.md)) |
 | Recorded agent run on Microsoft Foundry Local (`data/RGS-2026-0001.renders.foundry-local.json`, qwen2.5-3b, CPU) | 17 renders on air, 17 pass a re-check; of 12 the model attempted, 8 passed first time and 4 were blocked twice and replaced by verified templates; the Analyst called its tools in 12 traces |
-| Tests | 225 backend (pytest, including a whole match narrated by a deliberately lying model: 400 bad drafts, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
+| Tests | 246 backend (pytest, including a whole match narrated by a deliberately lying model: 400 bad drafts, none on air), 9 frontend (Vitest); CI also fails on stale generated contracts |
 
 ## Run it locally
 
@@ -145,6 +146,7 @@ python -m regista.agents record ../data/RGS-2026-0001.json --out ../data/RGS-202
     --kinds goal,press_change,milestone,recap --profiles analyst-en,casual-es-slm --resume ../data/RGS-2026-0001.renders.json
 python -m regista.sim generate --seed 7 --out ../data   # regenerate the demo match
 python scripts/fit_models.py                            # refit pass / xG models, report vs ground truth
+python scripts/fit_predictions.py                       # refit the calls' stated chances, report on held-out seeds
 python scripts/hello_foundry.py                         # agent smoke test against the configured provider
 ```
 

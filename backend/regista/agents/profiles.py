@@ -33,11 +33,13 @@ SLOT: dict[str, OverlaySlot] = {
     "rhythm_shift": "side_panel",
     "period_summary": "top_bar",
     "recap": "side_panel",
+    "prediction": "ticker",
+    "prediction_result": "side_panel",
 }
 
 # metric_of_interest -> insight kinds it boosts
 INTEREST = {
-    "press": {"press_change"},
+    "press": {"press_change", "prediction", "prediction_result"},
     "xg": {"shot_quality", "key_pass"},
     "momentum": {"momentum_shift", "control_vs_chaos"},
     "speed": {"player_tag"},

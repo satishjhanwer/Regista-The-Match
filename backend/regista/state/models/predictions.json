@@ -1,0 +1,12 @@
+{
+ "momentum_xg": {
+  "p": 0.6,
+  "n": 18,
+  "hits": 11
+ },
+ "press_completion": {
+  "p": 0.75,
+  "n": 6,
+  "hits": 5
+ }
+}

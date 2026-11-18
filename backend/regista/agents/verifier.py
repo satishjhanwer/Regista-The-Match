@@ -49,9 +49,29 @@ _CATEGORY_WORDS = {
         "header": ("header", "headed", "cabeza", "cabezazo", "हेडर"),
         "foot": ("right foot", "left foot", "con la derecha", "con la izquierda", "pierna derecha", "pierna izquierda"),
     },
+    # A graded call: the telling must not flip the verdict. Spanish "se cumplió" is left out because it sits
+    # inside "no se cumplió".
+    "result": {
+        "right": ("came true", "correct", "was right", "spot on", "acertó", "acertado", "acertada", "सही साबित"),
+        "wrong": (
+            "did not come true",
+            "didn't come true",
+            "missed",
+            "wrong",
+            "incorrect",
+            "failed",
+            "falló",
+            "fallido",
+            "fallida",
+            "no se cumplió",
+            "ग़लत साबित",
+            "गलत साबित",
+        ),
+    },
 }
 _CATEGORY_OF = {"through ball": ("pass", "through ball"), "cross": ("pass", "cross"), "header": ("finish", "header")}
 _CATEGORY_OF |= {v: ("finish", "foot") for v in ("right foot", "left foot")}
+_CATEGORY_OF |= {"right": ("result", "right"), "wrong": ("result", "wrong")}
 _DEVANAGARI_LETTER = re.compile(r"[ऀ-ॿ]")
 _DEVANAGARI = str.maketrans("०१२३४५६७८९", "0123456789")
 _NUMBER = re.compile(r"(?<![\w.])\d+(?:\.\d+)?")
@@ -257,7 +277,7 @@ class Verifier:
 
     @staticmethod
     def _category_issues(text: str, insight: Insight) -> list[str]:
-        """Words for a different pass type or finish than the moment's facts state."""
+        """Words for a different pass type, finish or call verdict than the moment's facts state."""
         issues = []
         actual = {_CATEGORY_OF[v] for f in insight.facts if isinstance(f.value, str) and (v := f.value) in _CATEGORY_OF}
         low = text.lower()

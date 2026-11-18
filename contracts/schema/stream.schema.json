@@ -415,7 +415,9 @@
             "player_tag",
             "milestone",
             "period_summary",
-            "recap"
+            "recap",
+            "prediction",
+            "prediction_result"
           ],
           "type": "string"
         },

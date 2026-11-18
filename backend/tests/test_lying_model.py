@@ -32,7 +32,7 @@ from regista.detect import InsightPipeline
 ROOT = Path(__file__).resolve().parents[2]
 TEAM_SWAP = {"Northvale FC": "Saltmere Athletic", "Saltmere Athletic": "Northvale FC", "Northvale": "Saltmere", "Saltmere": "Northvale"}
 OTHER_LANGUAGE = {"en": "hi", "es": "hi", "hi": "en"}
-LIES = {"inflate", "phantom_fact", "stranger", "uncited_number", "wrong_language", "team_swap", "placeholder", "overlong"}
+LIES = {"flip_verdict", "inflate", "phantom_fact", "stranger", "uncited_number", "wrong_language", "team_swap", "placeholder", "overlong"}
 
 
 def _rule_of():
@@ -77,7 +77,9 @@ class LyingNarrator(LLMNarrator):
             "stat_callout_fact_id": None,
         }
         if self.lie:
-            kind = self._corrupt(draft, brief, profile)
+            # A graded call is first told with the opposite verdict, then lied about the usual ways.
+            first = feedback is None and self._flip_verdict(draft, brief, profile)
+            kind = "flip_verdict" if first else self._corrupt(draft, brief, profile)
             self.told[kind].append(profile.profile_id)
         self.calls += 1
         return self.parse(json.dumps(draft, ensure_ascii=False), brief, profile)
@@ -90,6 +92,19 @@ class LyingNarrator(LLMNarrator):
             if lie(draft, brief, profile):
                 return lie.__name__.lstrip("_")
         raise AssertionError("no lie applies")  # _placeholder always applies
+
+    def _flip_verdict(self, draft, brief, profile) -> bool:
+        ins = brief.insight
+        if ins.kind != "prediction_result":
+            return False
+        flip = {"right": "wrong", "wrong": "right"}
+        flipped = ins.model_copy(
+            update={"facts": [f.model_copy(update={"value": flip[f.value]}) if f.key == "prediction.result" else f for f in ins.facts]}
+        )
+        lie = self.templates.render(flipped, profile)
+        draft["headline"] = lie.headline
+        draft["claims"] = [{"text": c.text, "fact_ids": list(c.fact_ids)} for c in lie.claims]
+        return True
 
     def _inflate(self, draft, brief, profile) -> bool:
         for c in draft["claims"]:
@@ -198,6 +213,7 @@ def test_nothing_a_lying_model_writes_reaches_the_screen(seed7, monkeypatch):
         "wrong language or script",
         "placeholder or empty text",
         "too long for the overlay",
+        "wrong pass type, finish or call verdict",
     ):
         assert rules[rule] > 0, rules
     assert rules["other"] == 0, rules
